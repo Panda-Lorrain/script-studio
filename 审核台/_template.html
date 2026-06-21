@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>文案审核台 · Script Studio</title>
+<style>
+  :root{
+    --bg:#f5f6f8;--card:#fff;--border:#e4e7eb;--text:#1f2329;--muted:#8a9099;
+    --high:#e34d59;--high-bg:#fff0f0;--med:#d87a00;--med-bg:#fff7e6;
+    --low:#00a870;--low-bg:#e6f9f0;--accent:#3370ff;--ok:#00a870;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{margin:0;font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column;height:100vh;overflow:hidden;}
+  header{background:var(--card);border-bottom:1px solid var(--border);padding:14px 24px;flex-shrink:0;}
+  header h1{font-size:18px;margin:0 0 6px;font-weight:600;}
+  .controls{display:flex;align-items:center;gap:14px;}
+  .controls label{font-size:13px;font-weight:600;white-space:nowrap;}
+  .slider-wrap{flex:1;}
+  input[type=range]{width:100%;accent-color:var(--accent);height:4px;}
+  .ticks{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px;}
+
+  /* 电脑端：左列上下(原文/输出)，右列卡片跨整列 */
+  main{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    grid-template-rows:1fr 1fr;
+    grid-template-areas:"original items" "output items";
+    gap:16px;padding:16px 24px;max-width:1500px;margin:0 auto;width:100%;
+    flex:1 1 0;min-height:0;align-items:stretch;
+  }
+  .panel-original{grid-area:original;}
+  .panel-output{grid-area:output;}
+  .panel-items{grid-area:items;}
+
+  .panel{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;display:flex;flex-direction:column;min-height:0;overflow:hidden;}
+  .panel h2{font-size:13px;margin:0 0 12px;color:var(--muted);font-weight:500;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;flex-shrink:0;}
+  .sort-bar{display:flex;gap:6px;}
+  .sort-btn{border:1px solid var(--border);background:#fff;color:var(--muted);padding:3px 11px;border-radius:14px;font-size:11px;cursor:pointer;font-weight:500;white-space:nowrap;}
+  .sort-btn:hover{background:#f2f3f5;}
+  .sort-btn.on{background:var(--accent);color:#fff;border-color:var(--accent);}
+  #original{font-size:14px;line-height:2.1;white-space:pre-wrap;word-break:break-word;flex:1 1 auto;min-height:0;overflow:auto;padding:12px;border:1px solid var(--border);border-radius:8px;}
+  mark.h{background:var(--high-bg);color:var(--high);border-bottom:2px solid var(--high);padding:0 2px;border-radius:2px;}
+  mark.m{background:var(--med-bg);color:var(--med);border-bottom:2px solid var(--med);padding:0 2px;border-radius:2px;}
+  mark.l{background:var(--low-bg);color:var(--low);border-bottom:2px dashed var(--low);padding:0 2px;border-radius:2px;}
+  #items{display:flex;flex-direction:column;gap:10px;flex:1 1 auto;overflow:auto;padding-right:4px;}
+  .card{border:1px solid var(--border);border-radius:8px;padding:12px;transition:.15s;flex-shrink:0;}
+  .card.adopted{border-color:var(--ok);background:#f5fcf8;}
+  .tag{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px;}
+  .tag.high{background:var(--high-bg);color:var(--high);}
+  .tag.medium{background:var(--med-bg);color:var(--med);}
+  .tag.low{background:var(--low-bg);color:var(--low);}
+  .cat{font-size:12px;color:var(--muted);margin-left:6px;}
+  .line{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:14px;margin:8px 0;}
+  .line .from{text-decoration:line-through;color:var(--muted);}
+  .line .arrow{color:var(--muted);}
+  .edit-sug{flex:1;min-width:140px;font-size:14px;font-family:inherit;color:var(--ok);font-weight:600;border:1px dashed var(--ok);background:#f5fcf8;border-radius:5px;padding:5px 8px;outline:none;}
+  .edit-sug:focus{border-style:solid;background:#fff;}
+  .reason{font-size:12px;color:var(--muted);margin:6px 0 10px;line-height:1.6;}
+  .actions{display:flex;gap:8px;}
+  .btn{border:1px solid var(--border);background:#fff;padding:5px 14px;border-radius:6px;font-size:13px;cursor:pointer;}
+  .btn:hover{background:#f2f3f5;}
+  .btn.yes{color:var(--ok);border-color:var(--ok);}
+  .btn.yes.on{background:var(--ok);color:#fff;}
+  .btn.no{color:var(--muted);}
+  .btn.no.on{background:#e4e7eb;color:var(--text);border-color:#c9cdd4;}
+  .out-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:10px;flex-wrap:wrap;flex-shrink:0;}
+  .out-head h2{font-size:13px;margin:0;color:var(--muted);font-weight:500;}
+  .out-head .btns{display:flex;gap:8px;}
+  #output{width:100%;flex:1 1 auto;min-height:0;border:1px solid var(--border);border-radius:8px;padding:12px;font-size:14px;line-height:1.9;font-family:inherit;resize:none;color:var(--text);}
+  #output:focus{border-color:var(--accent);}
+  .copy{background:var(--accent);color:#fff;border:none;padding:7px 18px;border-radius:6px;font-size:13px;cursor:pointer;font-weight:500;}
+  .copy:hover{opacity:.9;}
+  .split{background:#fff;border:1px solid var(--border);color:var(--muted);padding:7px 14px;border-radius:6px;font-size:13px;cursor:pointer;}
+  .split:hover{background:#f2f3f5;}
+  .split.active{background:var(--low-bg);border-color:var(--low);color:var(--low);font-weight:600;}
+  .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#1f2329;color:#fff;padding:9px 20px;border-radius:20px;font-size:13px;opacity:0;transition:.2s;pointer-events:none;}
+  .toast.show{opacity:.95;}
+
+  /* ===== 移动端：原文 → 卡片 → 输出，纵向单栏 ===== */
+  @media (max-width: 768px){
+    html,body{height:auto;}
+    body{display:block;min-height:auto;overflow:auto;}
+    header{padding:12px 14px;}
+    header h1{font-size:17px;}
+    .controls{gap:10px;}
+    .controls label{font-size:13px;}
+    input[type=range]{height:8px;}
+    .ticks{font-size:10px;margin-top:5px;}
+    main{grid-template-columns:1fr;grid-template-rows:auto;grid-template-areas:"original" "items" "output";padding:12px;gap:12px;max-width:100%;flex:none;}
+    .panel{padding:14px;border-radius:9px;overflow:visible;}
+    .panel h2{font-size:13px;margin-bottom:10px;}
+    .sort-btn{font-size:11px;padding:4px 11px;}
+    #original{font-size:15px;line-height:1.95;overflow:visible;padding:0;border:none;border-radius:0;}
+    #items{max-height:none;padding-right:0;gap:10px;overflow:visible;}
+    .card{padding:12px;}
+    .line{flex-direction:column;align-items:stretch;gap:5px;}
+    .line .from{font-size:14px;}
+    .line .arrow{display:none;}
+    .edit-sug{min-width:100%;font-size:15px;padding:9px 10px;}
+    .reason{font-size:12px;margin:6px 0;}
+    .actions{gap:10px;}
+    .btn{flex:1;padding:10px;font-size:14px;min-height:42px;}
+    .out-head{flex-direction:column;align-items:stretch;gap:8px;}
+    .out-head .btns{display:flex;gap:8px;}
+    .copy,.split{flex:1;padding:11px;font-size:14px;min-height:44px;}
+    #output{min-height:0;font-size:15px;line-height:1.8;resize:none;overflow:hidden;}
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>🛡️ 文案审核台 <span id="platform" style="font-size:12px;color:var(--muted);font-weight:400"></span></h1>
+</header>
+
+<main>
+  <section class="panel panel-original">
+    <h2>
+      <span>原文</span>
+      <button class="split" id="origSplitBtn">✂️ 字幕断句</button>
+    </h2>
+    <div id="original"></div>
+  </section>
+  <section class="panel panel-items">
+    <h2>
+      <span>采纳区</span>
+      <span class="sort-bar">
+        <button class="sort-btn on" data-sort="risk">⚠️ 危险程度</button>
+        <button class="sort-btn" data-sort="text">📜 文案顺序</button>
+      </span>
+    </h2>
+    <div id="items"></div>
+  </section>
+  <section class="panel panel-output">
+    <div class="out-head">
+      <h2>输出</h2>
+      <div class="btns">
+        <button class="split" id="splitBtn">✂️ 字幕断句</button>
+        <button class="copy" id="copyBtn">📋 一键复制</button>
+      </div>
+    </div>
+    <textarea id="output" placeholder="实时拼合修改后的文案"></textarea>
+  </section>
+</main>
+
+<div class="toast" id="toast">已复制到剪贴板</div>
+
+<script>
+/* ===== _template.html：文案审核台模板。由 script-review skill 使用 =====
+   生成流程：
+   1) Bash:  cp "_template.html" "review-<主题>.html"
+   2) Edit review-<主题>.html：把下面这行
+        var REVIEW_DATA = { PLACEHOLDER };
+      替换为实际审核数据对象，格式：
+        var REVIEW_DATA = {
+          verdict: "一句话总评",
+          platform: "抖音 · 小红书",
+          original: `原文（保留【角色】【镜头】等标记；标题钩子独立成行，不要塞进【】）`,
+          splitOriginal: `断句版本（agent 按口播节奏预切好的字幕，每句<=10字；原文有什么标点就保留什么标点，不加不减；点「字幕断句」按钮切换）`,
+          items: [
+            { id:1, level:"high", category:"消极价值观", original:"原文精确子串", suggestion:"改写", splitSuggestion:"断句版改写", reason:"原因" },
+            ...
+          ]
+        };
+   约束：items.original 必须是 original 的精确子串（网页靠 indexOf 定位高亮+替换）；level 仅 high/medium/low。
+   内容控制（断句、分句等）全部由 agent 完成，JS 只负责网页结构和交互。
+   注意：注释内切勿出现可闭合块注释的符号组合，否则 JS 会报错。 */
+var REVIEW_DATA = { PLACEHOLDER };
+</script>
+<script>
+const LEVEL_RANK = { high:3, medium:2, low:1 };
+const LEVEL_LABEL = { high:"🔴 高危", medium:"🟡 中危", low:"🟢 低危" };
+const LEVEL_CLS = { high:"h", medium:"m", low:"l" };
+let DATA = null;
+let state = {};
+let edits = {};
+let sortOrder = 'risk';
+let splitMode = false;
+let origSplitMode = false;
+
+function init(){
+  DATA = window.REVIEW_DATA;
+  if(!DATA){ document.getElementById('original').textContent='未找到审核数据'; return; }
+  document.getElementById('platform').textContent = '· ' + (DATA.platform||'');
+  DATA.items.forEach(it=>{ edits[it.id] = it.suggestion; state[it.id] = false; });
+  renderOriginal();
+  renderItems();
+  compose();
+  autoResizeOutput();
+}
+window.addEventListener('resize', autoResizeOutput);
+
+document.querySelectorAll('.sort-btn').forEach(b=>{
+  b.onclick = ()=>{
+    sortOrder = b.dataset.sort;
+    document.querySelectorAll('.sort-btn').forEach(x=> x.classList.toggle('on', x.dataset.sort===sortOrder));
+    renderItems();
+  };
+});
+function sortedItems(){
+  const arr = DATA.items.slice();
+  if(sortOrder === 'risk') arr.sort((a,b)=> (LEVEL_RANK[b.level]-LEVEL_RANK[a.level]) || (posOf(a)-posOf(b)) );
+  else arr.sort((a,b)=> posOf(a) - posOf(b));
+  return arr;
+}
+function posOf(it){ return it.original ? DATA.original.indexOf(it.original) : 999999; }
+
+function renderOriginal(){
+  const rawText = origSplitMode && DATA.splitOriginal ? DATA.splitOriginal : DATA.original;
+  const NL = '\x00';
+  const text = origSplitMode ? rawText.replace(/\n/g, NL) : rawText;
+  const marks = [];
+  DATA.items.forEach(it=>{
+    if(!it.original) return;
+    let idx = text.indexOf(it.original);
+    while(idx !== -1){ marks.push({s:idx, e:idx+it.original.length, level:it.level}); idx = text.indexOf(it.original, idx+1); }
+  });
+  marks.sort((a,b)=>a.s-b.s || b.e-a.e);
+  const merged = [];
+  for(const m of marks){
+    const last = merged[merged.length-1];
+    if(last && m.s < last.e){ last.e = Math.max(last.e, m.e); last.level = topRank(last.level, m.level); }
+    else merged.push({...m});
+  }
+  let html='', cur=0;
+  for(const m of merged){
+    if(m.s > cur) html += esc(text.slice(cur, m.s));
+    html += `<mark class="${LEVEL_CLS[m.level]}">${esc(text.slice(m.s, m.e))}</mark>`;
+    cur = m.e;
+  }
+  if(cur < text.length) html += esc(text.slice(cur));
+  document.getElementById('original').innerHTML = origSplitMode ? html.replace(/\x00/g, '\n') : html;
+}
+function topRank(a,b){ return LEVEL_RANK[a] >= LEVEL_RANK[b] ? a : b; }
+
+function renderItems(){
+  const box = document.getElementById('items');
+  box.innerHTML = sortedItems().map(it=>{
+    const on = state[it.id];
+    return `<div class="card ${on?'adopted':''}">
+      <div><span class="tag ${it.level}">${LEVEL_LABEL[it.level]}</span><span class="cat">${esc(it.category||'')}</span></div>
+      <div class="line">
+        <span class="from">${esc(it.original)}</span>
+        <span class="arrow">→</span>
+        <input class="edit-sug" data-id="${it.id}" value="${escAttr(edits[it.id])}" title="可直接修改改写内容">
+      </div>
+      <div class="reason">${esc(it.reason||'')}</div>
+      <div class="actions">
+        <button class="btn yes ${on?'on':''}" data-id="${it.id}" data-act="1">✓ 采纳</button>
+        <button class="btn no ${!on?'on':''}" data-id="${it.id}" data-act="0">✗ 保留原文</button>
+      </div>
+    </div>`;
+  }).join('');
+  box.querySelectorAll('button[data-act]').forEach(b=>{
+    b.onclick = ()=>{ state[+b.dataset.id] = (b.dataset.act === '1'); renderItems(); compose(); };
+  });
+  box.querySelectorAll('input.edit-sug').forEach(inp=>{
+    inp.oninput = ()=>{ edits[+inp.dataset.id] = inp.value; compose(); };
+  });
+}
+
+function compose(){
+  let text = splitMode && DATA.splitOriginal ? DATA.splitOriginal : DATA.original;
+  const adopted = DATA.items
+    .filter(it => state[it.id] && it.original && edits[it.id])
+    .sort((a,b)=> LEVEL_RANK[b.level] - LEVEL_RANK[a.level]);
+  // 断句模式：换行→占位符，让 indexOf 能跨行匹配
+  const NL = '\x00';
+  if(splitMode) text = text.replace(/\n/g, NL);
+  for(const it of adopted){
+    let sug = edits[it.id];
+    if(!sug || sug === it.original) continue;
+    // 断句模式：未手动编辑时用 splitSuggestion
+    if(splitMode && it.splitSuggestion && sug === it.suggestion) sug = it.splitSuggestion;
+    const ph = '\x01' + it.id + '\x01';
+    text = text.split(it.original).join(ph);
+    text = text.split(ph).join(sug);
+  }
+  if(splitMode) text = text.replace(/\x00/g, '\n');
+  document.getElementById('output').value = cleanText(text);
+  autoResizeOutput();
+  updateSplitUI();
+}
+function autoResizeOutput(){
+  const ta = document.getElementById('output');
+  ta.style.height = 'auto';
+  ta.style.height = ta.scrollHeight + 'px';
+}
+
+function cleanText(text){
+  return text
+    .replace(/【[^】]*】/g, '')
+    .replace(/（[^）]*）/g, '')
+    .replace(/\([^)]*\)/g, '')
+    .split('\n')
+    .map(l => l.replace(/^[\s　]+/, '').replace(/[\s　]+$/, ''))
+    .filter(l => l.length > 0)
+    .join('\n');
+}
+
+document.getElementById('origSplitBtn').addEventListener('click', ()=>{
+  origSplitMode = !origSplitMode;
+  renderOriginal();
+  updateOrigSplitUI();
+});
+function updateOrigSplitUI(){
+  const btn = document.getElementById('origSplitBtn');
+  if(origSplitMode){ btn.classList.add('active'); btn.textContent = '↩️ 连续原文'; }
+  else { btn.classList.remove('active'); btn.textContent = '✂️ 字幕断句'; }
+}
+
+document.getElementById('splitBtn').addEventListener('click', ()=>{
+  splitMode = !splitMode;
+  compose();
+});
+function updateSplitUI(){
+  const btn = document.getElementById('splitBtn');
+  if(splitMode){ btn.classList.add('active'); btn.textContent = '↩️ 连续原文'; }
+  else { btn.classList.remove('active'); btn.textContent = '✂️ 字幕断句'; }
+}
+
+document.getElementById('copyBtn').addEventListener('click', ()=>{
+  const t = document.getElementById('output').value;
+  const done = ()=> toast('已复制到剪贴板');
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(t).then(done).catch(fallbackCopy);
+  } else { fallbackCopy(); }
+  function fallbackCopy(){
+    const ta = document.getElementById('output');
+    ta.focus(); ta.select(); document.execCommand('copy');
+    done();
+  }
+});
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1500); }
+function esc(s){ return String(s).replace(/[&<>]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+function escAttr(s){ return String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+# 第三方词库源：各自独立 git clone，自带版本管理，不纳入本仓库
+词库源/
+
+# Claude Code 本地权限配置（机器相关）
+.claude/settings.local.json
