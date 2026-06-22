@@ -95,6 +95,7 @@ body {
 .btn.primary:hover { opacity: 0.92; }
 .btn.ghost { color: var(--muted); }
 .btn.ok { color: var(--ok); border-color: var(--ok); }
+.btn.done { background: var(--ok); color: #fff; border-color: var(--ok); opacity: .85; cursor: default; }
 
 /* 通用面板 */
 .panel { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }

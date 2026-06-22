@@ -46,6 +46,7 @@ export async function renderReview(data, main) {
               <button class="split-btn" id="splitBtn">✂️ 字幕断句</button>
               <button class="btn primary" id="copyBtn">📋 复制</button>
               <button class="btn ok" id="pushDesignBtn">✓ 完成审核</button>
+              <button class="btn primary" id="goDesignBtn" style="display:none">🎨 去设计台 →</button>
             </div>
           </div>
           <textarea id="revOutput" placeholder="实时拼合修改后的文案，可手动编辑"></textarea>
@@ -90,6 +91,17 @@ export async function renderReview(data, main) {
   };
 
   main.querySelector('#pushDesignBtn').onclick = () => pushToDesign(data);
+
+  // 去设计台按钮 + 已完成审核的文案初始就显示完成态
+  const pushBtn = main.querySelector('#pushDesignBtn');
+  const goBtn = main.querySelector('#goDesignBtn');
+  goBtn.onclick = () => (window.__go || (h => { location.hash = h; }))(encodeURIComponent(data.meta.title) + '/design');
+  if (data.meta.stage === 'design' || data.meta.stage === 'done') {
+    pushBtn.textContent = '✓ 已完成';
+    pushBtn.classList.add('done');
+    pushBtn.disabled = true;
+    goBtn.style.display = '';
+  }
 
   // 用户手动编辑输出框：记录到 review.output，debounce 后重渲采纳区（显示手动修改条目）
   let manualTimer = null;
@@ -166,8 +178,10 @@ export async function renderReview(data, main) {
 
     const itemsHtml = sortedItems().map(it => {
       const d = review.decisions[it.id] || { adopted: false, kept: false, editedSuggestion: it.suggestion };
-      return `<div class="rev-card ${d.adopted ? 'adopted' : ''}">
-        <div><span class="tag ${it.level}">${LEVEL_LABEL[it.level]}</span><span class="cat">${utils.esc(it.category || '')}</span>${d.lastBy ? ' ' + utils.operatorTag(d.lastBy) : ''}</div>
+      const decided = d.adopted || d.kept;
+      return `<div class="rev-card ${d.adopted ? 'adopted' : ''} ${d.kept ? 'kept' : ''}">
+        ${decided ? `<button class="rev-undo" data-undo="${it.id}" title="取消这个决定">↩ 撤销</button>` : ''}
+        <div><span class="tag ${it.level}">${LEVEL_LABEL[it.level]}</span><span class="cat">${utils.esc(it.category || '')}</span>${decided ? '<span class="rev-reviewed">已审核</span>' : ''}${d.lastBy ? ' ' + utils.operatorTag(d.lastBy) : ''}</div>
         <div class="rev-line">
           <span class="from">${utils.esc(it.original)}</span>
           <span class="arrow">→</span>
@@ -196,6 +210,15 @@ export async function renderReview(data, main) {
         review.decisions[id].lastTs = utils.nowIso();
         compose();
         safeSave(data, 'review_decide', `第${id}条 ${adopt ? '采纳' : '保留'}`);
+      };
+    });
+    box.querySelectorAll('button[data-undo]').forEach(b => {
+      b.onclick = () => {
+        const id = +b.dataset.undo;
+        review.decisions[id].adopted = false;
+        review.decisions[id].kept = false;
+        compose();
+        safeSave(data, 'review_undo', `第${id}条撤销决定`);
       };
     });
     box.querySelectorAll('input.edit-sug').forEach(inp => {
@@ -307,8 +330,13 @@ export async function renderReview(data, main) {
       lastBy: pushBy, lastTs: pushTs
     }));
     data.meta.stage = 'design';
-    await safeSave(data, 'pushed_to_design', `生成 ${lines.length} 镜`);
-    utils.toast(`✓ 审核完成，已生成 ${lines.length} 镜分镜。到「🎨 设计台」打开`);
+    const btn = main.querySelector('#pushDesignBtn');
+    btn.textContent = '✓ 已完成';
+    btn.classList.add('done');
+    btn.disabled = true;
+    main.querySelector('#goDesignBtn').style.display = '';
+    utils.toast(`审核完成，已生成 ${lines.length} 镜`);
+    safeSave(data, 'pushed_to_design', `生成 ${lines.length} 镜`);
   }
 
   async function safeSave(data, action, detail) {

@@ -29,8 +29,14 @@ mark.m { background: var(--warn-bg); color: var(--warn); border-bottom: 2px soli
 mark.l { background: var(--ok-bg); color: var(--ok); border-bottom: 2px dashed var(--ok); padding: 0 2px; border-radius: 2px; }
 
 #revItems { display: flex; flex-direction: column; gap: 10px; flex: 1; overflow: auto; padding-right: 4px; }
-.rev-card { border: 1px solid var(--border); border-radius: 8px; padding: 12px; transition: .15s; background: #fff; }
+.rev-card { border: 1px solid var(--border); border-radius: 8px; padding: 12px; transition: .15s; background: #f7f8fa; position: relative; }
 .rev-card.adopted { border-color: var(--ok); background: #f5fcf8; }
+.rev-card.kept { border-color: var(--warn); background: #fff8ec; }
+.rev-reviewed { font-size: 11px; font-weight: 600; color: var(--muted); margin-left: 4px; }
+.rev-card.adopted .rev-reviewed { color: var(--ok); }
+.rev-card.kept .rev-reviewed { color: var(--warn); }
+.rev-undo { position: absolute; top: 8px; right: 10px; border: 1px solid var(--border); background: #fff; color: var(--muted); font-size: 11px; padding: 3px 9px; border-radius: 12px; cursor: pointer; font-family: inherit; }
+.rev-undo:hover { background: var(--high-bg); color: var(--high); border-color: var(--high); }
 .rev-card .cat { font-size: 12px; color: var(--muted); margin-left: 6px; }
 .rev-line { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 14px; margin: 8px 0; }
 .rev-line .from { text-decoration: line-through; color: var(--muted); }
