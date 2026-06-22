@@ -55,8 +55,8 @@ export async function renderDesign(data, main) {
     if (type !== 'lib') s.subject.assetId = null;
     if (type !== 'ai') { s.subject.refs = []; s.subject.prompt = ''; }
     s.lastBy = store.getOperator(); s.lastTs = utils.nowIso();
-    await safeSave(data, 'design_edit', `第${i + 1}镜主体=${type || '未定'}`);
     renderShots();
+    safeSave(data, 'design_edit', `第${i + 1}镜主体=${type || '未定'}`);
   };
 
   window.__designPick = (i, field) => {
@@ -67,8 +67,8 @@ export async function renderDesign(data, main) {
         onSelect: async (id) => {
           s.subject.type = 'lib'; s.subject.assetId = id;
           s.lastBy = store.getOperator(); s.lastTs = utils.nowIso();
-          await safeSave(data, 'design_edit', `第${i + 1}镜选库 ${id}`);
           renderShots();
+          safeSave(data, 'design_edit', `第${i + 1}镜选库 ${id}`);
         }
       });
     } else {
@@ -78,8 +78,8 @@ export async function renderDesign(data, main) {
           s.subject.refs = ids.slice();
           if (s.subject.type !== 'ai') s.subject.type = 'ai';
           s.lastBy = store.getOperator(); s.lastTs = utils.nowIso();
-          await safeSave(data, 'design_edit', `第${i + 1}镜参考图更新`);
           renderShots();
+          safeSave(data, 'design_edit', `第${i + 1}镜参考图更新`);
         }
       });
     }
@@ -89,8 +89,8 @@ export async function renderDesign(data, main) {
     design.shots[i].subject.refs.splice(idx, 1);
     design.shots[i].lastBy = store.getOperator();
     design.shots[i].lastTs = utils.nowIso();
-    await safeSave(data, 'design_edit', `第${i + 1}镜删参考图`);
     renderShots();
+    safeSave(data, 'design_edit', `第${i + 1}镜删参考图`);
   };
 
   let saveTimer = null;

@@ -194,8 +194,8 @@ export async function renderReview(data, main) {
         review.decisions[id].kept = !adopt;
         review.decisions[id].lastBy = store.getOperator();
         review.decisions[id].lastTs = utils.nowIso();
-        await safeSave(data, 'review_decide', `第${id}条 ${adopt ? '采纳' : '保留'}`);
         compose();
+        safeSave(data, 'review_decide', `第${id}条 ${adopt ? '采纳' : '保留'}`);
       };
     });
     box.querySelectorAll('input.edit-sug').forEach(inp => {
@@ -203,12 +203,12 @@ export async function renderReview(data, main) {
         const id = +inp.dataset.id;
         review.decisions[id].editedSuggestion = inp.value;
       };
-      inp.onblur = async () => {
+      inp.onblur = () => {
         const id = +inp.dataset.id;
         review.decisions[id].lastBy = store.getOperator();
         review.decisions[id].lastTs = utils.nowIso();
-        await safeSave(data, 'review_edit', `第${id}条改写`);
         compose();
+        safeSave(data, 'review_edit', `第${id}条改写`);
       };
     });
   }
