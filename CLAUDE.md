@@ -64,10 +64,16 @@ python -m http.server 8080
 
 ## 版本控制
 
-本目录是一个**独立 git 仓库**（`master` 分支），跟踪 `审核台/`、`output/`、`CLAUDE.md`、`.gitignore`。
+本目录是一个**独立 git 仓库**（`master` 分支，纯本地，**未配远程**）。实际跟踪范围：
 
-`.gitignore` 排除两类：
+- `审核台/`、`output/`、`workspace/`、`docs/` —— skill 素材、产物、工作台代码、设计文档。
+- `Material Collection/素材清单.md` —— 素材图库的**索引文件**（仅此一个入库，原图不入库，见下）。
+- `CLAUDE.md`、`.gitignore`。
+
+`.gitignore` 排除：
 - `词库源/` —— 三个子目录各自是独立 git clone，自带版本管理，不重复跟踪。
 - `.claude/settings.local.json` —— 机器相关的本地权限配置。
+- `Material Collection/**/*.{jpg,jpeg,png,webp,gif}` —— 素材图库**原图**，体积大（约 22MB 且持续增长）不入库，靠素材清单索引 + `workspace/assets.json` 本地路径引用。
+- `output/Material Collection/` —— 素材图**副本**（供 storyboard HTML 双击离线加载图），同上不入库。
 
 注意：本仓库**嵌套在桌面（`Desktop`）那个大 git 仓库里**。对桌面仓库而言，整个 `Script Studio/` 现在是一个嵌套仓库（gitlink），桌面仓库不再直接跟踪本目录内部文件——这是预期行为。每次 `script-review` 生成新产物后，记得把文件归到 `output/` 并 `git add output/ && git commit` 记录版本。
