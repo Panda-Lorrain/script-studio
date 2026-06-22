@@ -15,9 +15,18 @@ const ACTION_LABEL = {
   imported: '导入合并'
 };
 
+async function loadMembers() {
+  try {
+    const res = await fetch('/api/users', { credentials: 'include' });
+    if (!res.ok) return null;
+    const r = await res.json();
+    return r.ok ? r : null;
+  } catch { return null; }
+}
+
 export async function renderAdmin(main) {
   main.innerHTML = '<div style="padding:60px;text-align:center;color:#8a9099">加载中…</div>';
-  const [activity, projects] = await Promise.all([store.loadAllActivity(), store.loadProjectList()]);
+  const [activity, projects, users] = await Promise.all([store.loadAllActivity(), store.loadProjectList(), loadMembers()]);
 
   // 按人聚合
   const byWho = {};
@@ -62,10 +71,28 @@ export async function renderAdmin(main) {
       </div>
     </div>`).join('') || '<div class="admin-empty">暂无操作记录</div>';
 
+  const membersHtml = users ? `
+    <div class="admin-section">
+      <div class="admin-sec-title">👥 成员管理（白名单 ${users.members.length}）</div>
+      <div class="admin-members">
+        ${users.members.map(m => `
+          <div class="admin-member">
+            ${utils.operatorAvatar(m)}
+            <span class="am-name">${utils.esc(m)}${users.admins.includes(m) ? ' <span class="am-admin">管理员</span>' : ''}</span>
+            ${m === 'lorrain' ? '' : `<button class="btn ghost am-del" data-name="${utils.escAttr(m)}">移除</button>`}
+          </div>`).join('')}
+      </div>
+      <div class="admin-add">
+        <input id="newMemberInput" class="search" placeholder="输入昵称添加到白名单" autocomplete="off">
+        <button class="btn primary" id="addMemberBtn">添加</button>
+      </div>
+    </div>` : '';
+
   main.innerHTML = `
     <div class="admin-wrap">
       <div class="admin-head"><h1>👑 管理员后台</h1></div>
       ${stat}
+      ${membersHtml}
       <div class="admin-section">
         <div class="admin-sec-title">👥 协作者（${people.length}）</div>
         <div class="admin-people">${peopleHtml || '<div class="admin-empty">暂无协作者</div>'}</div>
@@ -79,4 +106,35 @@ export async function renderAdmin(main) {
         <div class="admin-tls">${tlHtml}</div>
       </div>
     </div>`;
+
+  // 成员管理事件
+  const addBtn = main.querySelector('#addMemberBtn');
+  const addInput = main.querySelector('#newMemberInput');
+  if (addBtn) {
+    const addMember = async () => {
+      const name = addInput.value.trim();
+      if (!name) return;
+      try {
+        const res = await fetch('/api/user', {
+          method: 'POST', credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name })
+        });
+        if (res.ok) { utils.toast('已添加：' + name); renderAdmin(main); }
+        else utils.toast('添加失败(' + res.status + ')');
+      } catch (e) { utils.toast('添加失败：' + e.message); }
+    };
+    addBtn.onclick = addMember;
+    addInput.onkeydown = e => { if (e.key === 'Enter') addMember(); };
+  }
+  main.querySelectorAll('.am-del').forEach(b => {
+    b.onclick = async () => {
+      const name = b.dataset.name;
+      try {
+        const res = await fetch('/api/user?name=' + encodeURIComponent(name), { method: 'DELETE', credentials: 'include' });
+        if (res.ok) { utils.toast('已移除：' + name); renderAdmin(main); }
+        else utils.toast('移除失败(' + res.status + ')');
+      } catch (e) { utils.toast('移除失败：' + e.message); }
+    };
+  });
 }

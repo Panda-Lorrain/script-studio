@@ -133,6 +133,18 @@ body {
 .login-btns { display: flex; gap: 8px; }
 .login-btns .btn { flex: 1; padding: 10px; font-size: 14px; }
 
+/* 预加载层（登录前拉素材图，盖在最上层） */
+.preloader { position: fixed; inset: 0; z-index: 300; background: var(--bg); display: flex; align-items: center; justify-content: center; transition: opacity .35s ease; }
+.preloader.hide { opacity: 0; pointer-events: none; }
+.pl-card { text-align: center; padding: 0 24px; }
+.pl-logo { font-size: 56px; line-height: 1; animation: plPulse 1.1s ease-in-out infinite; }
+.pl-name { font-size: 18px; font-weight: 700; margin-top: 10px; color: var(--text); letter-spacing: .5px; }
+.pl-bar { width: 180px; max-width: 60vw; height: 4px; background: var(--border); border-radius: 2px; margin: 18px auto 0; overflow: hidden; }
+.pl-bar > i { display: block; height: 100%; width: 0; background: var(--accent); border-radius: 2px; transition: width .25s ease; }
+.pl-text { font-size: 12px; color: var(--muted); margin-top: 10px; }
+.pl-text b { color: var(--text); font-weight: 600; }
+@keyframes plPulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.15); opacity: .7; } }
+
 /* 操作者标签 */
 .op-tag { font-size: 10px; font-weight: 600; padding: 1px 7px; border-radius: 10px; border: 1px solid; display: inline-flex; align-items: center; white-space: nowrap; vertical-align: middle; }
 .op-avatar { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; color: #fff; font-size: 11px; font-weight: 700; flex-shrink: 0; }
@@ -251,3 +263,13 @@ body {
   .modal-box { margin: 0; height: 100vh; border-radius: 0; max-width: 100%; }
   .grid { grid-template-columns: repeat(2, 1fr); padding: 12px; }
 }
+
+/* 成员管理 */
+.admin-members { display: flex; flex-direction: column; gap: 6px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 8px; }
+.admin-member { display: flex; align-items: center; gap: 10px; padding: 7px 10px; border-radius: 6px; }
+.admin-member:hover { background: #f2f3f5; }
+.admin-member .am-name { flex: 1; font-size: 14px; }
+.admin-member .am-admin { font-size: 11px; color: var(--accent); }
+.admin-member .am-del { padding: 3px 10px; font-size: 12px; }
+.admin-add { display: flex; gap: 8px; margin-top: 10px; }
+.admin-add .search { flex: 1; }
