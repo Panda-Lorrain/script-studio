@@ -170,13 +170,42 @@ class Handler(SimpleHTTPRequestHandler):
         self._json(200, {'ok': True, 'updated': new_updated})
 
     def api_users(self):
-        self._json(501, {'ok': False, 'error': 'not implemented'})
+        name = self.session_name()
+        if not name:
+            return self._json(401, {'ok': False})
+        users = load_users()
+        if name not in users.get('admins', []):
+            return self._json(403, {'ok': False, 'error': 'admin only'})
+        self._json(200, {'ok': True, 'admins': users.get('admins', []), 'members': users.get('members', [])})
 
     def api_user_add(self):
-        self._json(501, {'ok': False, 'error': 'not implemented'})
+        name = self.session_name()
+        if not name:
+            return self._json(401, {'ok': False})
+        users = load_users()
+        if name not in users.get('admins', []):
+            return self._json(403, {'ok': False, 'error': 'admin only'})
+        body = self._read_body()
+        new = (body.get('name') or '').strip()
+        if new and new not in users['members']:
+            users['members'].append(new)
+            save_users(users)
+        self._json(200, {'ok': True, 'members': users['members']})
 
     def api_user_del(self):
-        self._json(501, {'ok': False, 'error': 'not implemented'})
+        name = self.session_name()
+        if not name:
+            return self._json(401, {'ok': False})
+        users = load_users()
+        if name not in users.get('admins', []):
+            return self._json(403, {'ok': False, 'error': 'admin only'})
+        target = parse_qs(urlparse(self.path).query).get('name', [''])[0]
+        if target == 'lorrain':
+            return self._json(400, {'ok': False, 'error': 'cannot remove lorrain'})
+        if target in users['members']:
+            users['members'].remove(target)
+            save_users(users)
+        self._json(200, {'ok': True, 'members': users['members']})
 
 
 if __name__ == '__main__':
