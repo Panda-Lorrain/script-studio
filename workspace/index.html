@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Script Studio · 工作台</title>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/review.css">
+<link rel="stylesheet" href="css/design.css">
+</head>
+<body>
+<div class="topbar">
+  <div class="brand">🎬 Script Studio <span class="sub" id="subTitle">工作台</span></div>
+  <div class="right">
+    <span class="operator" id="operatorLabel" style="display:none">操作者：<b id="operatorName"></b></span>
+    <button class="btn ghost" id="importBtn">📂 导入</button>
+    <button class="btn" id="dirBtn">📁 选择工作目录</button>
+  </div>
+</div>
+<div class="layout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <main class="main" id="main"></main>
+</div>
+<div id="modalRoot"></div>
+<input type="file" id="fileIn" accept=".json,.html" style="display:none">
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

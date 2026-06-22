@@ -1,0 +1,222 @@
+[
+  {
+    "id": "01",
+    "file": "01_全身_哭.png",
+    "folder": "01_悲伤",
+    "cat": "悲伤",
+    "action": "",
+    "framing": "全身",
+    "state": "",
+    "prop": "",
+    "desc": "哭"
+  },
+  {
+    "id": "02",
+    "file": "02_上半身_哭.jpg",
+    "folder": "01_悲伤",
+    "cat": "悲伤",
+    "action": "",
+    "framing": "上半身",
+    "state": "",
+    "prop": "",
+    "desc": "哭"
+  },
+  {
+    "id": "03",
+    "file": "03_全身_上坟伤心.png",
+    "folder": "01_悲伤",
+    "cat": "悲伤",
+    "action": "",
+    "framing": "全身",
+    "state": "",
+    "prop": "",
+    "desc": "上坟伤心"
+  },
+  {
+    "id": "04",
+    "file": "04_全身_伤心背身插刀.png",
+    "folder": "01_悲伤",
+    "cat": "悲伤",
+    "action": "",
+    "framing": "全身",
+    "state": "",
+    "prop": "",
+    "desc": "伤心背身插刀"
+  },
+  {
+    "id": "05",
+    "file": "05_全身_抱着存钱罐工资悲伤.png",
+    "folder": "01_悲伤",
+    "cat": "悲伤",
+    "action": "",
+    "framing": "全身",
+    "state": "",
+    "prop": "",
+    "desc": "抱着存钱罐工资悲伤"
+  },
+  {
+    "id": "06",
+    "file": "06_全身_发怒封嘴.jpg",
+    "folder": "02_愤怒",
+    "cat": "愤怒",
+    "action": "",
+    "framing": "全身",
+    "state": "",
+    "prop": "",
+    "desc": "发怒封嘴"
+  },
+  {
+    "id": "07",
+    "file": "07_全身_发怒点赞.png",
+    "folder": "02_愤怒",
+    "cat": "愤怒",
+    "action": "",
+    "framing": "全身",
+    "state": "",
+    "prop": "",
+    "desc": "发怒点赞"
+  },
+  {
+    "id": "08",
+    "file": "08_上半身_生气握拳.png",
+    "folder": "02_愤怒",
+    "cat": "愤怒",
+    "action": "",
+    "framing": "上半身",
+    "state": "",
+    "prop": "",
+    "desc": "生气握拳"
+  },
+  {
+    "id": "09",
+    "file": "09_全身_叉腰盯.png",
+    "folder": "02_愤怒",
+    "cat": "愤怒",
+    "action": "",
+    "framing": "全身",
+    "state": "",
+    "prop": "",
+    "desc": "叉腰盯"
+  },
+  {
+    "id": "10",
+    "file": "10_全身_指着盯.png",
+    "folder": "02_愤怒",
+    "cat": "愤怒",
+    "action": "",
+    "framing": "全身",
+    "state": "",
+    "prop": "",
+    "desc": "指着盯"
+  },
+  {
+    "id": "11",
+    "file": "11_全身_站直盯.png",
+    "folder": "02_愤怒",
+    "cat": "愤怒",
+    "action": "",
+    "framing": "全身",
+    "state": "",
+    "prop": "",
+    "desc": "站直盯"
+  },
+  {
+    "id": "12",
+    "file": "12_全身_懵圈疑惑.png",
+    "folder": "03_懵圈无力",
+    "cat": "懵圈无力",
+    "action": "",
+    "framing": "全身",
+    "state": "",
+    "prop": "",
+    "desc": "懵圈疑惑"
+  },
+  {
+    "id": "13",
+    "file": "13_上半身_懵圈抱头.jpg",
+    "folder": "03_懵圈无力",
+    "cat": "懵圈无力",
+    "action": "",
+    "framing": "上半身",
+    "state": "",
+    "prop": "",
+    "desc": "懵圈抱头"
+  },
+  {
+    "id": "14",
+    "file": "14_全身_泄气无力低落.png",
+    "folder": "03_懵圈无力",
+    "cat": "懵圈无力",
+    "action": "",
+    "framing": "全身",
+    "state": "",
+    "prop": "",
+    "desc": "泄气无力低落"
+  },
+  {
+    "id": "15",
+    "file": "15_全身_无力正面趴下.png",
+    "folder": "03_懵圈无力",
+    "cat": "懵圈无力",
+    "action": "",
+    "framing": "全身",
+    "state": "",
+    "prop": "",
+    "desc": "无力正面趴下"
+  },
+  {
+    "id": "16",
+    "file": "16_全身_黑眼圈耷拉耳朵无力.jpg",
+    "folder": "03_懵圈无力",
+    "cat": "懵圈无力",
+    "action": "",
+    "framing": "全身",
+    "state": "",
+    "prop": "",
+    "desc": "黑眼圈耷拉耳朵无力"
+  },
+  {
+    "id": "17",
+    "file": "17_全身_疲惫电脑桌前工作.png",
+    "folder": "04_打工人",
+    "cat": "打工人",
+    "action": "",
+    "framing": "全身",
+    "state": "",
+    "prop": "",
+    "desc": "疲惫电脑桌前工作"
+  },
+  {
+    "id": "18",
+    "file": "18_全身_拉推车干活.png",
+    "folder": "04_打工人",
+    "cat": "打工人",
+    "action": "",
+    "framing": "全身",
+    "state": "",
+    "prop": "",
+    "desc": "拉推车干活"
+  },
+  {
+    "id": "19",
+    "file": "19_上半身_开心鼓掌.jpg",
+    "folder": "05_开心",
+    "cat": "开心",
+    "action": "",
+    "framing": "上半身",
+    "state": "",
+    "prop": "",
+    "desc": "开心鼓掌"
+  },
+  {
+    "id": "20",
+    "file": "20_转场_花屏我已懵圈.png",
+    "folder": "06_转场特效",
+    "cat": "转场特效",
+    "action": "",
+    "framing": "转场",
+    "state": "",
+    "prop": "",
+    "desc": "花屏我已懵圈"
+  }
+]
