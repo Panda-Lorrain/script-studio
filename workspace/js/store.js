@@ -158,6 +158,11 @@ function projectSummary(data) {
 
 export async function loadProject(title) {
   if (projectCache.has(title)) return projectCache.get(title);
+  // 只读模式（未授权目录）：优先读 IndexedDB 本地草稿（自己改过的），无则 fetch 服务器原始
+  if (!dirHandle) {
+    const draft = await idbGet('draft_' + title);
+    if (draft) { projectCache.set(title, draft); return draft; }
+  }
   const txt = await readText('data/' + title + '.json');
   const data = JSON.parse(txt);
   projectCache.set(title, data);
@@ -167,7 +172,7 @@ export async function loadProject(title) {
 export async function saveProject(data) {
   data.meta.updated = nowIso();
   const title = data.meta.title;
-  projectCache.set(title, data);  // 内存缓存始终更新（只读模式也能即时生效）
+  projectCache.set(title, data);  // 内存缓存始终更新
   try {
     await writeText('data/' + title + '.json', JSON.stringify(data, null, 2));
     const list = await loadProjectList();
@@ -176,7 +181,9 @@ export async function saveProject(data) {
     if (i >= 0) list[i] = sum; else list.push(sum);
     await saveIndex(list);
   } catch (e) {
-    if (e.message !== 'NO_DIR') throw e;  // 只读降级：内存已更新，磁盘未持久化
+    if (e.message !== 'NO_DIR') throw e;
+    // 只读模式：写 IndexedDB 本地草稿，刷新/退出都不丢（存在本机浏览器）
+    await idbSet('draft_' + title, data);
   }
   return data;
 }
