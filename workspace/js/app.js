@@ -144,7 +144,14 @@ window.__go = go;
 
 /* ---------- 路由 ---------- */
 async function route() {
-  const hash = location.hash.slice(1) || 'dashboard';
+  let hash = location.hash.slice(1) || 'dashboard';
+  // 非 admin 绝不进后台/总览：立即重定向到审核台（URL 也改掉），杜绝管理内容闪现
+  if (!store.isAdmin() && (hash === 'admin' || hash === 'dashboard' || hash === '')) {
+    hash = 'review';
+    history.replaceState(null, '', '#review');
+  }
+  // 主区先占位清空，避免上次内容在 async 渲染期间闪现
+  $('main').innerHTML = '<div style="padding:80px;text-align:center;color:#8a9099">加载中…</div>';
 
   const isTopLevel = (hash === 'dashboard' || hash === '' || hash === 'admin' || hash === 'review' || hash === 'design');
   if (isTopLevel) {
