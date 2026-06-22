@@ -18,6 +18,7 @@ export async function renderReview(data, main) {
   let sortOrder = 'risk';
   let splitMode = false;
   let origSplitMode = false;
+  let autoOutput = '';  // 基于采纳 items 算出的建议输出（不含手动改），用于 diff 手动修改
 
   main.innerHTML = `
     <div class="review-wrap">
@@ -40,14 +41,14 @@ export async function renderReview(data, main) {
         </section>
         <section class="panel rev-panel panel-output">
           <div class="out-head">
-            <h2 style="margin:0">输出</h2>
+            <h2 style="margin:0">输出 <span style="font-size:11px;color:#8a9099;font-weight:400">（可手动编辑，改动的行会记录到上方「手动修改」）</span></h2>
             <div class="btns">
               <button class="split-btn" id="splitBtn">✂️ 字幕断句</button>
               <button class="btn primary" id="copyBtn">📋 复制</button>
               <button class="btn ok" id="pushDesignBtn">→ 推入设计台</button>
             </div>
           </div>
-          <textarea id="revOutput" placeholder="实时拼合修改后的文案"></textarea>
+          <textarea id="revOutput" placeholder="实时拼合修改后的文案，可手动编辑"></textarea>
         </section>
       </div>
     </div>
@@ -90,6 +91,17 @@ export async function renderReview(data, main) {
 
   main.querySelector('#pushDesignBtn').onclick = () => pushToDesign(data);
 
+  // 用户手动编辑输出框：记录到 review.output，debounce 后重渲采纳区（显示手动修改条目）
+  let manualTimer = null;
+  main.querySelector('#revOutput').addEventListener('input', () => {
+    review.output = main.querySelector('#revOutput').value;
+    clearTimeout(manualTimer);
+    manualTimer = setTimeout(() => {
+      renderItems();
+      safeSave(data, 'manual_edit', '手动编辑输出');
+    }, 800);
+  });
+
   function posOf(it) { return it.original ? review.original.indexOf(it.original) : 999999; }
   function sortedItems() {
     const arr = review.items.slice();
@@ -129,7 +141,26 @@ export async function renderReview(data, main) {
 
   function renderItems() {
     const box = main.querySelector('#revItems');
-    box.innerHTML = sortedItems().map(it => {
+    const manuals = diffManuals();
+    const manualHtml = manuals.length ? `
+      <div class="manual-section">
+        <div class="manual-head">✏️ 手动修改 · ${manuals.length} 处 <span class="manual-hint">（你在输出框里改的行，按文案顺序排列，可逐行撤销）</span></div>
+        ${manuals.map(m => `
+          <div class="rev-card manual">
+            <div><span class="tag manual-tag">✏️ 第${m.line}行</span></div>
+            <div class="rev-line">
+              <span class="from">${utils.esc(m.auto)}</span>
+              <span class="arrow">→</span>
+              <span class="manual-to">${utils.esc(m.manual)}</span>
+            </div>
+            <div class="rev-actions">
+              <button class="btn" data-revert="${m.line}">↩️ 撤销该行</button>
+            </div>
+          </div>
+        `).join('')}
+      </div>` : '';
+
+    const itemsHtml = sortedItems().map(it => {
       const d = review.decisions[it.id] || { adopted: false, kept: false, editedSuggestion: it.suggestion };
       return `<div class="rev-card ${d.adopted ? 'adopted' : ''}">
         <div><span class="tag ${it.level}">${LEVEL_LABEL[it.level]}</span><span class="cat">${utils.esc(it.category || '')}</span></div>
@@ -146,6 +177,11 @@ export async function renderReview(data, main) {
       </div>`;
     }).join('');
 
+    box.innerHTML = manualHtml + itemsHtml;
+
+    box.querySelectorAll('button[data-revert]').forEach(b => {
+      b.onclick = () => revertManual(+b.dataset.revert);
+    });
     box.querySelectorAll('button[data-act]').forEach(b => {
       b.onclick = async () => {
         const id = +b.dataset.id;
@@ -153,7 +189,6 @@ export async function renderReview(data, main) {
         review.decisions[id].adopted = adopt;
         review.decisions[id].kept = !adopt;
         await safeSave(data, 'review_decide', `第${id}条 ${adopt ? '采纳' : '保留'}`);
-        renderItems();
         compose();
       };
     });
@@ -169,7 +204,8 @@ export async function renderReview(data, main) {
     });
   }
 
-  function compose() {
+  // 基于采纳 items 算出建议输出（不含手动改），纯函数不碰输出框
+  function computeAuto() {
     let text = splitMode && review.splitOriginal ? review.splitOriginal : review.original;
     const adopted = review.items
       .filter(it => review.decisions[it.id] && review.decisions[it.id].adopted && it.original)
@@ -185,9 +221,46 @@ export async function renderReview(data, main) {
       text = text.split(ph).join(sug);
     }
     if (splitMode) text = text.replace(/\x00/g, '\n');
-    const cleaned = cleanText(text);
-    main.querySelector('#revOutput').value = cleaned;
-    review.output = cleaned;
+    return cleanText(text);
+  }
+
+  function compose() {
+    const prevAuto = autoOutput;
+    autoOutput = computeAuto();
+    const ta = main.querySelector('#revOutput');
+    // 输出框未被手动改（== 上次自动值 或 空）→ 跟随新自动值；否则保留用户手动值
+    if (ta.value === prevAuto || ta.value === '') {
+      ta.value = autoOutput;
+      review.output = autoOutput;
+    }
+    renderItems();
+  }
+
+  // diff 建议输出(autoOutput) 与 用户输出(review.output) 的逐行差异 = 手动修改
+  function diffManuals() {
+    if (!autoOutput || review.output === autoOutput) return [];
+    const a = autoOutput.split('\n'), m = (review.output || '').split('\n');
+    const edits = [];
+    const max = Math.max(a.length, m.length);
+    for (let i = 0; i < max; i++) {
+      if (a[i] !== m[i]) {
+        edits.push({ line: i + 1, auto: a[i] !== undefined ? a[i] : '(无此行)', manual: m[i] !== undefined ? m[i] : '(已删除)' });
+      }
+    }
+    return edits;
+  }
+
+  function revertManual(line) {
+    const m = (review.output || '').split('\n');
+    const a = autoOutput.split('\n');
+    if (line >= 1 && line <= m.length && a[line - 1] !== undefined) {
+      m[line - 1] = a[line - 1];
+      review.output = m.join('\n');
+      main.querySelector('#revOutput').value = review.output;
+      renderItems();
+      safeSave(data, 'manual_revert', `撤销第${line}行手动修改`);
+      utils.toast('已撤销第' + line + '行');
+    }
   }
 
   function cleanText(text) {
@@ -202,7 +275,7 @@ export async function renderReview(data, main) {
   }
 
   async function pushToDesign(data) {
-    compose();
+    review.output = main.querySelector('#revOutput').value;
     if (!review.output || !review.output.trim()) {
       utils.toast('输出为空，无法推入');
       return;
@@ -220,7 +293,6 @@ export async function renderReview(data, main) {
     (window.__go || (h => { location.hash = h; }))(encodeURIComponent(data.meta.title) + '/design');
   }
 
-  // 只读模式（未授权目录）下保存静默失败，不阻断交互
   async function safeSave(data, action, detail) {
     try { await store.logAndSave(data, action, detail); }
     catch (e) { utils.toast('保存失败：' + e.message); }
