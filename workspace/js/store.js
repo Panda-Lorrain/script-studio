@@ -203,6 +203,19 @@ export async function loadAssets() {
   return assetsCache;
 }
 
+/* ---------- 全局活动聚合（管理员后台用）：遍历所有项目 changelog ---------- */
+export async function loadAllActivity() {
+  const list = await loadProjectList();
+  const all = [];
+  for (const p of list) {
+    let d;
+    try { d = await loadProject(p.title); } catch { continue; }
+    (d.changelog || []).forEach(c => all.push({ ts: c.ts, who: c.who, action: c.action, detail: c.detail, project: p.title, stage: p.stage }));
+  }
+  all.sort((a, b) => (b.ts || '').localeCompare(a.ts || ''));
+  return all;
+}
+
 export function assetUrl(a) {
   return encodeURI('../Material Collection/' + a.folder + '/' + a.file);
 }

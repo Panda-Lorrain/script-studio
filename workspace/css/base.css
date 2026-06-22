@@ -136,6 +136,36 @@ body {
 .op-tag { font-size: 10px; font-weight: 600; padding: 1px 7px; border-radius: 10px; border: 1px solid; display: inline-flex; align-items: center; white-space: nowrap; vertical-align: middle; }
 .op-avatar { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; color: #fff; font-size: 11px; font-weight: 700; flex-shrink: 0; }
 
+/* 管理员后台 */
+.admin-wrap { padding: 20px 24px 60px; max-width: 1100px; margin: 0 auto; }
+.admin-head h1 { font-size: 18px; font-weight: 600; margin-bottom: 12px; }
+.admin-stat { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+.admin-stat b { color: var(--text); }
+.admin-section { margin-bottom: 28px; }
+.admin-sec-title { font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 12px; }
+.admin-people { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
+.admin-person { display: flex; align-items: center; gap: 10px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px; }
+.ap-info { flex: 1; min-width: 0; }
+.ap-name { font-size: 14px; font-weight: 600; }
+.ap-me { font-size: 11px; color: var(--accent); font-weight: 400; }
+.ap-meta { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.ap-meta b { color: var(--text); }
+.admin-projs { display: flex; flex-direction: column; gap: 6px; }
+.admin-proj { display: flex; align-items: center; gap: 10px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 9px 12px; font-size: 13px; flex-wrap: wrap; }
+.apj-title { font-weight: 600; }
+.apj-stage { font-size: 12px; }
+.apj-meta { color: var(--muted); font-size: 12px; }
+.apj-time { color: var(--muted); font-size: 12px; margin-left: auto; }
+.admin-tls { display: flex; flex-direction: column; gap: 2px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 6px; max-height: 520px; overflow-y: auto; }
+.admin-tl { display: flex; align-items: flex-start; gap: 10px; padding: 8px 10px; border-radius: 6px; }
+.admin-tl:hover { background: #f2f3f5; }
+.atl-body { flex: 1; min-width: 0; font-size: 13px; }
+.atl-act { color: var(--accent); font-weight: 500; }
+.atl-proj { color: var(--muted); }
+.atl-detail { font-size: 12px; color: var(--muted); margin-top: 2px; word-break: break-word; }
+.atl-time { color: var(--muted); }
+.admin-empty { color: var(--muted); font-size: 13px; padding: 16px; text-align: center; }
+
 /* dashboard */
 .project-grid {
   display: grid;
