@@ -35,8 +35,9 @@ async function boot() {
 // 按管理员身份显隐管理类 UI（导入/选目录/新建/后台 仅管理员可见）
 function applyAdminUI() {
   const admin = store.isAdmin();
-  $('importBtn').style.display = admin ? '' : 'none';
-  if (!admin) $('dirBtn').style.display = 'none';
+  const show = admin ? '' : 'none';
+  $('importBtn').style.display = show;
+  $('dirBtn').style.display = show;
 }
 
 /* ---------- 操作者身份（自定义登录浮层，不用浏览器 prompt） ---------- */
