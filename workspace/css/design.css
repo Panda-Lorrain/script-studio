@@ -8,7 +8,8 @@
 .dash-summary b { color: var(--text); font-weight: 600; }
 
 .shots { display: flex; flex-direction: column; gap: 12px; flex: 1; overflow-y: auto; padding-right: 4px; }
-.shot .card-inner { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px; border-left: 3px solid var(--border); }
+.shot .card-inner { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px; border-left: 3px solid var(--border); position: relative; }
+.shot-op { position: absolute; top: 10px; right: 12px; z-index: 2; }
 .shot .card-inner.has-lib { border-left-color: var(--ok); }
 .shot .card-inner.has-ai { border-left-color: var(--ai); }
 .shot-head { display: flex; align-items: flex-start; gap: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border); margin-bottom: 4px; }

@@ -151,7 +151,7 @@ export async function renderReview(data, main) {
         <div class="manual-head">✏️ 手动修改 · ${manuals.length} 处 <span class="manual-hint">（你在输出框里改的行，按文案顺序排列，可逐行撤销）</span></div>
         ${manuals.map(m => `
           <div class="rev-card manual">
-            <div><span class="tag manual-tag">✏️ 第${m.line}行</span></div>
+            <div><span class="tag manual-tag">✏️ 第${m.line}行</span>${review.outputLastBy ? ' ' + utils.operatorTag(review.outputLastBy) : ''}</div>
             <div class="rev-line">
               <span class="from">${utils.esc(m.auto)}</span>
               <span class="arrow">→</span>
@@ -167,7 +167,7 @@ export async function renderReview(data, main) {
     const itemsHtml = sortedItems().map(it => {
       const d = review.decisions[it.id] || { adopted: false, kept: false, editedSuggestion: it.suggestion };
       return `<div class="rev-card ${d.adopted ? 'adopted' : ''}">
-        <div><span class="tag ${it.level}">${LEVEL_LABEL[it.level]}</span><span class="cat">${utils.esc(it.category || '')}</span></div>
+        <div><span class="tag ${it.level}">${LEVEL_LABEL[it.level]}</span><span class="cat">${utils.esc(it.category || '')}</span>${d.lastBy ? ' ' + utils.operatorTag(d.lastBy) : ''}</div>
         <div class="rev-line">
           <span class="from">${utils.esc(it.original)}</span>
           <span class="arrow">→</span>
@@ -192,6 +192,8 @@ export async function renderReview(data, main) {
         const adopt = (b.dataset.act === '1');
         review.decisions[id].adopted = adopt;
         review.decisions[id].kept = !adopt;
+        review.decisions[id].lastBy = store.getOperator();
+        review.decisions[id].lastTs = utils.nowIso();
         await safeSave(data, 'review_decide', `第${id}条 ${adopt ? '采纳' : '保留'}`);
         compose();
       };
@@ -202,7 +204,10 @@ export async function renderReview(data, main) {
         review.decisions[id].editedSuggestion = inp.value;
       };
       inp.onblur = async () => {
-        await safeSave(data, 'review_edit', `第${inp.dataset.id}条改写`);
+        const id = +inp.dataset.id;
+        review.decisions[id].lastBy = store.getOperator();
+        review.decisions[id].lastTs = utils.nowIso();
+        await safeSave(data, 'review_edit', `第${id}条改写`);
         compose();
       };
     });
@@ -293,11 +298,13 @@ export async function renderReview(data, main) {
       return;
     }
     const lines = review.output.split('\n').map(l => l.trim()).filter(Boolean);
+    const pushBy = store.getOperator(), pushTs = utils.nowIso();
     data.design.shots = lines.map(line => ({
       line, subtitle: '',
       subject: { type: null, assetId: null, refs: [], prompt: '' },
       post: { text: '', sticker: '', fx: '', anim: '', trans: '' },
-      timing: { text: '', sticker: '', fx: '', anim: '', trans: '' }
+      timing: { text: '', sticker: '', fx: '', anim: '', trans: '' },
+      lastBy: pushBy, lastTs: pushTs
     }));
     data.meta.stage = 'design';
     await safeSave(data, 'pushed_to_design', `生成 ${lines.length} 镜`);

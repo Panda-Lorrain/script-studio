@@ -41,6 +41,8 @@ export async function renderDesign(data, main) {
     else if (k === 'prompt') s.subject.prompt = v;
     else if (k && k.startsWith('post.')) s.post[k.slice(5)] = v;
     else if (k && k.startsWith('timing.')) s.timing[k.slice(7)] = v;
+    s.lastBy = store.getOperator();
+    s.lastTs = utils.nowIso();
     debounceSave(data);
   });
 
@@ -52,6 +54,7 @@ export async function renderDesign(data, main) {
     s.subject.type = type;
     if (type !== 'lib') s.subject.assetId = null;
     if (type !== 'ai') { s.subject.refs = []; s.subject.prompt = ''; }
+    s.lastBy = store.getOperator(); s.lastTs = utils.nowIso();
     await safeSave(data, 'design_edit', `第${i + 1}镜主体=${type || '未定'}`);
     renderShots();
   };
@@ -63,6 +66,7 @@ export async function renderDesign(data, main) {
         assets, currentId: s.subject.assetId, multi: false, title: '选画面主体（单选）', sub: `第 ${i + 1} 镜`,
         onSelect: async (id) => {
           s.subject.type = 'lib'; s.subject.assetId = id;
+          s.lastBy = store.getOperator(); s.lastTs = utils.nowIso();
           await safeSave(data, 'design_edit', `第${i + 1}镜选库 ${id}`);
           renderShots();
         }
@@ -73,6 +77,7 @@ export async function renderDesign(data, main) {
         onSelect: async (ids) => {
           s.subject.refs = ids.slice();
           if (s.subject.type !== 'ai') s.subject.type = 'ai';
+          s.lastBy = store.getOperator(); s.lastTs = utils.nowIso();
           await safeSave(data, 'design_edit', `第${i + 1}镜参考图更新`);
           renderShots();
         }
@@ -82,6 +87,8 @@ export async function renderDesign(data, main) {
 
   window.__designRemoveRef = async (i, idx) => {
     design.shots[i].subject.refs.splice(idx, 1);
+    design.shots[i].lastBy = store.getOperator();
+    design.shots[i].lastTs = utils.nowIso();
     await safeSave(data, 'design_edit', `第${i + 1}镜删参考图`);
     renderShots();
   };
@@ -142,6 +149,7 @@ export async function renderDesign(data, main) {
     }
 
     return `<div class="shot ${cls}"><div class="card-inner ${cls}">
+      ${s.lastBy ? `<span class="shot-op">${utils.operatorTag(s.lastBy)}</span>` : ''}
       <div class="shot-head">
         <div class="shot-no">${String(i + 1).padStart(2, '0')}</div>
         ${thumb}
