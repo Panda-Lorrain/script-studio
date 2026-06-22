@@ -1,7 +1,7 @@
 # Script Studio Workspace 设计规格
 
 > 日期：2026-06-22
-> 状态：待审阅
+> 状态：已自审，待用户审阅
 > 作者：lorrain + Claude
 
 ## 背景
@@ -44,7 +44,7 @@ workspace/
 │   └── design.css          ← 设计面板样式
 ├── js/
 │   ├── app.js              ← 入口：路由 + 视图切换 + 初始化
-│   ├── store.js            ← 数据层：加载/保存 JSON、IndexedDB 缓存
+│   ├── store.js            ← 数据层：加载/保存 JSON、管理 data/ 目录清单
 │   ├── review.js           ← 审核模块：渲染审核面板 + 交互
 │   ├── design.js           ← 设计模块：渲染设计面板 + 交互
 │   ├── picker.js           ← 选图弹窗（审核/设计共用）
@@ -151,6 +151,37 @@ workspace 目录放在 Script Studio 根目录下，与 `审核台/`、`output/`
 
 字段与现有 storyboard HTML 的 ASSETS 数组一致。
 
+### data/index.json 格式
+
+浏览器无法直接列目录，需要一个索引文件。每次 saveProject 时自动更新。
+
+```json
+{
+  "projects": [
+    {
+      "title": "吃苦卖命",
+      "stage": "design",
+      "updated": "2026-06-22T15:30:00Z",
+      "shotCount": 38,
+      "reviewItemCount": 12
+    }
+  ]
+}
+```
+
+### 操作者身份
+
+首次访问工作台时弹窗要求输入昵称，存入 localStorage。后续所有 changelog 的 `who` 字段自动填入。
+
+```js
+// 首次访问
+if (!localStorage.getItem('ss_operator')) {
+  // 弹窗输入昵称
+}
+// changelog 追加时
+changelog.push({ ts: new Date().toISOString(), who: getOperator(), action, detail });
+```
+
 ## 模块架构
 
 ### 依赖关系
@@ -181,10 +212,12 @@ picker.js
 
 ```js
 // store.js
-export async function loadProjectList()        // 扫描 data/ 返回项目摘要列表
-export async function loadProject(title)       // 加载完整 JSON
-export async function saveProject(title, data) // 保存 JSON（自动追加 changelog）
+export async function loadProjectList()        // 加载 data/index.json 返回项目摘要列表
+export async function loadProject(title)       // 加载 data/{title}.json 完整数据
+export async function saveProject(title, data) // 保存 JSON + 更新 index.json（自动追加 changelog）
+export async function createProject(title)     // 创建空项目 JSON + 更新 index.json
 export async function loadAssets()             // 加载 assets.json（带缓存）
+export function setOperator(name)              // 设置当前操作者身份（存 localStorage）
 
 // review.js
 export function renderReview(data, container)  // 渲染审核面板到 container
@@ -436,6 +469,8 @@ python -m http.server 8080
 ```
 
 从 Script Studio 根目录启动，确保 workspace/ 和 Material Collection/ 都在服务范围内。
+
+项目清单通过 `data/index.json` 管理（saveProject 自动维护），不需要服务器开目录列表。
 
 ### 穿透后访问
 
