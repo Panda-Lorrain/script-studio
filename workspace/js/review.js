@@ -217,6 +217,8 @@ export async function renderReview(data, main) {
         const id = +b.dataset.undo;
         review.decisions[id].adopted = false;
         review.decisions[id].kept = false;
+        review.decisions[id].lastBy = null;
+        review.decisions[id].lastTs = null;
         compose();
         safeSave(data, 'review_undo', `第${id}条撤销决定`);
       };
