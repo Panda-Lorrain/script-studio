@@ -1,6 +1,6 @@
 // workspace/js/store.js
 // 数据层：File System Access API 读写，data/index.json 管清单，operator 身份
-import { nowIso } from './utils.js';
+import { nowIso, toast } from './utils.js';
 
 let dirHandle = null;       // workspace/ 目录句柄
 let assetsCache = null;     // assets.json 缓存
@@ -50,18 +50,16 @@ export function setOperator(name) {
   localStorage.setItem(OP_KEY, name);
 }
 
-/* ---------- 管理员（运营者）：才有导入/选目录/新建/后台权限 ---------- */
-const ADMIN_KEY = 'ss_admins';
-export function getAdmins() {
-  try { return JSON.parse(localStorage.getItem(ADMIN_KEY)) || ['lorrain']; }
-  catch { return ['lorrain']; }
-}
+/* ---------- 管理员身份：服务端 /api/login 下发 isAdmin，存 localStorage ---------- */
+const ADMIN_KEY = 'ss_is_admin';
 export function isAdmin() {
-  return getAdmins().includes(getOperator());
+  // lorrain 兜底：未登录过且昵称是 lorrain 时视为 admin（保证 server 未起时的本地可用性）
+  const op = getOperator();
+  if (op === 'lorrain' && localStorage.getItem(ADMIN_KEY) === null) return true;
+  return localStorage.getItem(ADMIN_KEY) === '1';
 }
-export function addAdmin(name) {
-  const list = getAdmins();
-  if (name && !list.includes(name)) { list.push(name); localStorage.setItem(ADMIN_KEY, JSON.stringify(list)); }
+export function setAdminFromServer(v) {
+  localStorage.setItem(ADMIN_KEY, v ? '1' : '0');
 }
 
 /* ---------- 目录授权 ---------- */
@@ -130,16 +128,14 @@ function emptyProject(title) {
   };
 }
 
-let indexCache = null;  // 项目清单缓存，避免每次 route 都 fetch index.json（点文案卡顿主因）
 export async function loadProjectList() {
-  if (indexCache) return indexCache;
+  // 多人同步场景要新鲜度，每次都读（readText 已带 ?t= 防缓存）；数据小，无性能问题
   try {
     const txt = await readText('data/index.json');
-    indexCache = (JSON.parse(txt).projects) || [];
+    return (JSON.parse(txt).projects) || [];
   } catch {
-    indexCache = [];
+    return [];
   }
-  return indexCache;
 }
 
 async function saveIndex(projects) {
@@ -158,11 +154,7 @@ function projectSummary(data) {
 
 export async function loadProject(title) {
   if (projectCache.has(title)) return projectCache.get(title);
-  // 只读模式（未授权目录）：优先读 IndexedDB 本地草稿（自己改过的），无则 fetch 服务器原始
-  if (!dirHandle) {
-    const draft = await idbGet('draft_' + title);
-    if (draft) { projectCache.set(title, draft); return draft; }
-  }
+  // 无 FSA 时 readText 走 fetch（已带 ?t= 防缓存），以服务器为准（API 同步模式）
   const txt = await readText('data/' + title + '.json');
   const data = JSON.parse(txt);
   projectCache.set(title, data);
@@ -173,17 +165,41 @@ export async function saveProject(data) {
   data.meta.updated = nowIso();
   const title = data.meta.title;
   projectCache.set(title, data);  // 内存缓存始终更新
-  try {
-    await writeText('data/' + title + '.json', JSON.stringify(data, null, 2));
-    const list = await loadProjectList();
-    const sum = projectSummary(data);
-    const i = list.findIndex(p => p.title === title);
-    if (i >= 0) list[i] = sum; else list.push(sum);
-    await saveIndex(list);
-  } catch (e) {
-    if (e.message !== 'NO_DIR') throw e;
-    // 只读模式：写 IndexedDB 本地草稿，刷新/退出都不丢（存在本机浏览器）
-    await idbSet('draft_' + title, data);
+  if (dirHandle) {
+    // localhost 运营者：FSA 直写（不变）
+    try {
+      await writeText('data/' + title + '.json', JSON.stringify(data, null, 2));
+      const list = await loadProjectList();
+      const sum = projectSummary(data);
+      const i = list.findIndex(p => p.title === title);
+      if (i >= 0) list[i] = sum; else list.push(sum);
+      await saveIndex(list);
+    } catch (e) {
+      if (e.message !== 'NO_DIR') throw e;
+      await idbSet('draft_' + title, data);  // FSA 句柄突然失效的兜底
+    }
+  } else {
+    // 手机/成员：走 /api/save 同步
+    const res = await fetch('/api/save', {
+      method: 'POST', credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    if (res.status === 409) {
+      const r = await res.json().catch(() => ({}));
+      if (r.server) projectCache.set(title, r.server);  // 用服务器版刷新缓存
+      toast('该文案已被别人更新，正在刷新…');
+      setTimeout(() => location.reload(), 900);
+      return r.server || data;
+    }
+    if (res.status === 401) {
+      toast('登录已过期，请重新登录');
+      setTimeout(() => location.reload(), 900);  // reload 后 boot 的 /api/me 失败→弹登录
+      return data;
+    }
+    if (!res.ok) throw new Error('保存失败(' + res.status + ')');
+    const r = await res.json();
+    data.meta.updated = r.updated;  // 用服务器接管后的时间
   }
   return data;
 }
@@ -209,9 +225,40 @@ export async function loadAssets() {
   } catch {
     assetsCache = [];
   }
-  // 预热素材图到浏览器缓存：首次加载时后台拉取，选图弹窗打开即显示，不卡
-  assetsCache.forEach(a => { const img = new Image(); img.src = assetUrl(a); });
+  // 注：图片的本地缓存 + 预加载由 preloadAssets 负责（落盘 IndexedDB，刷新/离线复用）
   return assetsCache;
+}
+
+// 登录后预加载：每张图优先读 IndexedDB 本地缓存（零下载），未命中才联网 fetch 并落盘；
+// 生成的 blob URL 存进内存 Map，assetUrl 据此返回，设计台/选图台都直接用本地图。
+let preloadPromise = null;
+const blobUrlCache = new Map();   // assetId -> blob:URL（页面级内存，刷新后由 preload 重建）
+export function preloadAssets(onProgress) {
+  if (preloadPromise) return preloadPromise;
+  preloadPromise = (async () => {
+    const list = await loadAssets();
+    if (!list.length) { if (onProgress) onProgress(0, 0); return list; }
+    let done = 0;
+    if (onProgress) onProgress(0, list.length);
+    await Promise.all(list.map(async (a) => {
+      try {
+        if (!blobUrlCache.has(a.id)) {
+          let blob = await idbGet('img_' + a.id);            // 1. 先查本地持久缓存
+          if (!blob) {
+            const res = await fetch(assetHttpUrl(a));         // 2. 未命中才联网下载
+            if (!res.ok) throw new Error(res.status);
+            blob = await res.blob();
+            await idbSet('img_' + a.id, blob);                // 3. 落盘，下次刷新/离线直接用
+          }
+          blobUrlCache.set(a.id, URL.createObjectURL(blob));
+        }
+      } catch { /* 单张失败不卡整体，assetUrl 会回退 HTTP */ }
+      done++;
+      if (onProgress) onProgress(done, list.length);
+    }));
+    return list;
+  })();
+  return preloadPromise;
 }
 
 /* ---------- 全局活动聚合（管理员后台用）：遍历所有项目 changelog ---------- */
@@ -227,7 +274,13 @@ export async function loadAllActivity() {
   return all;
 }
 
+// 优先返回本地缓存的 blob URL（preload 命中后）；未预加载/失败时回退 HTTP URL
 export function assetUrl(a) {
+  const cached = blobUrlCache.get(a.id);
+  return cached || assetHttpUrl(a);
+}
+// 素材图的原始 HTTP 路径（预加载 fetch、回退兜底用）
+export function assetHttpUrl(a) {
   return encodeURI('../Material Collection/' + a.folder + '/' + a.file);
 }
 export function assetById(assets, id) {
