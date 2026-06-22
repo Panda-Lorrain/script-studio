@@ -47,13 +47,13 @@ const WORDBANK = AD_WORDS.concat(DRAIN_WORDS);
 
 ```bash
 cd "C:\Users\26875\Desktop\Script Studio"
-python -m http.server 8080
+python workspace/server.py
 ```
 浏览器打开 `http://localhost:8080/workspace/`。
 
 - 首次访问输入昵称，点「选择工作目录」授权 `workspace/` 文件夹（Chrome/Edge，localhost 环境）
 - 数据在 `workspace/data/*.json`，授权后读写全自动（File System Access API）
-- 内网穿透后，协作者访问同一 URL 只读浏览，改完「导出」JSON 发回，运营者「导入」合并
+- 内网穿透后，白名单成员（`data/users.json`，lorrain 在后台「成员管理」增删）改完**自动同步**到服务器，无需导出 JSON；非白名单昵称被拒门外
 - 加新素材后跑 `python workspace/scripts/scan-assets.py` 刷新 `workspace/assets.json`
 
 设计规格见 `docs/superpowers/specs/2026-06-22-workspace-design.md`。
