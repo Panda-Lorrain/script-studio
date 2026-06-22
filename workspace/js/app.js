@@ -22,14 +22,53 @@ async function boot() {
   label.title = '点击切换操作者 / 退出登录';
   label.onclick = () => openLogin({ mode: 'switch' });
 
-  applyAdminUI();
+  // 先凭 cookie 走 /api/me 恢复登录态（server 重启后 cookie 失效→回到登录）
+  let me = null;
+  try {
+    const res = await fetch('/api/me', { credentials: 'include' });
+    if (res.ok) me = await res.json();
+  } catch { /* server 未起：me 为 null，落到本地兜底 */ }
 
-  if (localStorage.getItem('ss_operator')) {
-    showOperator(store.getOperator());
-    route();
-  } else {
+  if (me && me.ok) {
+    store.setOperator(me.name);
+    store.setAdminFromServer(me.isAdmin);
+  } else if (!localStorage.getItem('ss_operator')) {
+    applyAdminUI();   // 未登录：隐藏管理 UI 后弹登录
     openLogin({ mode: 'first' });
+    return;
   }
+  showOperator(store.getOperator());
+  applyAdminUI();
+  await preloadWithAnimation();
+  route();
+}
+
+/* ---------- 预加载动画：登录通过后才加载素材（未登录不暴露资源）；设计台选图秒开 ---------- */
+async function preloadWithAnimation() {
+  const loader = $('preloader');
+  if (!loader) return;
+  loader.style.display = '';        // 显示加载层（默认 display:none）
+  loader.classList.remove('hide');
+  const bar = loader.querySelector('.pl-bar > i');
+  const num = loader.querySelector('.pl-num');
+  const total = loader.querySelector('.pl-total');
+
+  const setProgress = (done, t) => {
+    if (num) num.textContent = done;
+    if (total) total.textContent = t;
+    if (bar) bar.style.width = (t > 0 ? (done / t * 100) : 0) + '%';
+  };
+
+  // 超时兜底：素材多/网慢时最多等 12s，不无限卡住用户
+  const timeout = new Promise(resolve => setTimeout(resolve, 12000));
+  const list = await Promise.race([store.preloadAssets(setProgress), timeout]);
+
+  // 放行前确保进度拉满（首次逐张走完；缓存命中秒 resolve 时补满，避免 0 进度闪现）
+  const t = (list && list.length) || 0;
+  if (t > 0) { setProgress(t, t); await new Promise(r => setTimeout(r, 150)); }
+
+  loader.classList.add('hide');
+  setTimeout(() => { loader.style.display = 'none'; }, 400);
 }
 
 // 按管理员身份显隐管理类 UI（导入/选目录/新建/后台 仅管理员可见）
@@ -64,13 +103,33 @@ function openLogin({ mode }) {
   ov.classList.add('on');
   setTimeout(() => input.focus(), 50);
 
-  const ok = () => {
+  const ok = async () => {
     const name = input.value.trim();
     if (!name) { input.focus(); return; }
-    store.setOperator(name);
+    // 走服务端 /api/login 校验白名单
+    try {
+      const res = await fetch('/api/login', {
+        method: 'POST', credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name })
+      });
+      if (res.status === 403) {
+        sub.textContent = '未授权——联系 lorrain 把你的昵称加入白名单';
+        input.select();
+        return;
+      }
+      if (!res.ok) throw new Error('登录失败(' + res.status + ')');
+      const r = await res.json();
+      store.setOperator(name);
+      store.setAdminFromServer(r.isAdmin);
+    } catch (e) {
+      sub.textContent = '登录失败：' + e.message + '（服务器是否已启动？）';
+      return;
+    }
     showOperator(name);
     ov.classList.remove('on');
     applyAdminUI();
+    await preloadWithAnimation();   // 登录验证通过后再加载素材（未登录不暴露资源）
     utils.toast(mode === 'first' ? '欢迎，' + name : '已切换为 ' + name);
     route();
   };
