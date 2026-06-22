@@ -92,10 +92,18 @@ function setupImport() {
 /* ---------- 路由 ---------- */
 async function route() {
   const hash = location.hash.slice(1) || 'dashboard';
+
+  // 先确定 currentTitle，再渲染侧栏（否则侧栏高亮滞后一次：点 A 却高亮上一个）
+  if (hash === 'dashboard' || hash === '') {
+    currentTitle = null;
+  } else {
+    const si = hash.lastIndexOf('/');
+    const t = si >= 0 ? hash.slice(0, si) : hash;
+    currentTitle = decodeURIComponent(t);
+  }
   await renderSidebar();
 
   if (hash === 'dashboard' || hash === '') {
-    currentTitle = null;
     $('subTitle').textContent = '总览';
     const projects = await store.loadProjectList();
     renderDashboard(projects, $('main'), { onOpen: openProject, onNew: newProject });
@@ -104,9 +112,7 @@ async function route() {
 
   const slashIdx = hash.lastIndexOf('/');
   const mode = slashIdx >= 0 ? hash.slice(slashIdx + 1) : '';
-  const title = slashIdx >= 0 ? hash.slice(0, slashIdx) : hash;
-  const decodedTitle = decodeURIComponent(title);
-  currentTitle = decodedTitle;
+  const decodedTitle = currentTitle;
 
   try {
     const data = await store.loadProject(decodedTitle);
