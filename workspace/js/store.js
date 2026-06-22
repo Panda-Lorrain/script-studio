@@ -50,6 +50,20 @@ export function setOperator(name) {
   localStorage.setItem(OP_KEY, name);
 }
 
+/* ---------- 管理员（运营者）：才有导入/选目录/新建/后台权限 ---------- */
+const ADMIN_KEY = 'ss_admins';
+export function getAdmins() {
+  try { return JSON.parse(localStorage.getItem(ADMIN_KEY)) || ['lorrain']; }
+  catch { return ['lorrain']; }
+}
+export function isAdmin() {
+  return getAdmins().includes(getOperator());
+}
+export function addAdmin(name) {
+  const list = getAdmins();
+  if (name && !list.includes(name)) { list.push(name); localStorage.setItem(ADMIN_KEY, JSON.stringify(list)); }
+}
+
 /* ---------- 目录授权 ---------- */
 export function hasDir() { return !!dirHandle; }
 export function isFsaSupported() {

@@ -1,10 +1,11 @@
 // workspace/js/app.js
-// 入口：路由、侧栏、初始化
+// 入口：路由、侧栏、初始化、登录、管理员权限
 import * as store from './store.js';
 import * as utils from './utils.js';
 import { renderDashboard } from './dashboard.js';
 import { renderReview } from './review.js';
 import { renderDesign } from './design.js';
+import { renderAdmin } from './admin.js';
 import { importJSONFile } from './export.js';
 
 const $ = id => document.getElementById(id);
@@ -12,53 +13,74 @@ let currentTitle = null;
 
 /* ---------- 初始化 ---------- */
 async function boot() {
-  setupOperator();
   await setupDirButton();
   setupImport();
   window.addEventListener('hashchange', route);
-  route();
-}
 
-/* ---------- 操作者身份 ---------- */
-function setupOperator() {
-  const name = store.getOperator();
-  if (name === '匿名' || !localStorage.getItem('ss_operator')) {
-    promptOperator();
-  } else {
-    showOperator(name);
-  }
   const label = $('operatorLabel');
   label.style.cursor = 'pointer';
-  label.title = '点击修改昵称 / 退出登录';
-  label.onclick = operatorMenu;
-}
+  label.title = '点击切换操作者 / 退出登录';
+  label.onclick = () => openLogin({ mode: 'switch' });
 
-function promptOperator() {
-  const name = prompt('请输入你的昵称（用于记录操作）', '');
-  if (name && name.trim()) {
-    store.setOperator(name.trim());
-    showOperator(name.trim());
+  applyAdminUI();
+
+  if (localStorage.getItem('ss_operator')) {
+    showOperator(store.getOperator());
+    route();
+  } else {
+    openLogin({ mode: 'first' });
   }
 }
 
+// 按管理员身份显隐管理类 UI（导入/选目录/新建/后台 仅管理员可见）
+function applyAdminUI() {
+  const admin = store.isAdmin();
+  $('importBtn').style.display = admin ? '' : 'none';
+  if (!admin) $('dirBtn').style.display = 'none';
+}
+
+/* ---------- 操作者身份（自定义登录浮层，不用浏览器 prompt） ---------- */
 function showOperator(name) {
   $('operatorLabel').style.display = '';
   $('operatorName').textContent = name;
 }
 
-function operatorMenu() {
+function openLogin({ mode }) {
+  const ov = $('loginOverlay');
+  const input = $('loginInput');
+  const exitBtn = $('loginExit');
+  const sub = $('loginSub');
   const cur = store.getOperator();
-  const name = prompt(`操作者：${cur}\n\n· 输入新昵称 → 切换操作者\n· 留空 → 退出登录（刷新后重新输入）`, cur);
-  if (name === null) return;  // 取消
-  if (name.trim()) {
-    store.setOperator(name.trim());
-    showOperator(name.trim());
-    utils.toast('已切换为：' + name.trim());
+  if (mode === 'switch') {
+    input.value = cur !== '匿名' ? cur : '';
+    sub.textContent = '切换操作者：输入新昵称确认；或点「退出登录」';
+    exitBtn.style.display = '';
   } else {
-    localStorage.removeItem('ss_operator');
-    utils.toast('已退出，正在刷新…');
-    setTimeout(() => location.reload(), 600);
+    input.value = '';
+    sub.textContent = '输入你的昵称，开始协作';
+    exitBtn.style.display = 'none';
   }
+  ov.classList.add('on');
+  setTimeout(() => input.focus(), 50);
+
+  const ok = () => {
+    const name = input.value.trim();
+    if (!name) { input.focus(); return; }
+    store.setOperator(name);
+    showOperator(name);
+    ov.classList.remove('on');
+    applyAdminUI();
+    utils.toast(mode === 'first' ? '欢迎，' + name : '已切换为 ' + name);
+    route();
+  };
+  $('loginOk').onclick = ok;
+  input.onkeydown = e => { if (e.key === 'Enter') ok(); };
+  exitBtn.onclick = () => {
+    localStorage.removeItem('ss_operator');
+    ov.classList.remove('on');
+    utils.toast('已退出，正在刷新…');
+    setTimeout(() => location.reload(), 500);
+  };
 }
 
 async function setupDirButton() {
@@ -67,16 +89,14 @@ async function setupDirButton() {
   const restored = hasFsa && await store.initStore();
 
   function refreshBtn() {
+    if (!store.isAdmin()) { btn.style.display = 'none'; return; }
     if (!hasFsa) {
-      btn.textContent = '📡 只读模式';
-      btn.disabled = true;
-      btn.title = '当前浏览器/环境不支持写入，仅浏览+导出';
+      btn.textContent = '📡 只读模式'; btn.disabled = true;
+      btn.title = '当前浏览器/环境不支持写入，仅浏览';
     } else if (store.hasDir()) {
-      btn.textContent = '✓ 已授权';
-      btn.disabled = true;
+      btn.textContent = '✓ 已授权'; btn.disabled = true;
     } else {
-      btn.textContent = '📁 选择工作目录';
-      btn.disabled = false;
+      btn.textContent = '📁 选择工作目录'; btn.disabled = false;
     }
   }
   refreshBtn();
@@ -110,23 +130,25 @@ function setupImport() {
 }
 
 /* ---------- 导航 ---------- */
-// 从总览进入文案 = push（浏览器返回键可回总览）；文案间切换 / 同文案换视图 = replace（返回键不在文案间乱跳）
+// 从总览/admin 进入文案 = push（返回键回总览）；其余切换 = replace（返回键不在文案间跳）
 function go(hash) {
-  if (currentTitle === null && hash !== 'dashboard') {
-    location.hash = hash;            // 从总览进入：入栈，返回键回总览
+  const isTopLevel = (hash === 'dashboard' || hash === 'admin');
+  if (currentTitle === null && !isTopLevel) {
+    location.hash = hash;
   } else {
-    history.replaceState(null, '', '#' + hash);  // 文案间切换：替换当前历史，返回键直接回总览
+    history.replaceState(null, '', '#' + hash);
     route();
   }
 }
-window.__go = go;   // 供 review/design/dashboard 模块调用，避免循环 import
+window.__go = go;
 
 /* ---------- 路由 ---------- */
 async function route() {
   const hash = location.hash.slice(1) || 'dashboard';
 
-  // 先确定 currentTitle，再渲染侧栏（否则侧栏高亮滞后一次：点 A 却高亮上一个）
   if (hash === 'dashboard' || hash === '') {
+    currentTitle = null;
+  } else if (hash === 'admin') {
     currentTitle = null;
   } else {
     const si = hash.lastIndexOf('/');
@@ -134,6 +156,16 @@ async function route() {
     currentTitle = decodeURIComponent(t);
   }
   await renderSidebar();
+
+  if (hash === 'admin') {
+    if (!store.isAdmin()) {
+      $('main').innerHTML = '<div style="padding:60px;text-align:center;color:#8a9099">仅管理员可查看后台</div>';
+      return;
+    }
+    $('subTitle').textContent = '管理员后台';
+    renderAdmin($('main'));
+    return;
+  }
 
   if (hash === 'dashboard' || hash === '') {
     $('subTitle').textContent = '总览';
@@ -168,6 +200,8 @@ async function renderSidebar() {
   const projects = await store.loadProjectList();
   const stageLabel = { review: '🔵', design: '🟡', done: '🟢' };
   const stageText = { review: '审核中', design: '设计中', done: '已完成' };
+  const admin = store.isAdmin();
+  const hash = location.hash.slice(1);
 
   const items = projects.map(p => {
     const active = currentTitle === p.title ? 'active' : '';
@@ -178,19 +212,23 @@ async function renderSidebar() {
     </div>`;
   }).join('');
 
+  const adminItem = admin ? `<div class="nav-item ${hash === 'admin' ? 'active' : ''}" data-href="admin">👑 管理员后台</div>` : '';
+  const newBtn = admin ? `<button class="btn new-btn" id="newProjectBtn">＋ 新建文案</button>` : '';
+
   $('sidebar').innerHTML = `
-    <div class="nav-item ${!currentTitle ? 'active' : ''}" data-href="dashboard">📊 总览</div>
+    <div class="nav-item ${!currentTitle && hash !== 'admin' ? 'active' : ''}" data-href="dashboard">📊 总览</div>
+    ${adminItem}
     <div class="nav-section">文案 (${projects.length})</div>
     ${items || '<div class="nav-section" style="padding-top:0">暂无文案</div>'}
-    <button class="btn new-btn" id="newProjectBtn">＋ 新建文案</button>
+    ${newBtn}
   `;
 
   $('sidebar').onclick = e => {
     const item = e.target.closest('[data-href]');
     if (item) go(item.dataset.href);
   };
-  const newBtn = $('newProjectBtn');
-  if (newBtn) newBtn.onclick = newProject;
+  const newB = $('newProjectBtn');
+  if (newB) newB.onclick = newProject;
 }
 
 async function newProject() {

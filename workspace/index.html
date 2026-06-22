@@ -9,6 +9,18 @@
 <link rel="stylesheet" href="css/design.css">
 </head>
 <body>
+<div id="loginOverlay" class="login-overlay">
+  <div class="login-card">
+    <div class="login-logo">🎬</div>
+    <div class="login-title">Script Studio</div>
+    <div class="login-sub" id="loginSub">输入你的昵称，开始协作</div>
+    <input id="loginInput" class="login-input" placeholder="你的昵称" autocomplete="off">
+    <div class="login-btns">
+      <button id="loginExit" class="btn ghost" style="display:none">退出登录</button>
+      <button id="loginOk" class="btn primary">进入工作台</button>
+    </div>
+  </div>
+</div>
 <div class="topbar">
   <div class="brand">🎬 Script Studio <span class="sub" id="subTitle">工作台</span></div>
   <div class="right">

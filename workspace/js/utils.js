@@ -51,3 +51,25 @@ export function timeAgo(iso) {
 export function nowIso() {
   return new Date().toISOString();
 }
+
+// 操作者名字 → 稳定颜色（同名永远同色，不同人不同色）
+export function operatorColor(name) {
+  if (!name) return '#8a9099';
+  let h = 0;
+  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) % 360;
+  return `hsl(${h}, 58%, 45%)`;
+}
+
+// 操作者标签 HTML（带颜色小标签）
+export function operatorTag(name) {
+  if (!name) return '';
+  const c = operatorColor(name);
+  return `<span class="op-tag" style="background:${c}1f;color:${c};border-color:${c}55" title="${esc(name)} 操作">${esc(name)}</span>`;
+}
+
+// 操作者头像色块（圆形首字）
+export function operatorAvatar(name) {
+  if (!name) return '';
+  const c = operatorColor(name);
+  return `<span class="op-avatar" style="background:${c}" title="${esc(name)}">${esc(name.slice(0, 1))}</span>`;
+}

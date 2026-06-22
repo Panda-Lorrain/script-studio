@@ -120,6 +120,22 @@ body {
 }
 .toast.show { opacity: 0.95; }
 
+/* 登录浮层 */
+.login-overlay { position: fixed; inset: 0; background: rgba(31,35,41,.5); backdrop-filter: blur(4px); z-index: 200; display: none; align-items: center; justify-content: center; }
+.login-overlay.on { display: flex; }
+.login-card { background: var(--card); border-radius: 14px; padding: 32px 28px; width: 320px; max-width: 90vw; box-shadow: 0 8px 32px rgba(0,0,0,.2); text-align: center; }
+.login-logo { font-size: 40px; margin-bottom: 8px; }
+.login-title { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+.login-sub { font-size: 13px; color: var(--muted); margin-bottom: 20px; line-height: 1.5; }
+.login-input { width: 100%; border: 1px solid var(--border); border-radius: 8px; padding: 11px 14px; font-size: 15px; font-family: inherit; outline: none; text-align: center; margin-bottom: 14px; }
+.login-input:focus { border-color: var(--accent); }
+.login-btns { display: flex; gap: 8px; }
+.login-btns .btn { flex: 1; padding: 10px; font-size: 14px; }
+
+/* 操作者标签 */
+.op-tag { font-size: 10px; font-weight: 600; padding: 1px 7px; border-radius: 10px; border: 1px solid; display: inline-flex; align-items: center; white-space: nowrap; vertical-align: middle; }
+.op-avatar { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; color: #fff; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+
 /* dashboard */
 .project-grid {
   display: grid;
