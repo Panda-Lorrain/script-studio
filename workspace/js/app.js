@@ -2,7 +2,7 @@
 // 入口：路由、侧栏、初始化、登录、管理员权限
 import * as store from './store.js';
 import * as utils from './utils.js';
-import { renderDashboard } from './dashboard.js';
+import { renderDashboard, renderDeskList } from './dashboard.js';
 import { renderReview } from './review.js';
 import { renderDesign } from './design.js';
 import { renderAdmin } from './admin.js';
@@ -132,7 +132,7 @@ function setupImport() {
 /* ---------- 导航 ---------- */
 // 从总览/admin 进入文案 = push（返回键回总览）；其余切换 = replace（返回键不在文案间跳）
 function go(hash) {
-  const isTopLevel = (hash === 'dashboard' || hash === 'admin');
+  const isTopLevel = (hash === 'dashboard' || hash === 'admin' || hash === 'review' || hash === 'design');
   if (currentTitle === null && !isTopLevel) {
     location.hash = hash;
   } else {
@@ -146,9 +146,8 @@ window.__go = go;
 async function route() {
   const hash = location.hash.slice(1) || 'dashboard';
 
-  if (hash === 'dashboard' || hash === '') {
-    currentTitle = null;
-  } else if (hash === 'admin') {
+  const isTopLevel = (hash === 'dashboard' || hash === '' || hash === 'admin' || hash === 'review' || hash === 'design');
+  if (isTopLevel) {
     currentTitle = null;
   } else {
     const si = hash.lastIndexOf('/');
@@ -170,7 +169,14 @@ async function route() {
   if (hash === 'dashboard' || hash === '') {
     $('subTitle').textContent = '总览';
     const projects = await store.loadProjectList();
-    renderDashboard(projects, $('main'), { onOpen: openProject, onNew: newProject });
+    renderDashboard(projects, $('main'), {});
+    return;
+  }
+
+  if (hash === 'review' || hash === 'design') {
+    $('subTitle').textContent = hash === 'design' ? '设计台' : '审核台';
+    const projects = await store.loadProjectList();
+    renderDeskList(projects, $('main'), hash);
     return;
   }
 
@@ -216,7 +222,9 @@ async function renderSidebar() {
   const newBtn = admin ? `<button class="btn new-btn" id="newProjectBtn">＋ 新建文案</button>` : '';
 
   $('sidebar').innerHTML = `
-    <div class="nav-item ${!currentTitle && hash !== 'admin' ? 'active' : ''}" data-href="dashboard">📊 总览</div>
+    <div class="nav-item ${!currentTitle && hash !== 'admin' && hash !== 'review' && hash !== 'design' ? 'active' : ''}" data-href="dashboard">📊 总览</div>
+    <div class="nav-item ${hash === 'review' ? 'active' : ''}" data-href="review">📝 审核台</div>
+    <div class="nav-item ${hash === 'design' ? 'active' : ''}" data-href="design">🎨 设计台</div>
     ${adminItem}
     <div class="nav-section">文案 (${projects.length})</div>
     ${items || '<div class="nav-section" style="padding-top:0">暂无文案</div>'}

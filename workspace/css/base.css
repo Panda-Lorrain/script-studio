@@ -166,6 +166,19 @@ body {
 .atl-time { color: var(--muted); }
 .admin-empty { color: var(--muted); font-size: 13px; padding: 16px; text-align: center; }
 
+/* 工作台入口（总览两个大卡片） */
+.desk-entries { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.desk-entry { display: flex; align-items: center; gap: 14px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; cursor: pointer; transition: .15s; }
+.desk-entry:hover { border-color: var(--accent); box-shadow: 0 2px 12px rgba(51,112,255,.12); transform: translateY(-1px); }
+.de-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+.desk-entry.review .de-icon { background: var(--accent-bg); }
+.desk-entry.design .de-icon { background: var(--warn-bg); }
+.de-body { flex: 1; }
+.de-title { font-size: 16px; font-weight: 700; }
+.de-desc { font-size: 12px; color: var(--muted); margin-top: 3px; }
+.de-arrow { font-size: 22px; color: var(--muted); }
+@media (max-width: 768px) { .desk-entries { grid-template-columns: 1fr; gap: 10px; } .desk-entry { padding: 14px 16px; } }
+
 /* dashboard */
 .project-grid {
   display: grid;

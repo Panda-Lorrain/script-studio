@@ -45,7 +45,7 @@ export async function renderReview(data, main) {
             <div class="btns">
               <button class="split-btn" id="splitBtn">✂️ 字幕断句</button>
               <button class="btn primary" id="copyBtn">📋 复制</button>
-              <button class="btn ok" id="pushDesignBtn">→ 推入设计台</button>
+              <button class="btn ok" id="pushDesignBtn">✓ 完成审核</button>
             </div>
           </div>
           <textarea id="revOutput" placeholder="实时拼合修改后的文案，可手动编辑"></textarea>
@@ -308,8 +308,7 @@ export async function renderReview(data, main) {
     }));
     data.meta.stage = 'design';
     await safeSave(data, 'pushed_to_design', `生成 ${lines.length} 镜`);
-    utils.toast(`已推入设计台（${lines.length} 镜）`);
-    (window.__go || (h => { location.hash = h; }))(encodeURIComponent(data.meta.title) + '/design');
+    utils.toast(`✓ 审核完成，已生成 ${lines.length} 镜分镜。到「🎨 设计台」打开`);
   }
 
   async function safeSave(data, action, detail) {
