@@ -1,75 +1,129 @@
 {
   "meta": {
     "title": "吃苦卖命",
-    "created": "2026-06-22T10:00:00Z",
-    "updated": "2026-06-22T10:00:00Z",
-    "stage": "design",
-    "operator": "lorrain"
+    "created": "2026-06-22T11:33:19.031Z",
+    "updated": "2026-06-22T11:33:19.031Z",
+    "stage": "review",
+    "operator": "script-review"
   },
   "review": {
     "platform": "抖音 · 小红书",
-    "verdict": "全文充斥消极价值观与绝对化表述，「卖命/自残/摆烂」等消极导向词需改写",
-    "original": "从小家里都说：勤快饿不死，别人能出头，就是比你更能吃苦。我听话进厂苦干，天天加班到深夜，放弃所有休假，熬了整整三年。熬坏颈椎、熬出胃病、大把掉发，薪资只涨几百，老板还劝我勤劳自有回报。好像我再拼命，也永远赶不上别人，只能认命埋头干活。别被 KFC 了！这根本不是勤劳，是愚笨式自残！老板挂天道酬勤哄你卖命，自己坐享红利，这套鸡汤你也信？没资源没方向，瞎勤快一文不值！螺丝钉再拼，也变不了发动机。累垮一身毛病，赚的钱连看病都不够，卖命到底图什么？可以干活，但别卖命！拒绝无意义内耗，该摆烂就摆烂。你的命，远比老板画的饼金贵，谁都别想消耗你！",
-    "splitOriginal": "从小家里都说：\n勤快饿不死，\n别人能出头，\n就是比你更能吃苦。\n我听话进厂苦干，\n天天加班到深夜，\n放弃所有休假，\n熬了整整三年。\n熬坏颈椎、\n熬出胃病、\n大把掉发，\n薪资只涨几百，\n老板还劝我\n勤劳自有回报。\n好像我再拼命，\n也永远赶不上别人，\n只能认命埋头干活。\n别被 KFC 了！\n这根本不是勤劳，\n是愚笨式自残！\n老板挂天道酬勤\n哄你卖命，\n自己坐享红利，\n这套鸡汤你也信？\n没资源没方向，\n瞎勤快一文不值！\n螺丝钉再拼，\n也变不了发动机。\n累垮一身毛病，\n赚的钱连看病都不够，\n卖命到底图什么？\n可以干活，\n但别卖命！\n拒绝无意义内耗，\n该摆烂就摆烂。\n你的命，\n远比老板画的饼金贵，\n谁都别想消耗你！",
+    "verdict": "整体立意偏消极，否定努力+煽动劳资对立+摆烂价值观，高风险",
+    "original": "从小家里人都说：勤快饿不死，别人能出头，就是比你更能吃苦。\n我听话进厂苦干，天天加班到深夜，放弃所有休假，熬了整整三年。\n熬坏颈椎、熬出胃病、大把掉发，薪资只涨几百，老板还劝我勤劳自有回报。\n好像我再拼命，也永远赶不上别人，只能认命埋头干活。\n别被 KFC 了！这根本不是勤劳，是愚笨式自残！\n老板挂天道酬勤哄你卖命，自己坐享红利，这套鸡汤你也信？\n没资源没方向，瞎勤快一文不值！螺丝钉再拼，也变不了发动机。\n累垮一身毛病，赚的钱连看病都不够，卖命到底图什么？\n可以干活，但别卖命！拒绝无意义内耗，该摆烂就摆烂。\n你的命，远比老板画的饼金贵，谁都别想消耗你！",
+    "splitOriginal": "从小家里都说：\n勤快饿不死，\n别人能出头，\n就是比你更能吃苦。\n\n我听话进厂苦干，\n天天加班到深夜，\n放弃所有休假，\n熬了整整三年。\n\n熬坏颈椎、\n熬出胃病、\n大把掉发，\n薪资只涨几百，\n老板还劝我\n勤劳自有回报。\n\n好像我再拼命，\n也永远赶不上别人，\n只能认命埋头干活。\n\n别被 KFC 了！\n这根本不是勤劳，\n是愚笨式自残！\n\n老板挂天道酬勤\n哄你卖命，\n自己坐享红利，\n这套鸡汤你也信？\n\n没资源没方向，\n瞎勤快一文不值！\n螺丝钉再拼，\n也变不了发动机。\n\n累垮一身毛病，\n赚的钱连看病都不够，\n卖命到底图什么？\n\n可以干活，\n但别卖命！\n拒绝无意义内耗，\n该摆烂就摆烂。\n\n你的命，\n远比老板画的饼金贵，\n谁都别想消耗你！",
     "items": [
-      { "id": 1, "level": "high", "category": "消极价值观", "original": "愚笨式自残", "suggestion": "得不偿失", "splitSuggestion": "得不偿失", "reason": "「自残」涉及伤害身体，消极导向，平台限流风险高" },
-      { "id": 2, "level": "high", "category": "消极价值观", "original": "该摆烂就摆烂", "suggestion": "该休息就休息", "splitSuggestion": "该休息就休息", "reason": "「摆烂」是消极放弃的网络梗，与正能量导向冲突" },
-      { "id": 3, "level": "high", "category": "消极价值观", "original": "认命埋头干活", "suggestion": "只能低头干活", "splitSuggestion": "只能低头干活", "reason": "「认命」渲染宿命论，消极导向" },
-      { "id": 4, "level": "medium", "category": "绝对化用语", "original": "永远", "suggestion": "总是", "splitSuggestion": "总是", "reason": "「永远」属绝对化表述，建议弱化" },
-      { "id": 5, "level": "medium", "category": "消极价值观", "original": "赚的钱连看病都不够", "suggestion": "赚的钱不够花", "splitSuggestion": "赚的钱不够花", "reason": "「看病」涉及健康焦虑，易触发负面情绪推荐降权" }
+      {
+        "id": 1,
+        "level": "high",
+        "category": "违禁词",
+        "original": "自残",
+        "suggestion": "慢性透支",
+        "splitSuggestion": "慢性透支",
+        "reason": "抖音违禁词，涉嫌暴力内容，可能触发限流或封禁。改为「慢性透支」保留原意但规避风险。"
+      },
+      {
+        "id": 2,
+        "level": "high",
+        "category": "消极价值观",
+        "original": "该摆烂就摆烂",
+        "suggestion": "该休息就休息",
+        "splitSuggestion": "该休息\n就休息。",
+        "reason": "「摆烂」是抖音敏感词，传达反奋斗价值观，容易被限流。改为「该休息就休息」更正向，保留拒绝无效内耗的立意。"
+      },
+      {
+        "id": 3,
+        "level": "high",
+        "category": "煽动对立",
+        "original": "老板挂天道酬勤",
+        "suggestion": "有人拿天道酬勤",
+        "splitSuggestion": "有人拿\n天道酬勤",
+        "reason": "直接点名「老板」并搭配「哄你卖命」「坐享红利」，构成劳资对立，抖音对此类内容审核严格。改为「有人」更中性。"
+      },
+      {
+        "id": 4,
+        "level": "high",
+        "category": "消极价值观",
+        "original": "螺丝钉再拼",
+        "suggestion": "方向不对再拼",
+        "splitSuggestion": "方向不对\n再拼",
+        "reason": "否定努力意义，「螺丝钉变不了发动机」暗示再拼也没用。改为「方向不对再拼」保留反思但不否定努力本身。"
+      },
+      {
+        "id": 5,
+        "level": "high",
+        "category": "消极价值观",
+        "original": "卖命到底图",
+        "suggestion": "透支身体图",
+        "splitSuggestion": "透支身体图",
+        "reason": "「卖命」出现2次，搭配「图什么」构成消极反问，暗示努力无意义。改为「透支身体」更具体且不否定奋斗。"
+      },
+      {
+        "id": 6,
+        "level": "medium",
+        "category": "绝对化用语",
+        "original": "永远赶不上",
+        "suggestion": "努力也追不上",
+        "splitSuggestion": "努力也\n追不上",
+        "reason": "「永远」是绝对化用语，剧情语境风险较低，但建议改为「努力也追不上」更客观。"
+      },
+      {
+        "id": 7,
+        "level": "medium",
+        "category": "敏感词",
+        "original": "薪资只涨几百",
+        "suggestion": "工资只涨几百",
+        "splitSuggestion": "工资只涨\n几百",
+        "reason": "「薪资」涉嫌招聘信息，短视频平台招聘类目需报白。改为「工资」规避风险。"
+      },
+      {
+        "id": 8,
+        "level": "medium",
+        "category": "谐音规避",
+        "original": "被 KFC 了",
+        "suggestion": "被洗脑了",
+        "splitSuggestion": "被洗脑了",
+        "reason": "「KFC」代「PUA」，平台可能识别为谐音规避。直接改为「被洗脑了」更清晰且无风险。"
+      },
+      {
+        "id": 9,
+        "level": "medium",
+        "category": "敏感词",
+        "original": "老板还劝",
+        "suggestion": "领导还劝",
+        "splitSuggestion": "领导还劝",
+        "reason": "「老板」出现3次，虽剧情语境可过，但反复出现增加风险。部分改为「领导」降低敏感度。"
+      },
+      {
+        "id": 10,
+        "level": "medium",
+        "category": "绝对化用语",
+        "original": "放弃所有",
+        "suggestion": "放弃全部休息",
+        "splitSuggestion": "放弃\n全部休息",
+        "reason": "「所有」是绝对化用语，建议改为「全部休息」或「所有假期」更具体。"
+      },
+      {
+        "id": 11,
+        "level": "low",
+        "category": "敏感词",
+        "original": "赚的钱连看病",
+        "suggestion": "挣的钱不够看病",
+        "splitSuggestion": "挣的钱\n不够看病",
+        "reason": "「钱」是直播间违禁词，但口播剧情中风险较低。可改为「挣的钱」或「攒的钱」更口语化。"
+      }
     ],
-    "decisions": {
-      "1": { "adopted": true, "editedSuggestion": "得不偿失" },
-      "2": { "adopted": true, "editedSuggestion": "该休息就休息" },
-      "3": { "adopted": true, "editedSuggestion": "只能低头干活" },
-      "4": { "adopted": false, "editedSuggestion": "永远" },
-      "5": { "adopted": true, "editedSuggestion": "赚的钱不够花" }
-    },
-    "output": "从小家里都说：\n勤快饿不死，\n别人能出头，\n就是比你更能吃苦。\n我听话进厂苦干，\n天天加班到深夜，\n放弃所有休假，\n熬了整整三年。\n熬坏颈椎、\n熬出胃病、\n大把掉发，\n薪资只涨几百，\n老板还劝我\n勤劳自有回报。\n好像我再拼命，\n也永远赶不上别人，\n只能低头干活。\n别被 KFC 了！\n这根本不是勤劳，\n是得不偿失！\n老板挂天道酬勤\n哄你卖命，\n自己坐享红利，\n这套鸡汤你也信？\n没资源没方向，\n瞎勤快一文不值！\n螺丝钉再拼，\n也变不了发动机。\n累垮一身毛病，\n赚的钱不够花，\n卖命到底图什么？\n可以干活，\n但别卖命！\n拒绝无意义内耗，\n该休息就休息。\n你的命，\n远比老板画的饼金贵，\n谁都别想消耗你！"
+    "decisions": {},
+    "output": ""
   },
   "design": {
-    "shots": [
-      { "line": "从小家里都说：", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "勤快饿不死，", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "别人能出头，", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "就是比你更能吃苦。", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "我听话进厂苦干，", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "天天加班到深夜，", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "放弃所有休假，", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "熬了整整三年。", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "熬坏颈椎、", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "熬出胃病、", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "大把掉发，", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "薪资只涨几百，", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "老板还劝我", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "勤劳自有回报。", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "好像我再拼命，", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "也永远赶不上别人，", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "只能认命埋头干活。", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "别被 KFC 了！", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "这根本不是勤劳，", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "是愚笨式自残！", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "老板挂天道酬勤", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "哄你卖命，", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "自己坐享红利，", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "这套鸡汤你也信？", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "没资源没方向，", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "瞎勤快一文不值！", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "螺丝钉再拼，", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "也变不了发动机。", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "累垮一身毛病，", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "赚的钱连看病都不够，", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "卖命到底图什么？", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "可以干活，", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "但别卖命！", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "拒绝无意义内耗，", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "该摆烂就摆烂。", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "你的命，", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "远比老板画的饼金贵，", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } },
-      { "line": "谁都别想消耗你！", "subtitle": "", "subject": { "type": null, "assetId": null, "refs": [], "prompt": "" }, "post": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" }, "timing": { "text": "", "sticker": "", "fx": "", "anim": "", "trans": "" } }
-    ]
+    "shots": []
   },
   "changelog": [
-    { "ts": "2026-06-22T10:00:00Z", "who": "lorrain", "action": "created", "detail": "示例数据：吃苦卖命" }
+    {
+      "ts": "2026-06-22T11:33:19.031Z",
+      "who": "script-review",
+      "action": "migrated",
+      "detail": "从旧 review-*.html 迁移"
+    }
   ]
 }

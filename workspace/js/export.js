@@ -15,7 +15,7 @@ export async function importJSONFile(file) {
   const text = await file.text();
   let data;
   if (file.name.endsWith('.html')) {
-    data = parseLegacyReview(text);
+    data = parseLegacyReview(text, file.name);
   } else {
     data = JSON.parse(text);
   }
@@ -98,11 +98,16 @@ export function exportCutGuide(data) {
 }
 
 /* ---------- 旧 HTML 迁移 ---------- */
-export function parseLegacyReview(htmlText) {
-  const m = htmlText.match(/var\s+REVIEW_DATA\s*=\s*(\{[\s\S]*?\});\s*<\/script>/);
+export function parseLegacyReview(htmlText, fileName) {
+  // 先去掉 /* */ 块注释（注释里有 var REVIEW_DATA 的格式说明，会干扰匹配）
+  const cleaned = htmlText.replace(/\/\*[\s\S]*?\*\//g, '');
+  // REVIEW_DATA 以顶格的 }; 结尾
+  const m = cleaned.match(/var\s+REVIEW_DATA\s*=\s*(\{[\s\S]*\n\})\s*;/);
   if (!m) throw new Error('未找到 REVIEW_DATA');
   const rd = new Function('return ' + m[1])();
-  const title = rd.original ? rd.original.slice(0, 12).replace(/[\s\n]/g, '') : '未命名';
+  const title = fileName
+    ? fileName.replace(/^review-/i, '').replace(/\.html$/i, '')
+    : (rd.original ? rd.original.slice(0, 12).replace(/[\s\n]/g, '') : '未命名');
   return {
     meta: { title, created: utils.nowIso(), updated: utils.nowIso(), stage: 'review', operator: store.getOperator() },
     review: {

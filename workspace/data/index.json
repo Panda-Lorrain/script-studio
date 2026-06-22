@@ -2,9 +2,16 @@
   "projects": [
     {
       "title": "吃苦卖命",
-      "stage": "design",
-      "updated": "2026-06-22T10:00:00Z",
-      "shotCount": 38,
+      "stage": "review",
+      "updated": "2026-06-22T11:33:19.031Z",
+      "shotCount": 0,
+      "reviewItemCount": 11
+    },
+    {
+      "title": "回家过年",
+      "stage": "review",
+      "updated": "2026-06-22T11:33:19.033Z",
+      "shotCount": 0,
       "reviewItemCount": 5
     }
   ]
