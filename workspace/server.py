@@ -136,7 +136,38 @@ class Handler(SimpleHTTPRequestHandler):
         self._json(200, {'ok': True, 'name': name, 'isAdmin': name in users.get('admins', [])})
 
     def api_save(self):
-        self._json(501, {'ok': False, 'error': 'not implemented'})
+        name = self.session_name()
+        if not name:
+            return self._json(401, {'ok': False, 'error': 'no session'})
+        users = load_users()
+        if name not in users.get('members', []):
+            return self._json(403, {'ok': False, 'error': 'not member'})
+        data = self._read_body()
+        title = (data.get('meta') or {}).get('title')
+        if not title:
+            return self._json(400, {'ok': False, 'error': 'no title'})
+        safe = title.replace('/', '_').replace('\\', '_').replace(':', '_')
+        fpath = os.path.join(DATA, safe + '.json')
+        client_updated = (data.get('meta') or {}).get('updated', '')
+        existing = None
+        server_updated = ''
+        if os.path.exists(fpath):
+            try:
+                with open(fpath, 'r', encoding='utf-8') as f:
+                    existing = json.load(f)
+                server_updated = (existing.get('meta') or {}).get('updated', '')
+            except Exception:
+                existing = None
+        # LWW：客户端版本落后于服务器 → 拒绝，返回服务器版
+        if client_updated and server_updated and client_updated < server_updated:
+            return self._json(409, {'ok': False, 'error': 'stale', 'server': existing})
+        # 接受：server 用自身时钟接管 updated
+        new_updated = now_iso()
+        data.setdefault('meta', {})['updated'] = new_updated
+        with open(fpath, 'w', encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+        update_index(data)
+        self._json(200, {'ok': True, 'updated': new_updated})
 
     def api_users(self):
         self._json(501, {'ok': False, 'error': 'not implemented'})
