@@ -95,9 +95,8 @@ export async function renderDesign(data, main) {
   }
 
   async function safeSave(data, action, detail) {
-    if (!store.hasDir()) return;
     try { await store.logAndSave(data, action, detail); }
-    catch (e) { utils.toast('保存失败（只读模式？）：' + e.message); }
+    catch (e) { utils.toast('保存失败：' + e.message); }
   }
 
   function renderShots() {

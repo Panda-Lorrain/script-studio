@@ -1,5 +1,5 @@
 /* workspace/css/design.css */
-.design-wrap { padding: 16px 24px 90px; max-width: 1100px; margin: 0 auto; }
+.design-wrap { padding: 16px 32px 90px; max-width: 1500px; margin: 0 auto; }
 .design-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px; }
 .design-head h1 { font-size: 17px; font-weight: 600; }
 .design-head .toolbar { display: flex; gap: 8px; flex-wrap: wrap; }

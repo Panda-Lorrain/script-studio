@@ -4,6 +4,7 @@ import { nowIso } from './utils.js';
 
 let dirHandle = null;       // workspace/ 目录句柄
 let assetsCache = null;     // assets.json 缓存
+const projectCache = new Map();  // title -> data（内存缓存，让只读模式也能即时生效）
 const DIR_KEY = 'ss_dir_handle_v1';
 const OP_KEY = 'ss_operator';
 
@@ -140,19 +141,27 @@ function projectSummary(data) {
 }
 
 export async function loadProject(title) {
+  if (projectCache.has(title)) return projectCache.get(title);
   const txt = await readText('data/' + title + '.json');
-  return JSON.parse(txt);
+  const data = JSON.parse(txt);
+  projectCache.set(title, data);
+  return data;
 }
 
 export async function saveProject(data) {
   data.meta.updated = nowIso();
   const title = data.meta.title;
-  await writeText('data/' + title + '.json', JSON.stringify(data, null, 2));
-  const list = await loadProjectList();
-  const sum = projectSummary(data);
-  const i = list.findIndex(p => p.title === title);
-  if (i >= 0) list[i] = sum; else list.push(sum);
-  await saveIndex(list);
+  projectCache.set(title, data);  // 内存缓存始终更新（只读模式也能即时生效）
+  try {
+    await writeText('data/' + title + '.json', JSON.stringify(data, null, 2));
+    const list = await loadProjectList();
+    const sum = projectSummary(data);
+    const i = list.findIndex(p => p.title === title);
+    if (i >= 0) list[i] = sum; else list.push(sum);
+    await saveIndex(list);
+  } catch (e) {
+    if (e.message !== 'NO_DIR') throw e;  // 只读降级：内存已更新，磁盘未持久化
+  }
   return data;
 }
 

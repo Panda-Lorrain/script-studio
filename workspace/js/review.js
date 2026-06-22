@@ -12,7 +12,7 @@ export async function renderReview(data, main) {
   if (!review.items) review.items = [];
 
   review.items.forEach(it => {
-    if (!review.decisions[it.id]) review.decisions[it.id] = { adopted: false, editedSuggestion: it.suggestion };
+    if (!review.decisions[it.id]) review.decisions[it.id] = { adopted: false, kept: false, editedSuggestion: it.suggestion };
   });
 
   let sortOrder = 'risk';
@@ -131,7 +131,7 @@ export async function renderReview(data, main) {
   function renderItems() {
     const box = main.querySelector('#revItems');
     box.innerHTML = sortedItems().map(it => {
-      const d = review.decisions[it.id] || { adopted: false, editedSuggestion: it.suggestion };
+      const d = review.decisions[it.id] || { adopted: false, kept: false, editedSuggestion: it.suggestion };
       return `<div class="rev-card ${d.adopted ? 'adopted' : ''}">
         <div><span class="tag ${it.level}">${LEVEL_LABEL[it.level]}</span><span class="cat">${utils.esc(it.category || '')}</span></div>
         <div class="rev-line">
@@ -142,7 +142,7 @@ export async function renderReview(data, main) {
         <div class="rev-reason">${utils.esc(it.reason || '')}</div>
         <div class="rev-actions">
           <button class="btn yes ${d.adopted ? 'on' : ''}" data-id="${it.id}" data-act="1">✓ 采纳</button>
-          <button class="btn no ${!d.adopted ? 'on' : ''}" data-id="${it.id}" data-act="0">✗ 保留原文</button>
+          <button class="btn no ${d.kept ? 'on' : ''}" data-id="${it.id}" data-act="0">✗ 保留原文</button>
         </div>
       </div>`;
     }).join('');
@@ -150,8 +150,10 @@ export async function renderReview(data, main) {
     box.querySelectorAll('button[data-act]').forEach(b => {
       b.onclick = async () => {
         const id = +b.dataset.id;
-        review.decisions[id].adopted = (b.dataset.act === '1');
-        await safeSave(data, 'review_decide', `第${id}条 ${review.decisions[id].adopted ? '采纳' : '保留'}`);
+        const adopt = (b.dataset.act === '1');
+        review.decisions[id].adopted = adopt;
+        review.decisions[id].kept = !adopt;
+        await safeSave(data, 'review_decide', `第${id}条 ${adopt ? '采纳' : '保留'}`);
         renderItems();
         compose();
       };
@@ -221,9 +223,8 @@ export async function renderReview(data, main) {
 
   // 只读模式（未授权目录）下保存静默失败，不阻断交互
   async function safeSave(data, action, detail) {
-    if (!store.hasDir()) return;
     try { await store.logAndSave(data, action, detail); }
-    catch (e) { utils.toast('保存失败（只读模式？）：' + e.message); }
+    catch (e) { utils.toast('保存失败：' + e.message); }
   }
 
   renderOriginal();
