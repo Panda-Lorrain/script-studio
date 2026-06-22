@@ -90,7 +90,8 @@ async function readText(path) {
     const f = await fh.getFile();
     return await f.text();
   }
-  const res = await fetch('workspace/' + path + '?t=' + Date.now());
+  // 绝对路径，避免页面在 workspace/ 下时前缀重复（workspace/workspace/...）
+  const res = await fetch('/workspace/' + path + '?t=' + Date.now());
   if (!res.ok) throw new Error('读取失败: ' + path + ' (' + res.status + ')');
   return await res.text();
 }
