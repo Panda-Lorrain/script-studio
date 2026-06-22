@@ -135,8 +135,10 @@ function openLogin({ mode }) {
   };
   $('loginOk').onclick = ok;
   input.onkeydown = e => { if (e.key === 'Enter') ok(); };
-  exitBtn.onclick = () => {
+  exitBtn.onclick = async () => {
+    try { await fetch('/api/logout', { method: 'POST', credentials: 'include' }); } catch {}
     localStorage.removeItem('ss_operator');
+    localStorage.removeItem('ss_is_admin');
     ov.classList.remove('on');
     utils.toast('已退出，正在刷新…');
     setTimeout(() => location.reload(), 500);

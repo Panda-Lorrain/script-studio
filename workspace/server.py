@@ -107,6 +107,8 @@ class Handler(SimpleHTTPRequestHandler):
         path = urlparse(self.path).path
         if path == '/api/login':
             return self.api_login()
+        if path == '/api/logout':
+            return self.api_logout()
         if path == '/api/save':
             return self.api_save()
         if path == '/api/user':
@@ -132,6 +134,12 @@ class Handler(SimpleHTTPRequestHandler):
                        set_cookie=f'ss_session={token}; HttpOnly; SameSite=Lax; Path=/')
         else:
             self._json(403, {'ok': False, 'error': 'unauthorized'})
+
+    def api_logout(self):
+        token = self.cookies.get('ss_session')
+        if token and token in SESSIONS:
+            del SESSIONS[token]
+        self._json(200, {'ok': True}, set_cookie='ss_session=; Max-Age=0; Path=/')
 
     def api_me(self):
         name = self.session_name()
