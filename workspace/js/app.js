@@ -19,6 +19,7 @@ async function boot() {
   route();
 }
 
+/* ---------- 操作者身份 ---------- */
 function setupOperator() {
   const name = store.getOperator();
   if (name === '匿名' || !localStorage.getItem('ss_operator')) {
@@ -26,6 +27,10 @@ function setupOperator() {
   } else {
     showOperator(name);
   }
+  const label = $('operatorLabel');
+  label.style.cursor = 'pointer';
+  label.title = '点击修改昵称 / 退出登录';
+  label.onclick = operatorMenu;
 }
 
 function promptOperator() {
@@ -39,6 +44,21 @@ function promptOperator() {
 function showOperator(name) {
   $('operatorLabel').style.display = '';
   $('operatorName').textContent = name;
+}
+
+function operatorMenu() {
+  const cur = store.getOperator();
+  const name = prompt(`操作者：${cur}\n\n· 输入新昵称 → 切换操作者\n· 留空 → 退出登录（刷新后重新输入）`, cur);
+  if (name === null) return;  // 取消
+  if (name.trim()) {
+    store.setOperator(name.trim());
+    showOperator(name.trim());
+    utils.toast('已切换为：' + name.trim());
+  } else {
+    localStorage.removeItem('ss_operator');
+    utils.toast('已退出，正在刷新…');
+    setTimeout(() => location.reload(), 600);
+  }
 }
 
 async function setupDirButton() {
@@ -89,6 +109,18 @@ function setupImport() {
   });
 }
 
+/* ---------- 导航 ---------- */
+// 从总览进入文案 = push（浏览器返回键可回总览）；文案间切换 / 同文案换视图 = replace（返回键不在文案间乱跳）
+function go(hash) {
+  if (currentTitle === null && hash !== 'dashboard') {
+    location.hash = hash;            // 从总览进入：入栈，返回键回总览
+  } else {
+    history.replaceState(null, '', '#' + hash);  // 文案间切换：替换当前历史，返回键直接回总览
+    route();
+  }
+}
+window.__go = go;   // 供 review/design/dashboard 模块调用，避免循环 import
+
 /* ---------- 路由 ---------- */
 async function route() {
   const hash = location.hash.slice(1) || 'dashboard';
@@ -124,7 +156,7 @@ async function route() {
       renderDesign(data, $('main'));
     } else {
       const m = data.meta.stage === 'design' || data.meta.stage === 'done' ? 'design' : 'review';
-      location.hash = encodeURIComponent(decodedTitle) + '/' + m;
+      go(encodeURIComponent(decodedTitle) + '/' + m);
     }
   } catch (err) {
     $('main').innerHTML = '<div style="padding:40px;text-align:center;color:#8a9099">加载失败：' + utils.esc(err.message) + '<br><br>提示：需先「选择工作目录」授权，且 data/' + utils.esc(decodedTitle) + '.json 存在</div>';
@@ -153,10 +185,9 @@ async function renderSidebar() {
     <button class="btn new-btn" id="newProjectBtn">＋ 新建文案</button>
   `;
 
-  // 绑定侧栏点击（事件委托）
   $('sidebar').onclick = e => {
     const item = e.target.closest('[data-href]');
-    if (item) location.hash = item.dataset.href;
+    if (item) go(item.dataset.href);
   };
   const newBtn = $('newProjectBtn');
   if (newBtn) newBtn.onclick = newProject;
@@ -173,14 +204,14 @@ async function newProject() {
   try {
     await store.createProject(t);
     utils.toast('已创建：' + t);
-    location.hash = encodeURIComponent(t) + '/review';
+    go(encodeURIComponent(t) + '/review');
   } catch (err) {
     utils.toast('创建失败：' + err.message);
   }
 }
 
 function openProject(title, mode) {
-  location.hash = encodeURIComponent(title) + '/' + mode;
+  go(encodeURIComponent(title) + '/' + mode);
 }
 
 boot();

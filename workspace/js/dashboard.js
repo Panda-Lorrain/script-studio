@@ -44,7 +44,7 @@ async function loadCard(p) {
   try {
     const data = await store.loadProject(p.title);
     if (data.meta.stage === 'review' || data.review.items.length) {
-      const decided = Object.keys(data.review.decisions || {}).length;
+      const decided = Object.values(data.review.decisions || {}).filter(d => d.adopted || d.kept).length;
       const total = data.review.items.length;
       progress = `审核 ${decided}/${total}`;
     }
@@ -81,7 +81,7 @@ async function onCardClick(e) {
   const act = btn.dataset.act;
   const title = btn.dataset.title;
   if (act === 'review' || act === 'design') {
-    location.hash = encodeURIComponent(title) + '/' + act;
+    (window.__go || (h => { location.hash = h; }))(encodeURIComponent(title) + '/' + act);
   } else if (act === 'export') {
     try {
       const data = await store.loadProject(title);

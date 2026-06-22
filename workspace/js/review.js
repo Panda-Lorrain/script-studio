@@ -23,7 +23,6 @@ export async function renderReview(data, main) {
     <div class="review-wrap">
       <div class="review-head">
         <h1>🛡️ 文案审核 · ${utils.esc(data.meta.title)}</h1>
-        <div class="verdict">${utils.esc(review.platform || '')}${review.verdict ? ' · ' + utils.esc(review.verdict) : ''}</div>
       </div>
       <div class="review-grid">
         <section class="panel rev-panel panel-original">
@@ -218,7 +217,7 @@ export async function renderReview(data, main) {
     data.meta.stage = 'design';
     await safeSave(data, 'pushed_to_design', `生成 ${lines.length} 镜`);
     utils.toast(`已推入设计台（${lines.length} 镜）`);
-    location.hash = encodeURIComponent(data.meta.title) + '/design';
+    (window.__go || (h => { location.hash = h; }))(encodeURIComponent(data.meta.title) + '/design');
   }
 
   // 只读模式（未授权目录）下保存静默失败，不阻断交互
