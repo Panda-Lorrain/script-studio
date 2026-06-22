@@ -203,21 +203,8 @@ async function route() {
 
 /* ---------- 侧栏 ---------- */
 async function renderSidebar() {
-  const projects = await store.loadProjectList();
-  const stageLabel = { review: '🔵', design: '🟡', done: '🟢' };
-  const stageText = { review: '审核中', design: '设计中', done: '已完成' };
   const admin = store.isAdmin();
   const hash = location.hash.slice(1);
-
-  const items = projects.map(p => {
-    const active = currentTitle === p.title ? 'active' : '';
-    const stage = encodeURIComponent(p.title) + (p.stage === 'design' || p.stage === 'done' ? '/design' : '/review');
-    return `<div class="nav-item ${active}" data-href="${stage}">
-      <span>📄 ${utils.esc(p.title)}</span>
-      <span class="stage-dot" title="${stageText[p.stage] || ''}">${stageLabel[p.stage] || ''}</span>
-    </div>`;
-  }).join('');
-
   const adminItem = admin ? `<div class="nav-item ${hash === 'admin' ? 'active' : ''}" data-href="admin">👑 管理员后台</div>` : '';
   const newBtn = admin ? `<button class="btn new-btn" id="newProjectBtn">＋ 新建文案</button>` : '';
 
@@ -226,8 +213,6 @@ async function renderSidebar() {
     <div class="nav-item ${hash === 'review' ? 'active' : ''}" data-href="review">📝 审核台</div>
     <div class="nav-item ${hash === 'design' ? 'active' : ''}" data-href="design">🎨 设计台</div>
     ${adminItem}
-    <div class="nav-section">文案 (${projects.length})</div>
-    ${items || '<div class="nav-section" style="padding-top:0">暂无文案</div>'}
     ${newBtn}
   `;
 

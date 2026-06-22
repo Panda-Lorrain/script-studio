@@ -14,25 +14,12 @@ export async function renderDashboard(projects, main, handlers) {
 
   main.innerHTML = `
     <div style="padding:20px 24px">
-      <div class="desk-entries">
-        <div class="desk-entry review" data-href="review">
-          <div class="de-icon">📝</div>
-          <div class="de-body"><div class="de-title">审核台</div><div class="de-desc">审核文案风险，逐条采纳 / 改写</div></div>
-          <div class="de-arrow">›</div>
-        </div>
-        <div class="desk-entry design" data-href="design">
-          <div class="de-icon">🎨</div>
-          <div class="de-body"><div class="de-title">设计台</div><div class="de-desc">分镜画面设计，剪映后期</div></div>
-          <div class="de-arrow">›</div>
-        </div>
-      </div>
-      <div style="font-size:13px;color:#8a9099;margin:22px 0 14px">
+      <div style="font-size:13px;color:#8a9099;margin-bottom:14px">
         全部文案（${projects.length}）｜ 🔵 审核中 <b>${stat.review || 0}</b> · 🟡 设计中 <b>${stat.design || 0}</b> · 🟢 已完成 <b>${stat.done || 0}</b>
       </div>
       <div class="project-grid" id="projectGrid">${cards.join('') || '<div class="admin-empty">还没有文案，用 /script-review 生成，或点侧栏「＋ 新建文案」</div>'}</div>
     </div>`;
 
-  main.querySelectorAll('.desk-entry').forEach(el => { el.onclick = () => go(el.dataset.href); });
   main.querySelector('#projectGrid').addEventListener('click', onCardClick);
 }
 
