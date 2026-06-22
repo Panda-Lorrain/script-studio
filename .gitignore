@@ -3,3 +3,13 @@
 
 # Claude Code 本地权限配置（机器相关）
 .claude/settings.local.json
+
+# 素材图副本（output 内，供 storyboard HTML 双击加载图，体积大不入库）
+output/Material Collection/
+
+# 素材图库原图（只跟踪素材清单索引，图片本身体积大不入库）
+Material Collection/**/*.jpg
+Material Collection/**/*.jpeg
+Material Collection/**/*.png
+Material Collection/**/*.webp
+Material Collection/**/*.gif
