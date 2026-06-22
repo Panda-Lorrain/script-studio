@@ -116,10 +116,24 @@ class Handler(SimpleHTTPRequestHandler):
 
     # ---- API（Task 2-4 填充）----
     def api_login(self):
-        self._json(501, {'ok': False, 'error': 'not implemented'})
+        body = self._read_body()
+        name = (body.get('name') or '').strip()
+        users = load_users()
+        if name and name in users.get('members', []):
+            token = secrets.token_hex(16)
+            SESSIONS[token] = name
+            is_admin = name in users.get('admins', [])
+            self._json(200, {'ok': True, 'name': name, 'isAdmin': is_admin},
+                       set_cookie=f'ss_session={token}; HttpOnly; SameSite=Lax; Path=/')
+        else:
+            self._json(403, {'ok': False, 'error': 'unauthorized'})
 
     def api_me(self):
-        self._json(501, {'ok': False, 'error': 'not implemented'})
+        name = self.session_name()
+        if not name:
+            return self._json(401, {'ok': False})
+        users = load_users()
+        self._json(200, {'ok': True, 'name': name, 'isAdmin': name in users.get('admins', [])})
 
     def api_save(self):
         self._json(501, {'ok': False, 'error': 'not implemented'})
