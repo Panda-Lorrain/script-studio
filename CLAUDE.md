@@ -64,7 +64,7 @@ python -m http.server 8080
 
 ## 版本控制
 
-本目录是一个**独立 git 仓库**（`master` 分支，纯本地，**未配远程**）。实际跟踪范围：
+本目录是一个**独立 git 仓库**（`master` 分支），已配远程 `origin` → GitHub 私有库 `ChenDeji123/script-studio`（国内经 `ghfast.top` 加速，凭据存 Windows 凭据管理器；后续直接 `git push` 即可）。实际跟踪范围：
 
 - `审核台/`、`output/`、`workspace/`、`docs/` —— skill 素材、产物、工作台代码、设计文档。
 - `Material Collection/素材清单.md` —— 素材图库的**索引文件**（仅此一个入库，原图不入库，见下）。
