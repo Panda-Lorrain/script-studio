@@ -209,6 +209,8 @@ export async function loadAssets() {
   } catch {
     assetsCache = [];
   }
+  // 预热素材图到浏览器缓存：首次加载时后台拉取，选图弹窗打开即显示，不卡
+  assetsCache.forEach(a => { const img = new Image(); img.src = assetUrl(a); });
   return assetsCache;
 }
 

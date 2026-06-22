@@ -167,6 +167,7 @@ async function route() {
   }
 
   if (hash === 'dashboard' || hash === '') {
+    if (!store.isAdmin()) { go('review'); return; }  // 成员看不见总览，默认进审核台
     $('subTitle').textContent = '总览';
     const projects = await store.loadProjectList();
     renderDashboard(projects, $('main'), {});
@@ -205,11 +206,12 @@ async function route() {
 async function renderSidebar() {
   const admin = store.isAdmin();
   const hash = location.hash.slice(1);
+  const dashItem = admin ? `<div class="nav-item ${!currentTitle && hash !== 'admin' && hash !== 'review' && hash !== 'design' ? 'active' : ''}" data-href="dashboard">📊 总览</div>` : '';
   const adminItem = admin ? `<div class="nav-item ${hash === 'admin' ? 'active' : ''}" data-href="admin">👑 管理员后台</div>` : '';
   const newBtn = admin ? `<button class="btn new-btn" id="newProjectBtn">＋ 新建文案</button>` : '';
 
   $('sidebar').innerHTML = `
-    <div class="nav-item ${!currentTitle && hash !== 'admin' && hash !== 'review' && hash !== 'design' ? 'active' : ''}" data-href="dashboard">📊 总览</div>
+    ${dashItem}
     <div class="nav-item ${hash === 'review' ? 'active' : ''}" data-href="review">📝 审核台</div>
     <div class="nav-item ${hash === 'design' ? 'active' : ''}" data-href="design">🎨 设计台</div>
     ${adminItem}
