@@ -1,5 +1,5 @@
 /* workspace/css/review.css */
-.review-wrap { padding: 16px 24px; height: 100%; display: flex; flex-direction: column; overflow: hidden; }
+.review-wrap { padding: 16px 24px; }
 .review-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; flex-shrink: 0; }
 .review-head h1 { font-size: 17px; font-weight: 600; }
 .review-head .verdict { font-size: 13px; color: var(--muted); }
@@ -7,11 +7,10 @@
 .review-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows: minmax(280px, 40vh) auto;
   grid-template-areas: "original items" "output items";
   gap: 14px;
-  flex: 1;
-  min-height: 0;
+  align-items: start;
 }
 .review-grid .panel-original { grid-area: original; }
 .review-grid .panel-output { grid-area: output; }
@@ -54,7 +53,7 @@ mark.l { background: var(--ok-bg); color: var(--ok); border-bottom: 2px dashed v
 
 .out-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 10px; flex-wrap: wrap; }
 .out-head .btns { display: flex; gap: 8px; flex-wrap: wrap; }
-#revOutput { width: 100%; flex: 1; min-height: 120px; border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-size: 14px; line-height: 1.9; font-family: inherit; resize: none; color: var(--text); }
+#revOutput { width: 100%; min-height: 180px; height: auto; border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-size: 14px; line-height: 1.9; font-family: inherit; resize: none; color: var(--text); }
 #revOutput:focus { border-color: var(--accent); }
 .split-btn { background: #fff; border: 1px solid var(--border); color: var(--muted); padding: 5px 12px; border-radius: 6px; font-size: 13px; cursor: pointer; font-family: inherit; }
 .split-btn:hover { background: #f2f3f5; }

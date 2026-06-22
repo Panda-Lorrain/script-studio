@@ -246,9 +246,9 @@ export async function renderReview(data, main) {
     renderItems();
   }
 
-  // 手机端输出框随内容自动增高（电脑端固定高度面板内滚动）
+  // 输出框随内容自动增高（电脑端 + 手机端都生效），原文框保持固定高度滚动
   function autoResize(ta) {
-    if (!ta || window.innerWidth > 768) return;
+    if (!ta) return;
     ta.style.height = 'auto';
     ta.style.height = (ta.scrollHeight + 2) + 'px';
   }
