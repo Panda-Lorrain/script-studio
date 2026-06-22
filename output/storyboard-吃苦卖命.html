@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>画面设计台 · 吃苦卖命 · Script Studio</title>
+<style>
+  :root{
+    --bg:#f5f6f8;--card:#fff;--border:#e4e7eb;--text:#1f2329;--muted:#8a9099;
+    --accent:#3370ff;--accent-bg:#eaf1ff;--ok:#00a870;--ok-bg:#e6f9f0;
+    --warn:#d87a00;--warn-bg:#fff7e6;--ai:#8b5cf6;--ai-bg:#f3effe;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);line-height:1.5;-webkit-tap-highlight-color:transparent;}
+  header{background:var(--card);border-bottom:1px solid var(--border);padding:13px 24px;position:sticky;top:0;z-index:20;}
+  header .h-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;max-width:1100px;margin:0 auto;}
+  header h1{font-size:18px;margin:0;font-weight:600;}
+  header .sub{font-size:12px;color:var(--muted);font-weight:400;margin-left:6px;}
+  .toolbar{display:flex;gap:8px;flex-wrap:wrap;}
+  .btn{border:1px solid var(--border);background:#fff;padding:6px 13px;border-radius:6px;font-size:13px;cursor:pointer;color:var(--text);font-family:inherit;}
+  .btn:hover{background:#f2f3f5}
+  .btn.primary{background:var(--accent);color:#fff;border-color:var(--accent);}
+  .btn.primary:hover{opacity:.92}
+  .btn.ghost{color:var(--muted)}
+
+  main{max-width:1100px;margin:0 auto;padding:16px 24px 90px;}
+  .summary{font-size:12px;color:var(--muted);margin-bottom:12px;display:flex;gap:14px;flex-wrap:wrap;}
+  .nav{display:none;}
+  .summary b{color:var(--text);font-weight:600;}
+  .shots{display:flex;flex-direction:column;gap:12px;}
+  .shot{background:transparent;border:none;padding:0;}
+  .card-inner{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px;border-left:3px solid var(--border);}
+  .card-inner.has-lib{border-left-color:var(--ok);}
+  .card-inner.has-ai{border-left-color:var(--ai);}
+  .shot-head{display:flex;align-items:flex-start;gap:12px;padding-bottom:12px;border-bottom:1px solid var(--border);margin-bottom:4px;}
+  .shot-no{font-size:12px;font-weight:700;color:#fff;background:var(--muted);border-radius:6px;padding:3px 9px;flex-shrink:0;align-self:flex-start;margin-top:2px;}
+  .shot.has-lib .shot-no{background:var(--ok);}
+  .shot.has-ai .shot-no{background:var(--ai);}
+  .thumb{width:76px;height:76px;border:1px solid var(--border);border-radius:8px;background:#f2f3f5 center/contain no-repeat;flex-shrink:0;cursor:pointer;overflow:hidden;position:relative;}
+  .thumb-id{position:absolute;bottom:3px;right:3px;background:rgba(0,0,0,.55);color:#fff;font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;}
+  .thumb.empty{display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px;text-align:center;background:var(--bg);}
+  .thumb.ai-ph{display:flex;align-items:center;justify-content:center;color:var(--ai);font-size:11px;font-weight:600;background:var(--ai-bg);}
+  .shot-main{flex:1;min-width:0;}
+  .shot-line{font-size:15px;font-weight:600;line-height:1.55;word-break:break-word;}
+
+  .field{margin-top:14px;}
+  .field-label{font-size:12px;color:var(--accent);font-weight:600;margin-bottom:8px;display:inline-flex;align-items:center;gap:6px;background:var(--accent-bg);padding:4px 10px;border-radius:5px;}
+  .inp{width:100%;border:1px solid var(--border);border-radius:6px;padding:7px 10px;font-size:14px;font-family:inherit;color:var(--text);outline:none;background:#fff;}
+  .inp:focus{border-color:var(--accent);}
+  textarea.inp{resize:vertical;line-height:1.6;min-height:38px;}
+  textarea.auto-grow{resize:none;overflow:hidden;touch-action:pan-x pan-y;}
+
+  .seg{display:inline-flex;border:1px solid var(--border);border-radius:7px;overflow:hidden;}
+  .seg button{border:none;background:#fff;padding:6px 14px;font-size:13px;cursor:pointer;color:var(--muted);font-family:inherit;}
+  .seg button:hover{background:#f2f3f5}
+  .seg button.on{background:var(--accent);color:#fff;}
+
+  .lib-info{font-size:13px;color:var(--ok);margin-top:6px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .lib-info .hint{color:var(--muted);}
+  .ai-box{margin-top:8px;display:flex;flex-direction:column;gap:7px;}
+  .refs{display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
+  .ref-thumb{width:46px;height:46px;border:1px solid var(--border);border-radius:6px;background:center/contain no-repeat #fff;position:relative;cursor:default;}
+  .ref-thumb .x{position:absolute;top:-6px;right:-6px;background:var(--text);color:#fff;border-radius:50%;width:16px;height:16px;font-size:11px;line-height:15px;text-align:center;cursor:pointer;border:1px solid #fff;}
+  .add-ref{width:46px;height:46px;border:1px dashed var(--ai);background:var(--ai-bg);color:var(--ai);border-radius:6px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+
+  .post{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;}
+  .cell{display:flex;flex-direction:column;gap:4px;}
+  .cell label{font-size:11px;color:var(--muted);font-weight:600;}
+  .cell .inp{font-size:13px;padding:5px 8px;}
+  .cell .timing{color:var(--accent);font-size:12px;border-color:#dbe4ff;background:#fbfcff;}
+
+  /* 选图弹窗 */
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:50;display:none;}
+  .modal.on{display:block;}
+  .modal-box{background:var(--card);max-width:880px;margin:4vh auto 0;border-radius:12px;height:92vh;display:flex;flex-direction:column;overflow:hidden;}
+  .modal-head{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:10px;}
+  .modal-head .t{font-weight:600;font-size:15px;}
+  .modal-head .s{font-size:12px;color:var(--muted);margin-top:2px;}
+  .filters{padding:12px 18px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;gap:9px;background:#fafbfc;}
+  .search{width:100%;border:1px solid var(--border);border-radius:6px;padding:8px 11px;font-size:13px;font-family:inherit;outline:none;}
+  .search:focus{border-color:var(--accent);}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;}
+  .chip{border:1px solid var(--border);background:#fff;padding:4px 11px;border-radius:14px;font-size:12px;cursor:pointer;color:var(--muted);font-family:inherit;}
+  .chip:hover{background:#f2f3f5}
+  .chip.on{background:var(--accent);color:#fff;border-color:var(--accent);}
+  .grid{flex:1;overflow:auto;padding:14px 18px;display:grid;grid-template-columns:repeat(auto-fill,minmax(108px,1fr));gap:12px;align-content:start;}
+  .asset{cursor:pointer;border:2px solid transparent;border-radius:8px;overflow:hidden;background:#fff;display:flex;flex-direction:column;}
+  .asset img{width:100%;aspect-ratio:1;object-fit:contain;background:#fff;display:block;}
+  .asset .cap{font-size:11px;color:var(--muted);padding:5px 6px 6px;line-height:1.3;background:#fff;}
+  .asset .cap b{color:var(--text);font-weight:600;font-size:12px;}
+  .asset:hover{border-color:var(--accent);}
+  .asset.sel{border-color:var(--ok);box-shadow:0 0 0 1px var(--ok) inset;}
+  .asset.sel .cap{background:var(--ok-bg);}
+  .empty-grid{grid-column:1/-1;text-align:center;color:var(--muted);padding:40px 0;font-size:13px;}
+
+  .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:#1f2329;color:#fff;padding:9px 20px;border-radius:20px;font-size:13px;opacity:0;transition:.2s;pointer-events:none;z-index:100;max-width:90vw;text-align:center;}
+  .toast.show{opacity:.95;}
+
+  @media (max-width:768px){
+    body{display:flex;flex-direction:column;height:100dvh;overflow:hidden;}
+    header{flex-shrink:0;padding:8px 12px;}
+    header h1{display:none;}
+    header .h-row{justify-content:flex-end;}
+    main{flex:1;display:flex;flex-direction:column;overflow:hidden;padding:0;}
+    .summary{display:none;}
+    .nav{display:none;}
+    .shots{flex:1;flex-direction:row;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;gap:0;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;}
+    .shot{flex:0 0 100vw;min-width:100vw;width:100vw;padding:12px;border:none;background:transparent;scroll-snap-align:start;}
+    .card-inner{margin:0;max-height:100%;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;}
+    .thumb{width:96px;height:96px;}
+    .shot-line{font-size:20px;line-height:1.5;}
+    .post{display:flex;flex-direction:column;gap:10px;}
+    .post .cell{display:flex;flex-direction:column;gap:4px;background:#fafbfc;padding:8px 10px;border-radius:7px;}
+    .post .cell label{font-size:12px;width:auto;}
+    .post .cell .inp{width:100%;}
+    .post .cell .timing{font-size:12px;}
+    .grid{grid-template-columns:repeat(2,1fr);padding:12px;}
+    .modal-box{margin:0;height:100vh;border-radius:0;max-width:100%;}
+    .btn{padding:8px 12px;}
+    .toolbar{width:100%;}
+    .toolbar .btn{flex:1;text-align:center;}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="h-row">
+    <h1>🎬 画面设计台 <span class="sub" id="sub">· 吃苦卖命 · 38 镜</span></h1>
+    <div class="toolbar">
+      <button class="btn ghost" onclick="exportJSON()">💾 存档</button>
+      <button class="btn ghost" onclick="$('fileIn').click()">📂 导入</button>
+      <button class="btn" onclick="exportShotList()">🧾 生图清单</button>
+      <button class="btn primary" onclick="exportCutGuide()">🎬 剪辑指引</button>
+    </div>
+  </div>
+</header>
+<main>
+  <div class="summary" id="summary"></div>
+  <div class="shots" id="shots"></div>
+</main>
+
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div>
+        <div class="t" id="modalTitle">选图</div>
+        <div class="s" id="modalSub"></div>
+      </div>
+      <button class="btn ghost" onclick="closePicker()">✕ 完成</button>
+    </div>
+    <div class="filters">
+      <input class="search" id="search" placeholder="🔍 搜索：存钱罐 / 背身 / 墨镜 / 封嘴 / 推车 …" oninput="renderGrid()">
+      <div class="chips" id="catChips"></div>
+      <div class="chips" id="frmChips"></div>
+    </div>
+    <div class="grid" id="grid"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<input type="file" id="fileIn" accept=".json" style="display:none">
+
+<script>
+/* ===== 画面设计台原型 · Script Studio =====
+   数据：SCRIPT（口播逐行=镜，取自 review-吃苦卖命.html 的断句口播）
+        ASSETS（素材集 20 张，取自 素材集/素材清单.md）
+   设计模块规格见 memory: script-studio-design-module */
+
+// 素材副本在 output/Material Collection/（HTML 同级子目录）—— file:// 双击、http 服务器、手机/隧道都能加载（Chrome 不拦同级/子目录）
+const ASSET_BASE = 'Material Collection/';
+
+const SCRIPT = [
+'从小家里都说：','勤快饿不死，','别人能出头，','就是比你更能吃苦。',
+'我听话进厂苦干，','天天加班到深夜，','放弃所有休假，','熬了整整三年。',
+'熬坏颈椎、','熬出胃病、','大把掉发，','薪资只涨几百，','老板还劝我','勤劳自有回报。',
+'好像我再拼命，','也永远赶不上别人，','只能认命埋头干活。',
+'别被 KFC 了！','这根本不是勤劳，','是愚笨式自残！',
+'老板挂天道酬勤','哄你卖命，','自己坐享红利，','这套鸡汤你也信？',
+'没资源没方向，','瞎勤快一文不值！','螺丝钉再拼，','也变不了发动机。',
+'累垮一身毛病，','赚的钱连看病都不够，','卖命到底图什么？',
+'可以干活，','但别卖命！','拒绝无意义内耗，','该摆烂就摆烂。',
+'你的命，','远比老板画的饼金贵，','谁都别想消耗你！'
+];
+
+const ASSETS = [
+{id:'01',file:'01_全身_哭.png',folder:'01_悲伤',cat:'悲伤',action:'站立哭泣',framing:'全身',state:'流泪',prop:'',desc:'哭'},
+{id:'02',file:'02_上半身_哭.jpg',folder:'01_悲伤',cat:'悲伤',action:'哭泣',framing:'上半身',state:'流泪',prop:'',desc:'哭'},
+{id:'03',file:'03_全身_上坟伤心.png',folder:'01_悲伤',cat:'悲伤',action:'烧香祭拜擦泪',framing:'全身',state:'普通',prop:'香 墓碑',desc:'上坟伤心'},
+{id:'04',file:'04_全身_伤心背身插刀.png',folder:'01_悲伤',cat:'悲伤',action:'背身蜷缩',framing:'全身',state:'身中数刀',prop:'刀',desc:'背身插刀'},
+{id:'05',file:'05_全身_抱着存钱罐工资悲伤.png',folder:'01_悲伤',cat:'悲伤',action:'抱存钱罐',framing:'全身',state:'耷拉耳 流泪',prop:'存钱罐',desc:'抱存钱罐工资悲伤'},
+{id:'06',file:'06_全身_发怒封嘴.jpg',folder:'02_愤怒',cat:'愤怒',action:'嘴被封',framing:'全身',state:'封嘴 满头问号',prop:'胶带',desc:'发怒封嘴'},
+{id:'07',file:'07_全身_发怒点赞.png',folder:'02_愤怒',cat:'愤怒',action:'竖大拇指比赞',framing:'全身',state:'戴墨镜 微怒',prop:'',desc:'发怒点赞'},
+{id:'08',file:'08_上半身_生气握拳.png',folder:'02_愤怒',cat:'愤怒',action:'握拳怒视',framing:'上半身',state:'普通',prop:'',desc:'生气握拳'},
+{id:'09',file:'09_全身_叉腰盯.png',folder:'02_愤怒',cat:'愤怒',action:'叉腰瞪视',framing:'全身',state:'普通',prop:'',desc:'叉腰盯'},
+{id:'10',file:'10_全身_指着盯.png',folder:'02_愤怒',cat:'愤怒',action:'食指指向',framing:'全身',state:'戴墨镜',prop:'',desc:'指着盯'},
+{id:'11',file:'11_全身_站直盯.png',folder:'02_愤怒',cat:'愤怒',action:'站直瞪视',framing:'全身',state:'普通',prop:'',desc:'站直盯'},
+{id:'12',file:'12_全身_懵圈疑惑.png',folder:'03_懵圈无力',cat:'懵圈无力',action:'发懵',framing:'全身',state:'困惑',prop:'',desc:'懵圈疑惑'},
+{id:'13',file:'13_上半身_懵圈抱头.jpg',folder:'03_懵圈无力',cat:'懵圈无力',action:'双手抱头',framing:'上半身',state:'螺旋眼',prop:'',desc:'懵圈抱头'},
+{id:'14',file:'14_全身_泄气无力低落.png',folder:'03_懵圈无力',cat:'懵圈无力',action:'泄气低落',framing:'全身',state:'瘪掉 低落',prop:'',desc:'泄气无力低落'},
+{id:'15',file:'15_全身_无力正面趴下.png',folder:'03_懵圈无力',cat:'懵圈无力',action:'正面趴地',framing:'全身',state:'趴地',prop:'',desc:'无力正面趴下'},
+{id:'16',file:'16_全身_黑眼圈耷拉耳朵无力.jpg',folder:'03_懵圈无力',cat:'懵圈无力',action:'垂手低头',framing:'全身',state:'黑眼圈 耷拉耳',prop:'',desc:'黑眼圈耷拉耳朵无力'},
+{id:'17',file:'17_全身_疲惫电脑桌前工作.png',folder:'04_打工人',cat:'打工人',action:'坐电脑前工作',framing:'全身',state:'疲惫',prop:'电脑 桌椅',desc:'疲惫电脑桌前工作'},
+{id:'18',file:'18_全身_拉推车干活.png',folder:'04_打工人',cat:'打工人',action:'拉推车',framing:'全身',state:'卖力',prop:'推车',desc:'拉推车干活'},
+{id:'19',file:'19_上半身_开心鼓掌.jpg',folder:'05_开心',cat:'开心',action:'鼓掌',framing:'上半身',state:'开心',prop:'',desc:'开心鼓掌'},
+{id:'20',file:'20_转场_花屏我已懵圈.png',folder:'06_转场特效',cat:'转场特效',action:'转场特效',framing:'转场',state:'花屏故障',prop:'',desc:'花屏我已懵圈'}
+];
+
+const CATS = ['全部','悲伤','愤怒','懵圈无力','打工人','开心','转场特效'];
+const FRAMINGS = ['全部','全身','上半身','转场'];
+const POST = [['text','文字'],['sticker','贴纸'],['fx','特效'],['anim','动画'],['trans','转场']];
+
+let shots = SCRIPT.map((line,i)=>({ i, line, subtitle:'',
+  subject:{ type:null, assetId:null, refs:[], prompt:'' },
+  post:{ text:'', sticker:'', fx:'', anim:'', trans:'' },
+  timing:{ text:'', sticker:'', fx:'', anim:'', trans:'' } }));
+
+let picker = null;            // {i, field:'lib'|'ref'}
+let filterCat='全部', filterFrm='全部';
+
+const $ = id => document.getElementById(id);
+const assetUrl = a => encodeURI(ASSET_BASE + a.folder + '/' + a.file);
+const assetById = id => ASSETS.find(a=>a.id===id);
+const esc = s => String(s).replace(/[&<>]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const escAttr = s => String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ---------- 渲染卡片 ---------- */
+function renderShots(){
+  $('shots').innerHTML = shots.map(shotHTML).join('');
+  document.querySelectorAll('.auto-grow').forEach(autoGrow);
+}
+function autoGrow(el){ el.style.height='auto'; el.style.height=(el.scrollHeight+2)+'px'; }
+function shotHTML(s){
+  const t = s.subject.type;
+  const cls = t==='lib'?'has-lib':t==='ai'?'has-ai':'';
+  // 缩略图
+  let thumb;
+  if(t==='lib' && s.subject.assetId){
+    const a = assetById(s.subject.assetId);
+    thumb = `<div class="thumb has-img" style="background-image:url('${assetUrl(a)}')" onclick="openPicker(${s.i},'lib')" title="点击换图"><span class="thumb-id">${a.id}</span></div>`;
+  } else if(t==='ai'){
+    thumb = `<div class="thumb ai-ph" onclick="document.getElementById('prompt${s.i}').focus()" title="AI 生成（待生图）">AI<br>待生</div>`;
+  } else {
+    thumb = `<div class="thumb empty" onclick="setSubject(${s.i},'lib');openPicker(${s.i},'lib')" title="点击选图">+ 选图</div>`;
+  }
+  // 主体详情
+  let detail = '';
+  if(t==='lib'){
+    if(s.subject.assetId){
+      const a = assetById(s.subject.assetId);
+      detail = `<div class="lib-info">已选 <b>${a.id}·${esc(a.desc)}</b> <span class="hint">[${a.cat}/${a.framing}]</span>
+        <button class="btn ghost" style="padding:3px 10px;font-size:12px" onclick="openPicker(${s.i},'lib')">换图</button></div>`;
+    } else {
+      detail = `<div class="lib-info hint">点上方缩略图选一张</div>`;
+    }
+  } else if(t==='ai'){
+    const refs = s.subject.refs.map((rid,idx)=>{
+      const a = assetById(rid);
+      return `<div class="ref-thumb" style="background-image:url('${assetUrl(a)}')" title="${esc(a.desc)}"><span class="x" onclick="removeRef(${s.i},${idx})">×</span></div>`;
+    }).join('');
+    detail = `<div class="ai-box">
+      <div class="refs">${refs}<button class="add-ref" onclick="openPicker(${s.i},'ref')" title="加参考图">+</button></div>
+      <textarea class="inp auto-grow" id="prompt${s.i}" placeholder="提示词：要生成什么（如：同角色抱存钱罐，但改成愤怒表情、红色背景）" data-i="${s.i}" data-k="prompt">${esc(s.subject.prompt)}</textarea>
+    </div>`;
+  }
+  return `<div class="shot"><div class="card-inner ${cls}">
+    <div class="shot-head">
+      <div class="shot-no">${String(s.i+1).padStart(2,'0')}</div>
+      ${thumb}
+      <div class="shot-main">
+        <div class="shot-line">${esc(s.line)}</div>
+        <div class="field" style="margin-top:7px">
+          <textarea class="inp auto-grow" rows="1" placeholder="字幕（可空，默认同口播）" data-i="${s.i}" data-k="subtitle">${esc(s.subtitle)}</textarea>
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <div class="field-label">🖼 画面主体（导入剪映的图）</div>
+      <div class="seg">
+        <button class="${t===null?'on':''}" onclick="setSubject(${s.i},null)">未定</button>
+        <button class="${t==='lib'?'on':''}" onclick="setSubject(${s.i},'lib')">选库</button>
+        <button class="${t==='ai'?'on':''}" onclick="setSubject(${s.i},'ai')">AI 生成</button>
+      </div>
+      ${detail}
+    </div>
+    <div class="field">
+      <div class="field-label">✂️ 剪映后期（在剪映里加）</div>
+      <div class="post">
+        ${POST.map(([k,label])=>`<div class="cell"><label>${label}</label><input class="inp" placeholder="内容" value="${escAttr(s.post[k])}" data-i="${s.i}" data-k="post.${k}"><input class="inp timing" placeholder="⏱ 念到…时出现" value="${escAttr(s.timing[k])}" data-i="${s.i}" data-k="timing.${k}"></div>`).join('')}
+      </div>
+    </div>
+  </div></div>`;
+}
+
+/* ---------- 主体操作 ---------- */
+function setSubject(i,type){
+  shots[i].subject.type = type;
+  if(type!=='lib') shots[i].subject.assetId = null;
+  if(type!=='ai') { shots[i].subject.refs = []; shots[i].subject.prompt = ''; }
+  update(); renderShots();
+}
+function removeRef(i,idx){ shots[i].subject.refs.splice(idx,1); update(); renderShots(); }
+
+/* ---------- 输入绑定（事件委托） ---------- */
+$('shots').addEventListener('input', e=>{
+  const el = e.target;
+  if(el.classList.contains('auto-grow')) autoGrow(el);
+  const i = el.dataset.i, k = el.dataset.k;
+  if(i===undefined) return;
+  const v = el.value;
+  if(k==='subtitle') shots[i].subtitle = v;
+  else if(k==='prompt') shots[i].subject.prompt = v;
+  else if(k && k.startsWith('post.')) shots[i].post[k.slice(5)] = v;
+  else if(k && k.startsWith('timing.')) shots[i].timing[k.slice(7)] = v;
+  update();
+});
+
+/* ---------- 选图弹窗 ---------- */
+function openPicker(i, field){
+  picker = { i, field };
+  $('modalTitle').textContent = field==='ref' ? '加参考图（可多选）' : '选画面主体（单选）';
+  const line = shots[i].line;
+  $('modalSub').textContent = `第 ${i+1} 镜 · ${line.length>14?line.slice(0,14)+'…':line}`;
+  filterCat='全部'; filterFrm='全部'; $('search').value='';
+  renderChips(); renderGrid();
+  $('modal').classList.add('on');
+}
+function closePicker(){ picker=null; $('modal').classList.remove('on'); }
+function renderChips(){
+  $('catChips').innerHTML = CATS.map(c=>`<button class="chip ${c===filterCat?'on':''}" onclick="filterCat='${c}';renderChips();renderGrid()">${c}</button>`).join('');
+  $('frmChips').innerHTML = FRAMINGS.map(f=>`<button class="chip ${f===filterFrm?'on':''}" onclick="filterFrm='${f}';renderChips();renderGrid()">${f}</button>`).join('');
+}
+function renderGrid(){
+  const q = $('search').value.trim().toLowerCase();
+  const list = ASSETS.filter(a=>{
+    if(filterCat!=='全部' && a.cat!==filterCat) return false;
+    if(filterFrm!=='全部' && a.framing!==filterFrm) return false;
+    if(q){
+      const hay = (a.id+' '+a.desc+' '+a.action+' '+a.state+' '+a.prop+' '+a.cat).toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    return true;
+  });
+  if(!list.length){ $('grid').innerHTML = `<div class="empty-grid">没找到匹配的素材</div>`; return; }
+  const cur = picker && shots[picker.i].subject;
+  const isRef = picker && picker.field==='ref';
+  const selected = isRef ? cur.refs : (cur ? [cur.assetId].filter(Boolean) : []);
+  $('grid').innerHTML = list.map(a=>{
+    const sel = selected.includes(a.id) ? 'sel' : '';
+    return `<div class="asset ${sel}" onclick="pick('${a.id}')">
+      <img src="${assetUrl(a)}" loading="lazy" onerror="this.style.background='#fee'">
+      <div class="cap"><b>${a.id}</b> ${esc(a.desc)}<br><span style="opacity:.7">${a.cat}/${a.framing}</span></div>
+    </div>`;
+  }).join('');
+}
+function pick(id){
+  if(!picker) return;
+  const s = shots[picker.i];
+  if(picker.field==='lib'){
+    s.subject.type='lib'; s.subject.assetId=id;
+    update(); renderShots(); closePicker();
+  } else { // ref 多选
+    const idx = s.subject.refs.indexOf(id);
+    if(idx===-1) s.subject.refs.push(id); else s.subject.refs.splice(idx,1);
+    if(s.subject.type!=='ai') s.subject.type='ai';
+    update(); renderShots(); renderGrid();
+  }
+}
+
+/* ---------- 汇总条 ---------- */
+function update(){
+  const lib = shots.filter(s=>s.subject.type==='lib').length;
+  const ai = shots.filter(s=>s.subject.type==='ai').length;
+  const done = shots.filter(s=>s.subject.type!==null).length;
+  $('summary').innerHTML = `共 <b>${shots.length}</b> 镜 ｜ 已设计 <b>${done}</b> ｜ 选库 <b>${lib}</b> ｜ AI生成 <b>${ai}</b> ｜ 待定 <b>${shots.length-done}</b>`;
+}
+
+/* ---------- 导出 ---------- */
+function download(name, content, type='text/plain'){
+  const blob = new Blob([content], {type:type+';charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = name; a.click();
+  setTimeout(()=>URL.revokeObjectURL(url), 1000);
+}
+function exportJSON(){
+  download('storyboard-吃苦卖命.json', JSON.stringify({title:'吃苦卖命', shots}, null, 2), 'application/json');
+  toast('已导出存档 JSON');
+}
+$('fileIn').addEventListener('change', e=>{
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = ()=>{ try{
+    const data = JSON.parse(r.result);
+    if(data.shots){ shots = data.shots.map((s,i)=>({...shots[i], ...s, i})); update(); renderShots(); toast('已导入 '+shots.length+' 镜'); }
+    else toast('JSON 格式不对');
+  }catch(err){ toast('导入失败：'+err.message); } };
+  r.readAsText(f);
+  e.target.value='';
+});
+function exportShotList(){
+  const ai = shots.filter(s=>s.subject.type==='ai');
+  if(!ai.length){ toast('没有 AI 生成的镜，无需生图清单'); return; }
+  const lines = ai.map(s=>{
+    const refs = s.subject.refs.map(id=>{const a=assetById(id);return `${a.id}·${a.desc}`}).join('、')||'（无）';
+    return `【第${String(s.i+1).padStart(2,'0')}镜】${s.line}\n  参考图：${refs}\n  提示词：${s.subject.prompt||'（空）'}`;
+  });
+  const txt = `生图清单 · 吃苦卖命 · 共 ${ai.length} 张待生成\n${'='.repeat(40)}\n\n${lines.join('\n\n')}`;
+  download('生图清单-吃苦卖命.txt', txt);
+  toast(`已导出生图清单（${ai.length} 张）`);
+}
+function exportCutGuide(){
+  const lines = shots.map(s=>{
+    const t = s.subject.type;
+    let pic;
+    if(t==='lib'){ const a=assetById(s.subject.assetId); pic = `选库 ${a.id}·${a.desc}`; }
+    else if(t==='ai') pic = `AI生成（待生）`;
+    else pic = `未定`;
+    const sub = s.subtitle || '（同口播/不打）';
+    const p = POST.map(([k,l])=>{
+      if(!s.post[k]) return '';
+      const tm = s.timing[k] ? `（念到"${s.timing[k]}"时）` : '';
+      return `${l}:${s.post[k]}${tm}`;
+    }).filter(Boolean).join('  ');
+    return `【${String(s.i+1).padStart(2,'0')}】${s.line}\n  画面：${pic} ｜ 字幕：${sub}\n  ${p?'后期：'+p:'（后期空）'}`;
+  });
+  const txt = `剪辑指引 · 吃苦卖命 · 共 ${shots.length} 镜\n${'='.repeat(40)}\n\n${lines.join('\n\n')}`;
+  download('剪辑指引-吃苦卖命.txt', txt);
+  toast('已导出剪辑指引');
+}
+function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
+
+/* ---------- 启动 ---------- */
+renderShots(); update();
+$('modal').addEventListener('click', e=>{ if(e.target.id==='modal') closePicker(); });
+
+/* 横向自由滑动（scroll-snap 吸附），带惯性、不限张数 */
+</script>
+</body>
+</html>
