@@ -64,6 +64,7 @@ mark.l { background: var(--ok-bg); color: var(--ok); border-bottom: 2px dashed v
   .review-wrap { padding: 12px; height: auto; display: block; overflow: visible; }
   .review-grid { grid-template-columns: 1fr; grid-template-rows: auto; grid-template-areas: "original" "items" "output"; height: auto; }
   .rev-panel { max-height: none; }
+  #revOutput { min-height: 100px; height: auto; max-height: none; overflow: visible; }
   #revOriginal { font-size: 15px; line-height: 1.95; }
   .rev-line { flex-direction: column; align-items: stretch; gap: 5px; }
   .edit-sug { min-width: 100%; font-size: 15px; padding: 9px 10px; }

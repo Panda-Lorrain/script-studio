@@ -219,7 +219,7 @@ body {
     overflow-y: hidden;
     padding: 8px;
     gap: 6px;
-    order: 2;
+    order: 1;
   }
   .sidebar .nav-section { display: none; }
   .sidebar .nav-item {
@@ -231,7 +231,7 @@ body {
   }
   .sidebar .nav-item.active { border-left: none; border-bottom-color: var(--accent); }
   .sidebar .new-btn { margin: 0; flex-shrink: 0; }
-  .main { overflow: visible; order: 1; }
+  .main { overflow: visible; order: 2; }
   .modal-box { margin: 0; height: 100vh; border-radius: 0; max-width: 100%; }
   .grid { grid-template-columns: repeat(2, 1fr); padding: 12px; }
 }

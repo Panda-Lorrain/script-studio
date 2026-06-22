@@ -12,7 +12,7 @@ export async function renderReview(data, main) {
   if (!review.items) review.items = [];
 
   review.items.forEach(it => {
-    if (!review.decisions[it.id]) review.decisions[it.id] = { adopted: false, kept: false, editedSuggestion: it.suggestion };
+    if (!review.decisions[it.id]) review.decisions[it.id] = { adopted: false, kept: false, editedSuggestion: it.suggestion, lastBy: null, lastTs: null };
   });
 
   let sortOrder = 'risk';
@@ -94,9 +94,13 @@ export async function renderReview(data, main) {
   // 用户手动编辑输出框：记录到 review.output，debounce 后重渲采纳区（显示手动修改条目）
   let manualTimer = null;
   main.querySelector('#revOutput').addEventListener('input', () => {
-    review.output = main.querySelector('#revOutput').value;
+    const ta = main.querySelector('#revOutput');
+    review.output = ta.value;
+    autoResize(ta);
     clearTimeout(manualTimer);
     manualTimer = setTimeout(() => {
+      review.outputLastBy = store.getOperator();
+      review.outputLastTs = utils.nowIso();
       renderItems();
       safeSave(data, 'manual_edit', '手动编辑输出');
     }, 800);
@@ -233,7 +237,15 @@ export async function renderReview(data, main) {
       ta.value = autoOutput;
       review.output = autoOutput;
     }
+    autoResize(ta);
     renderItems();
+  }
+
+  // 手机端输出框随内容自动增高（电脑端固定高度面板内滚动）
+  function autoResize(ta) {
+    if (!ta || window.innerWidth > 768) return;
+    ta.style.height = 'auto';
+    ta.style.height = (ta.scrollHeight + 2) + 'px';
   }
 
   // diff 建议输出(autoOutput) 与 用户输出(review.output) 的逐行差异 = 手动修改

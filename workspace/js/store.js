@@ -130,14 +130,16 @@ function emptyProject(title) {
   };
 }
 
+let indexCache = null;  // 项目清单缓存，避免每次 route 都 fetch index.json（点文案卡顿主因）
 export async function loadProjectList() {
+  if (indexCache) return indexCache;
   try {
     const txt = await readText('data/index.json');
-    const idx = JSON.parse(txt);
-    return idx.projects || [];
+    indexCache = (JSON.parse(txt).projects) || [];
   } catch {
-    return [];
+    indexCache = [];
   }
+  return indexCache;
 }
 
 async function saveIndex(projects) {
