@@ -59,6 +59,11 @@ class Handler(SimpleHTTPRequestHandler):
     def __init__(self, *a, **kw):
         super().__init__(*a, directory=SITE_ROOT, **kw)
 
+    def end_headers(self):
+        # 静态资源不缓存：改完 JS/CSS 浏览器刷新即生效，免硬刷新
+        self.send_header('Cache-Control', 'no-cache, must-revalidate')
+        super().end_headers()
+
     @property
     def cookies(self):
         if not hasattr(self, '_cookies'):

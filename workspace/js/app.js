@@ -114,7 +114,7 @@ function openLogin({ mode }) {
         body: JSON.stringify({ name })
       });
       if (res.status === 403) {
-        sub.textContent = '未授权——联系 lorrain 把你的昵称加入白名单';
+        sub.textContent = '未授权，无法进入工作台';
         input.select();
         return;
       }
