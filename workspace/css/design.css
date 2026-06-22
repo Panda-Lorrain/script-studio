@@ -50,8 +50,16 @@ textarea.auto-grow { resize: none; overflow: hidden; }
 .cell .timing { color: var(--accent); font-size: 12px; border-color: #dbe4ff; background: #fbfcff; }
 
 @media (max-width: 768px) {
-  .design-wrap { padding: 12px; height: auto; display: block; overflow: visible; }
-  .shots { flex: none; overflow: visible; padding-right: 0; }
+  .design-wrap { padding: 0; height: calc(100dvh - 108px); display: flex; flex-direction: column; overflow: hidden; }
+  .design-head { padding: 10px 14px 4px; margin-bottom: 0; flex-shrink: 0; }
+  .design-head h1 { font-size: 15px; }
+  .dash-summary { padding: 0 14px 6px; margin-bottom: 0; flex-shrink: 0; }
+  /* 横向卡片轮播：左右滑切换镜，每镜占满一屏宽 */
+  .shots { flex: 1; flex-direction: row !important; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; gap: 0; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; padding: 0; }
+  .shot { flex: 0 0 100vw; min-width: 100vw; width: 100vw; padding: 4px 14px 14px; box-sizing: border-box; scroll-snap-align: start; }
+  .shot .card-inner { max-height: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior-y: contain; }
+  .shot-line { font-size: 19px; line-height: 1.5; }
+  .thumb { width: 88px; height: 88px; }
   .post { display: flex; flex-direction: column; gap: 10px; }
   .post .cell { background: #fafbfc; padding: 8px 10px; border-radius: 7px; }
   .cell .inp { width: 100%; }
