@@ -3,6 +3,7 @@ import * as store from './store.js';
 import * as utils from './utils.js';
 
 const POST = [['text', '文字'], ['sticker', '贴纸'], ['fx', '特效'], ['anim', '动画'], ['trans', '转场']];
+const AUDIO = [['bgm', '背景音乐'], ['sfx', '音效'], ['voice', '口播'], ['voiceFx', '变声']];
 
 /* ---------- 项目 JSON 导出/导入 ---------- */
 export async function exportProject(data) {
@@ -43,7 +44,18 @@ export function mergeData(base, incoming) {
     } else if (iSub.type && bSub.type && JSON.stringify(iSub) !== JSON.stringify(bSub)) {
       conflicts.push({ shot: i, base: bSub, incoming: iSub });
     }
-    ['post', 'timing'].forEach(field => {
+    // post：新结构是元素数组；按「kind+content+range 相等」去重并入（base 没有的元素补进来）
+    const iPost = Array.isArray(iShots[i].post) ? iShots[i].post : [];
+    const bPost = Array.isArray(bShots[i].post) ? bShots[i].post : (bShots[i].post = []);
+    iPost.forEach(pe => {
+      if (!bPost.some(be => be.kind === pe.kind && be.content === pe.content && JSON.stringify(be.range) === JSON.stringify(pe.range))) {
+        bPost.push(JSON.parse(JSON.stringify(pe)));
+      }
+    });
+    // trans：base 空才取 incoming
+    if (iShots[i].trans && !bShots[i].trans) bShots[i].trans = iShots[i].trans;
+    // audio / audioTiming：结构未变，按字段补空
+    ['audio', 'audioTiming'].forEach(field => {
       if (iShots[i][field]) {
         Object.keys(iShots[i][field]).forEach(k => {
           if (iShots[i][field][k] && !bShots[i][field][k]) bShots[i][field][k] = iShots[i][field][k];
@@ -81,7 +93,7 @@ export function exportCutGuide(data) {
   const lines = data.design.shots.map((s, i) => {
     const t = s.subject.type;
     let pic;
-    if (t === 'lib') pic = `选库 ${s.subject.assetId}`;
+    if (t === 'lib') pic = `选库 ${(s.subject.assetIds || []).join('、')}`;
     else if (t === 'ai') pic = `AI生成（待生）`;
     else pic = `未定`;
     const sub = s.subtitle || '（同口播/不打）';
@@ -90,7 +102,12 @@ export function exportCutGuide(data) {
       const tm = s.timing[k] ? `（念到"${s.timing[k]}"时）` : '';
       return `${l}:${s.post[k]}${tm}`;
     }).filter(Boolean).join('  ');
-    return `【${String(i + 1).padStart(2, '0')}】${s.line}\n  画面：${pic} ｜ 字幕：${sub}\n  ${p ? '后期：' + p : '（后期空）'}`;
+    const a = AUDIO.map(([k, l]) => {
+      if (!s.audio || !s.audio[k]) return '';
+      const tm = (s.audioTiming && s.audioTiming[k]) ? `（念到"${s.audioTiming[k]}"时）` : '';
+      return `${l}:${s.audio[k]}${tm}`;
+    }).filter(Boolean).join('  ');
+    return `【${String(i + 1).padStart(2, '0')}】${s.line}\n  画面：${pic} ｜ 字幕：${sub}\n  ${p ? '后期：' + p : '（后期空）'}${a ? '\n  音频：' + a : ''}`;
   });
   const txt = `剪辑指引 · ${data.meta.title} · 共 ${data.design.shots.length} 镜\n${'='.repeat(40)}\n\n${lines.join('\n\n')}`;
   utils.download(`剪辑指引-${data.meta.title}.txt`, txt);
