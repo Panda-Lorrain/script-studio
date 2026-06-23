@@ -87,6 +87,11 @@ textarea.auto-grow { resize: none; overflow: hidden; }
 .axis .bars .seg-bar.k-fx { background: #8b5cf6; }
 .axis .bars .seg-bar.k-anim { background: #f59e0b; }
 
+.trans-slot { display: flex; align-items: center; gap: 8px; justify-content: center; padding: 6px 12px; margin: -2px 0; }
+.trans-slot .trans-arrow { color: var(--accent); font-size: 14px; }
+.trans-slot label { font-size: 12px; color: var(--muted); white-space: nowrap; }
+.trans-slot .trans-select { width: auto; max-width: 180px; font-size: 13px; padding: 4px 8px; }
+
 @media (max-width: 768px) {
   .design-wrap { padding: 0; height: calc(100dvh - 108px); display: flex; flex-direction: column; overflow: hidden; }
   .design-head { padding: 10px 14px 4px; margin-bottom: 0; flex-shrink: 0; }

@@ -87,6 +87,16 @@ export async function renderDesign(data, main) {
     debounceSave(data);
   });
 
+  shotsEl.addEventListener('change', e => {
+    const el = e.target;
+    if (!el.classList.contains('trans-select')) return;
+    const i = +el.dataset.i;
+    const s = design.shots[i];
+    s.trans = el.value || null;
+    s.lastBy = store.getOperator(); s.lastTs = utils.nowIso();
+    debounceSave(data);
+  });
+
   function autoGrow(el) { el.style.height = 'auto'; el.style.height = (el.scrollHeight + 2) + 'px'; }
 
   // 暴露给 onclick 的操作
@@ -171,10 +181,20 @@ export async function renderDesign(data, main) {
   }
 
   function renderShots() {
-    shotsEl.innerHTML = design.shots.map((s, i) => shotHTML(s, i, assets)).join('');
+    const html = design.shots.map((s, i) => {
+      const card = shotHTML(s, i, assets);
+      const trans = (i < design.shots.length - 1) ? transHTML(s, i) : '';
+      return card + trans;
+    }).join('');
+    shotsEl.innerHTML = html;
     shotsEl.querySelectorAll('.auto-grow').forEach(autoGrow);
     updateSummary();
     bindAxis();
+  }
+  function transHTML(s, i) {
+    const cur = s.trans || '';
+    const opts = TRANS_PRESETS.map(p => `<option value="${utils.escAttr(p)}"${p === cur ? ' selected' : ''}>${p || '（无转场）'}</option>`).join('');
+    return `<div class="trans-slot"><span class="trans-arrow">▶</span><label>转场到第 ${i + 2} 镜</label><select class="inp trans-select" data-i="${i}">${opts}</select></div>`;
   }
 
   function bindAxis() {
