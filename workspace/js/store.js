@@ -41,6 +41,32 @@ function idbSet(key, val) {
     req.onerror = () => res(false);
   });
 }
+// 删除所有指定前缀的 key（只读 key、不读 value，避免把大 blob 读进内存）。用于清理旧版原图缓存。
+function idbDeletePrefix(prefix) {
+  return new Promise(res => {
+    const req = indexedDB.open('ss_store', 1);
+    req.onupgradeneeded = () => {
+      if (!req.result.objectStoreNames.contains('kv')) req.result.createObjectStore('kv');
+    };
+    req.onsuccess = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains('kv')) { res(0); return; }
+      const store = db.transaction('kv', 'readwrite').objectStore('kv');
+      let n = 0;
+      const open = store.openKeyCursor ? store.openKeyCursor() : store.openCursor();
+      open.onsuccess = (e) => {
+        const cur = e.target.result;
+        if (!cur) return;
+        const k = typeof cur.key === 'string' ? cur.key : (cur.primaryKey != null ? String(cur.primaryKey) : '');
+        if (k.startsWith(prefix)) { store.delete(k); n++; }
+        cur.continue();
+      };
+      store.transaction.oncomplete = () => res(n);
+      store.transaction.onerror = () => res(n);
+    };
+    req.onerror = () => res(0);
+  });
+}
 
 /* ---------- 操作者身份 ---------- */
 export function getOperator() {
@@ -152,11 +178,40 @@ function projectSummary(data) {
   };
 }
 
+// 向后兼容迁移：
+//  ① 旧 shot.subject.assetId(单值) → assetIds(数组)
+//  ② 旧 flat post/timing 单值格 → post 元素数组 + 独立 trans（design.schemaVer=2）
+function migrateData(data) {
+  const shots = (data.design && data.design.shots) || [];
+  const last = shots.length - 1;
+  shots.forEach((s, i) => {
+    if (s.subject && !Array.isArray(s.subject.assetIds)) {
+      s.subject.assetIds = s.subject.assetId ? [s.subject.assetId] : [];
+      delete s.subject.assetId;
+    }
+    if (!Array.isArray(s.post)) {
+      const oldPost = s.post || {};
+      const oldTiming = s.timing || {};
+      const KINDS = ['text', 'sticker', 'fx', 'anim'];
+      const post = [];
+      KINDS.forEach(k => {
+        if (oldPost[k]) post.push({ kind: k, content: oldPost[k], range: null, note: oldTiming[k] || '' });
+      });
+      s.post = post;
+      let tr = oldPost.trans;
+      s.trans = (i < last && tr) ? tr : null;
+      delete s.timing;
+    }
+  });
+  if (data.design) data.design.schemaVer = 2;
+  return data;
+}
+
 export async function loadProject(title) {
   if (projectCache.has(title)) return projectCache.get(title);
   // 无 FSA 时 readText 走 fetch（已带 ?t= 防缓存），以服务器为准（API 同步模式）
   const txt = await readText('data/' + title + '.json');
-  const data = JSON.parse(txt);
+  const data = migrateData(JSON.parse(txt));
   projectCache.set(title, data);
   return data;
 }
@@ -238,17 +293,24 @@ export function preloadAssets(onProgress) {
   preloadPromise = (async () => {
     const list = await loadAssets();
     if (!list.length) { if (onProgress) onProgress(0, 0); return list; }
+    // 一次性迁移：清理旧版预加载残留的「原图」缓存（img_ 前缀，单条 2MB+），换成缩略图（thumb_ 前缀）
+    if (!window.__ss_thumb_migrated) {
+      window.__ss_thumb_migrated = true;
+      idbDeletePrefix('img_').then(n => { if (n) console.log('[ss] 清理旧原图缓存', n, '条'); });
+    }
     let done = 0;
     if (onProgress) onProgress(0, list.length);
     await Promise.all(list.map(async (a) => {
       try {
         if (!blobUrlCache.has(a.id)) {
-          let blob = await idbGet('img_' + a.id);            // 1. 先查本地持久缓存
+          // key 带 mtime：图被替换(mtime 变) → key 变 → 自动重新下载，不命中旧缓存
+          const cacheKey = 'thumb_' + a.id + '_' + (a.mtime || 0);
+          let blob = await idbGet(cacheKey);                  // 1. 先查本地持久缓存
           if (!blob) {
-            const res = await fetch(assetHttpUrl(a));         // 2. 未命中才联网下载
+            const res = await fetch(assetThumbUrl(a));        // 2. 未命中才联网下载（缩略图，~35KB/张）
             if (!res.ok) throw new Error(res.status);
             blob = await res.blob();
-            await idbSet('img_' + a.id, blob);                // 3. 落盘，下次刷新/离线直接用
+            await idbSet(cacheKey, blob);                     // 3. 落盘，下次刷新/离线直接用
           }
           blobUrlCache.set(a.id, URL.createObjectURL(blob));
         }
@@ -274,14 +336,19 @@ export async function loadAllActivity() {
   return all;
 }
 
-// 优先返回本地缓存的 blob URL（preload 命中后）；未预加载/失败时回退 HTTP URL
+// 优先返回本地缓存的 blob URL（preload 命中后）；未预加载/未命中时回退【缩略图】HTTP（~15KB/张），
+// 而非原图（2MB+）——否则预加载未跑完时开选图会直接拉原图、明显卡顿。
 export function assetUrl(a) {
   const cached = blobUrlCache.get(a.id);
-  return cached || assetHttpUrl(a);
+  return cached || assetThumbUrl(a);
 }
-// 素材图的原始 HTTP 路径（预加载 fetch、回退兜底用）
+// 素材图的原始 HTTP 路径（回退兜底 / 原图用；预加载不再下载它）
 export function assetHttpUrl(a) {
   return encodeURI('../Material Collection/' + a.folder + '/' + a.file);
+}
+// 缩略图 HTTP 路径（预加载只下这个，~35KB/张；无 thumb 字段时回退原图）
+export function assetThumbUrl(a) {
+  return a.thumb ? encodeURI(a.thumb) : assetHttpUrl(a);
 }
 export function assetById(assets, id) {
   return assets.find(a => a.id === id);

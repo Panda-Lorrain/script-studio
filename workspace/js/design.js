@@ -4,12 +4,49 @@ import * as utils from './utils.js';
 import { openPicker } from './picker.js';
 import { exportShotList, exportCutGuide } from './export.js';
 
-const POST = [['text', '文字'], ['sticker', '贴纸'], ['fx', '特效'], ['anim', '动画'], ['trans', '转场']];
+const POST_KINDS = [['text', '文字'], ['sticker', '贴纸'], ['fx', '特效'], ['anim', '动画']];
+const TRANS_PRESETS = ['', '淡入淡出', '黑场', '白场', '缩放', '滑动', '运镜', '闪白', '无缝'];
+const AUDIO = [['bgm', '背景音乐'], ['sfx', '音效'], ['voice', '口播'], ['voiceFx', '变声']];
 
 export async function renderDesign(data, main) {
   const assets = await store.loadAssets();
   const design = data.design;
   if (!design.shots) design.shots = [];
+  const review = data.review || {};
+
+  // 空状态：还没有分镜（文案未审核，或审核了但没点「完成审核」生成分镜）→ 明显引导，而不是空壳
+  if (design.shots.length === 0) {
+    // 「已审核」= 用户在审核台对至少一条建议做过采纳/保留决定；仅有 skill 预审内容(原文/items)不算已审核
+    const decided = review.decisions && Object.values(review.decisions).some(d => d.adopted || d.kept);
+    const hasReviewed = !!decided;
+    const title = utils.esc(data.meta.title);
+    const goReviewHash = encodeURIComponent(data.meta.title) + '/review';
+    main.innerHTML = `
+      <div class="design-wrap">
+        <div class="design-head">
+          <h1>🎬 画面设计 · ${title} · 0 镜</h1>
+        </div>
+        <div class="design-empty">
+          <div class="de-icon">${hasReviewed ? '🎬' : '📝'}</div>
+          <div class="de-title">${hasReviewed ? '文案已审核，还没生成分镜' : '这篇文案还没审核'}</div>
+          <div class="de-desc">${hasReviewed
+            ? '画面分镜由审核后的文案自动拆分。请回到审核台点「<b>✓ 完成审核</b>」，系统会按断句生成逐句分镜，再回到这里逐镜配画面。'
+            : '画面分镜需要先有审核后的文案。请到审核台对这篇文案做合规审核，完成后系统会自动生成分镜，即可在这里逐镜设计画面。'}</div>
+          <button class="btn primary de-cta" id="goReviewBtn">${hasReviewed ? '✅ 去完成审核' : '📝 去审核台'}</button>
+          <div class="de-hint">当前分镜数据为空（0 镜）· 审核台在左侧导航「📝 审核台」</div>
+        </div>
+      </div>
+    `;
+    const go = window.__go || (h => { location.hash = h; });
+    main.querySelector('#goReviewBtn').onclick = () => go(goReviewHash);
+    return;
+  }
+
+  // 旧数据兼容：逐镜音频 audio / audioTiming（旧 shot 没有这两组，渲染前补空对象，免得输入时报错）
+  design.shots.forEach(s => {
+    if (!s.audio) s.audio = {};
+    if (!s.audioTiming) s.audioTiming = {};
+  });
 
   main.innerHTML = `
     <div class="design-wrap">
@@ -39,8 +76,12 @@ export async function renderDesign(data, main) {
     const v = el.value;
     if (k === 'subtitle') s.subtitle = v;
     else if (k === 'prompt') s.subject.prompt = v;
-    else if (k && k.startsWith('post.')) s.post[k.slice(5)] = v;
-    else if (k && k.startsWith('timing.')) s.timing[k.slice(7)] = v;
+    else if (k && k.startsWith('postc.')) {
+      const idx = +k.slice(6);
+      if (s.post[idx]) s.post[idx].content = v;
+    }
+    else if (k && k.startsWith('audio.')) s.audio[k.slice(6)] = v;
+    else if (k && k.startsWith('audioTiming.')) s.audioTiming[k.slice(12)] = v;
     s.lastBy = store.getOperator();
     s.lastTs = utils.nowIso();
     debounceSave(data);
@@ -52,7 +93,7 @@ export async function renderDesign(data, main) {
   window.__designSetType = async (i, type) => {
     const s = design.shots[i];
     s.subject.type = type;
-    if (type !== 'lib') s.subject.assetId = null;
+    if (type !== 'lib') s.subject.assetIds = [];
     if (type !== 'ai') { s.subject.refs = []; s.subject.prompt = ''; }
     s.lastBy = store.getOperator(); s.lastTs = utils.nowIso();
     renderShots();
@@ -63,12 +104,12 @@ export async function renderDesign(data, main) {
     const s = design.shots[i];
     if (field === 'lib') {
       openPicker({
-        assets, currentId: s.subject.assetId, multi: false, title: '选画面主体（单选）', sub: `第 ${i + 1} 镜`,
-        onSelect: async (id) => {
-          s.subject.type = 'lib'; s.subject.assetId = id;
+        assets, currentIds: (s.subject.assetIds || []).slice(), multi: true, title: '选画面主体（可多选）', sub: `第 ${i + 1} 镜`,
+        onSelect: async (ids) => {
+          s.subject.type = 'lib'; s.subject.assetIds = ids.slice();
           s.lastBy = store.getOperator(); s.lastTs = utils.nowIso();
           renderShots();
-          safeSave(data, 'design_edit', `第${i + 1}镜选库 ${id}`);
+          safeSave(data, 'design_edit', `第${i + 1}镜选库 ${ids.join(',')}`);
         }
       });
     } else {
@@ -93,6 +134,29 @@ export async function renderDesign(data, main) {
     safeSave(data, 'design_edit', `第${i + 1}镜删参考图`);
   };
 
+  window.__designRemoveLib = async (i, idx) => {
+    const s = design.shots[i];
+    s.subject.assetIds.splice(idx, 1);
+    s.lastBy = store.getOperator(); s.lastTs = utils.nowIso();
+    renderShots();
+    safeSave(data, 'design_edit', `第${i + 1}镜删选库图`);
+  };
+
+  window.__designAddPost = (i, kind) => {
+    design.shots[i].post.push({ kind, content: '', range: null, note: '' });
+    design.shots[i].lastBy = store.getOperator();
+    design.shots[i].lastTs = utils.nowIso();
+    renderShots();
+    safeSave(data, 'design_edit', `第${i + 1}镜加${kind}`);
+  };
+  window.__designDelPost = (i, idx) => {
+    design.shots[i].post.splice(idx, 1);
+    design.shots[i].lastBy = store.getOperator();
+    design.shots[i].lastTs = utils.nowIso();
+    renderShots();
+    safeSave(data, 'design_edit', `第${i + 1}镜删后期元素`);
+  };
+
   let saveTimer = null;
   function debounceSave(data) {
     clearTimeout(saveTimer);
@@ -115,9 +179,10 @@ export async function renderDesign(data, main) {
   function shotHTML(s, i, assets) {
     const t = s.subject.type;
     const cls = t === 'lib' ? 'has-lib' : t === 'ai' ? 'has-ai' : '';
+    const assetIds = s.subject.assetIds || [];
     let thumb;
-    if (t === 'lib' && s.subject.assetId) {
-      const a = store.assetById(assets, s.subject.assetId);
+    if (t === 'lib' && assetIds.length) {
+      const a = store.assetById(assets, assetIds[0]);
       thumb = a ? `<div class="thumb" style="background-image:url('${store.assetUrl(a)}')" onclick="window.__designPick(${i},'lib')" title="点击换图"><span class="thumb-id">${a.id}</span></div>`
         : `<div class="thumb empty" onclick="window.__designPick(${i},'lib')">+ 选图</div>`;
     } else if (t === 'ai') {
@@ -128,11 +193,13 @@ export async function renderDesign(data, main) {
 
     let detail = '';
     if (t === 'lib') {
-      if (s.subject.assetId) {
-        const a = store.assetById(assets, s.subject.assetId);
-        detail = a ? `<div class="lib-info">已选 <b>${a.id}·${utils.esc(a.desc)}</b> <span class="hint">[${a.cat}/${a.framing}]</span>
-          <button class="btn ghost" style="padding:3px 10px;font-size:12px" onclick="window.__designPick(${i},'lib')">换图</button></div>`
-          : `<div class="lib-info hint">素材不存在</div>`;
+      if (assetIds.length) {
+        const libRefs = assetIds.map((rid, idx) => {
+          const a = store.assetById(assets, rid);
+          if (!a) return '';
+          return `<div class="ref-thumb" style="background-image:url('${store.assetUrl(a)}')" title="${utils.escAttr(a.id + '·' + a.desc)}"><span class="x" onclick="window.__designRemoveLib(${i},${idx})">×</span></div>`;
+        }).join('');
+        detail = `<div class="lib-box"><div class="refs">${libRefs}<button class="add-ref" onclick="window.__designPick(${i},'lib')" title="加图">+</button></div></div>`;
       } else {
         detail = `<div class="lib-info hint">点上方缩略图选一张</div>`;
       }
@@ -171,8 +238,23 @@ export async function renderDesign(data, main) {
       </div>
       <div class="field">
         <div class="field-label">✂️ 剪映后期（在剪映里加）</div>
-        <div class="post">
-          ${POST.map(([k, label]) => `<div class="cell"><label>${label}</label><input class="inp" placeholder="内容" value="${utils.escAttr(s.post[k])}" data-i="${i}" data-k="post.${k}"><input class="inp timing" placeholder="⏱ 念到…时出现" value="${utils.escAttr(s.timing[k])}" data-i="${i}" data-k="timing.${k}"></div>`).join('')}
+        <div class="post-list">
+          ${s.post.map((el, idx) => `
+            <div class="post-item">
+              <span class="post-kind k-${el.kind}">${(POST_KINDS.find(p => p[0] === el.kind) || ['', '?'])[1]}</span>
+              <input class="inp post-content" placeholder="内容" value="${utils.escAttr(el.content)}" data-i="${i}" data-k="postc.${idx}">
+              <span class="post-range-tag" title="${utils.escAttr(el.note ? '原时机备注：' + el.note : '')}">${el.range ? '⏱已设' : '⏱跟镜'}${el.note ? '·有备注' : ''}</span>
+              <span class="post-x" onclick="window.__designDelPost(${i},${idx})" title="删除">×</span>
+            </div>`).join('')}
+          <div class="post-add">
+            ${POST_KINDS.map(([k, l]) => `<button class="post-add-btn" onclick="window.__designAddPost(${i},'${k}')">＋${l}</button>`).join('')}
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <div class="field-label">🔊 音频</div>
+        <div class="audio">
+          ${AUDIO.map(([k, label]) => `<div class="cell"><label>${label}</label><input class="inp" placeholder="内容" value="${utils.escAttr(s.audio[k] || '')}" data-i="${i}" data-k="audio.${k}"><input class="inp timing" placeholder="⏱ 念到…时" value="${utils.escAttr(s.audioTiming[k] || '')}" data-i="${i}" data-k="audioTiming.${k}"></div>`).join('')}
         </div>
       </div>
     </div></div>`;
