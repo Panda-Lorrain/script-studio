@@ -174,6 +174,110 @@ export async function renderDesign(data, main) {
     shotsEl.innerHTML = design.shots.map((s, i) => shotHTML(s, i, assets)).join('');
     shotsEl.querySelectorAll('.auto-grow').forEach(autoGrow);
     updateSummary();
+    bindAxis();
+  }
+
+  function bindAxis() {
+    shotsEl.querySelectorAll('.axis').forEach(axis => {
+      if (axis.dataset.bound) return;
+      axis.dataset.bound = '1';
+      axis.querySelectorAll('.w').forEach(w => {
+        w.addEventListener('click', () => {
+          const i = +axis.dataset.i;
+          const idx = axis.dataset.selIdx;
+          if (idx == null) { utils.toast('先点一条元素的条段选中它'); return; }
+          const end = axis.dataset.selEnd || 'a';
+          const s = design.shots[i];
+          const el = s.post[+idx];
+          if (!el) return;
+          const c = +w.dataset.c;
+          if (el.range == null) el.range = [c, c + 1];
+          if (end === 'a') el.range = [c, Math.max(c + 1, el.range[1])];
+          else el.range = [Math.min(el.range[0], c), c + 1];
+          if (el.range[0] >= el.range[1]) el.range = [el.range[0], el.range[0] + 1];
+          s.lastBy = store.getOperator(); s.lastTs = utils.nowIso();
+          renderShots(); bindAxis(); debounceSave(data);
+        });
+      });
+      axis.querySelectorAll('.seg-bar').forEach(bar => {
+        bar.addEventListener('click', e => e.stopPropagation());
+        bar.addEventListener('mousedown', e => startDrag(axis, bar, e));
+        bar.addEventListener('dblclick', e => { e.preventDefault(); resetRange(axis, bar); });
+      });
+    });
+  }
+  function resetRange(axis, bar) {
+    const i = +axis.dataset.i, idx = +bar.dataset.idx;
+    const s = design.shots[i];
+    s.post[idx].range = null;
+    s.lastBy = store.getOperator(); s.lastTs = utils.nowIso();
+    renderShots(); bindAxis(); debounceSave(data);
+  }
+  function startDrag(axis, bar, ev) {
+    ev.preventDefault();
+    const i = +axis.dataset.i, idx = +bar.dataset.idx;
+    axis.dataset.selIdx = idx; axis.dataset.selEnd = 'a';
+    const s = design.shots[i], el = s.post[idx];
+    const line = s.line || '';
+    const len = [...line].length;
+    if (el.range == null) el.range = [0, len];
+    const axisRect = axis.getBoundingClientRect();
+    const charAt = (clientX) => {
+      const ratio = Math.min(1, Math.max(0, (clientX - axisRect.left) / axisRect.width));
+      return Math.round(ratio * len);
+    };
+    let dragEnd = null;
+    const onMove = (e) => {
+      const x = e.clientX;
+      if (dragEnd == null) {
+        const aPx = axisRect.left + (el.range[0] / len) * axisRect.width;
+        const bPx = axisRect.left + (el.range[1] / len) * axisRect.width;
+        dragEnd = Math.abs(x - aPx) <= Math.abs(x - bPx) ? 'a' : 'b';
+        axis.dataset.selEnd = dragEnd;
+      }
+      const c = charAt(x);
+      if (dragEnd === 'a') el.range = [Math.min(c, el.range[1] - 1), el.range[1]];
+      else el.range = [el.range[0], Math.max(c, el.range[0] + 1)];
+      const left = (el.range[0] / len * 100).toFixed(2);
+      const width = ((el.range[1] - el.range[0]) / len * 100).toFixed(2);
+      bar.style.left = left + '%'; bar.style.width = width + '%';
+    };
+    const onUp = () => {
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+      s.lastBy = store.getOperator(); s.lastTs = utils.nowIso();
+      renderShots(); bindAxis(); debounceSave(data);
+    };
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  }
+
+  // 口播文字轴：line 按字切块；每条 post 元素一轨，range 映射成 % 条段
+  function renderAxis(s, i) {
+    const line = s.line || '';
+    if (!line) return '';
+    const words = [...line];
+    const len = words.length;
+    const bars = s.post.map((el, idx) => {
+      if (el.range == null) return '';
+      const [a, b] = el.range;
+      const left = (Math.max(0, a) / len * 100).toFixed(2);
+      const width = (Math.min(len, b) - Math.max(0, a)) / len * 100;
+      const top = (idx + 1) * 20;
+      return `<div class="seg-bar k-${el.kind}" style="left:${left}%;width:${width}%;top:${top}px" data-i="${i}" data-idx="${idx}" title="拖两端改区间·双击跟镜"></div>`;
+    }).join('');
+    const wordSpans = words.map((w, ci) => `<span class="w" data-i="${i}" data-c="${ci}">${utils.esc(w)}</span>`).join('');
+    const tracks = s.post.map((el, idx) => {
+      const full = el.range == null ? ' full' : '';
+      return `<div class="track${full}" data-i="${i}" data-idx="${idx}"></div>`;
+    }).join('');
+    return `
+      <div class="axis" data-i="${i}">
+        <div class="axis-cap">口播文字轴（拖条段·点字设进/出·双击跟镜）</div>
+        <div class="track track-line">${wordSpans}</div>
+        ${tracks}
+        <div class="bars">${bars}</div>
+      </div>`;
   }
 
   function shotHTML(s, i, assets) {
@@ -250,6 +354,7 @@ export async function renderDesign(data, main) {
             ${POST_KINDS.map(([k, l]) => `<button class="post-add-btn" onclick="window.__designAddPost(${i},'${k}')">＋${l}</button>`).join('')}
           </div>
         </div>
+        ${renderAxis(s, i)}
       </div>
       <div class="field">
         <div class="field-label">🔊 音频</div>
