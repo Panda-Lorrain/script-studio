@@ -220,7 +220,13 @@ export async function renderDesign(data, main) {
         });
       });
       axis.querySelectorAll('.seg-bar').forEach(bar => {
-        bar.addEventListener('click', e => e.stopPropagation());
+        bar.addEventListener('click', e => {
+          e.stopPropagation();
+          axis.dataset.selIdx = bar.dataset.idx;
+          axis.dataset.selEnd = 'a';
+          axis.querySelectorAll('.track.selected').forEach(t => t.classList.remove('selected'));
+          bar.closest('.track').classList.add('selected');
+        });
         bar.addEventListener('mousedown', e => startDrag(axis, bar, e));
         bar.addEventListener('dblclick', e => { e.preventDefault(); resetRange(axis, bar); });
       });
@@ -278,25 +284,23 @@ export async function renderDesign(data, main) {
     if (!line) return '';
     const words = [...line];
     const len = words.length;
-    const bars = s.post.map((el, idx) => {
-      if (el.range == null) return '';
-      const [a, b] = el.range;
-      const left = (Math.max(0, a) / len * 100).toFixed(2);
-      const width = (Math.min(len, b) - Math.max(0, a)) / len * 100;
-      const top = (idx + 1) * 20;
-      return `<div class="seg-bar k-${el.kind}" style="left:${left}%;width:${width}%;top:${top}px" data-i="${i}" data-idx="${idx}" title="拖两端改区间·双击跟镜"></div>`;
-    }).join('');
     const wordSpans = words.map((w, ci) => `<span class="w" data-i="${i}" data-c="${ci}">${utils.esc(w)}</span>`).join('');
     const tracks = s.post.map((el, idx) => {
       const full = el.range == null ? ' full' : '';
-      return `<div class="track${full}" data-i="${i}" data-idx="${idx}"></div>`;
+      let bar = '';
+      if (el.range != null) {
+        const [a, b] = el.range;
+        const left = (Math.max(0, a) / len * 100).toFixed(2);
+        const width = (Math.min(len, b) - Math.max(0, a)) / len * 100;
+        bar = `<div class="seg-bar k-${el.kind}" style="left:${left}%;width:${width}%" data-i="${i}" data-idx="${idx}" title="拖两端改区间·双击跟镜"></div>`;
+      }
+      return `<div class="track${full}" data-i="${i}" data-idx="${idx}">${bar}</div>`;
     }).join('');
     return `
       <div class="axis" data-i="${i}">
         <div class="axis-cap">口播文字轴（拖条段·点字设进/出·双击跟镜）</div>
         <div class="track track-line">${wordSpans}</div>
         ${tracks}
-        <div class="bars">${bars}</div>
       </div>`;
   }
 

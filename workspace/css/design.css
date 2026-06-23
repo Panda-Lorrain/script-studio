@@ -80,12 +80,12 @@ textarea.auto-grow { resize: none; overflow: hidden; }
 .axis .track-line { height: auto; padding: 4px 6px; line-height: 1.8; background: #fff; word-break: break-all; }
 .axis .track-line .w { display: inline; padding: 1px 0; cursor: pointer; border-radius: 3px; }
 .axis .track-line .w:hover { background: #fff3bf; }
-.axis .bars { position: relative; }
-.axis .bars .seg-bar { position: absolute; height: 16px; border-radius: 4px; cursor: ew-resize; opacity: .85; }
-.axis .bars .seg-bar.k-text { background: var(--accent); }
-.axis .bars .seg-bar.k-sticker { background: #ec6bad; }
-.axis .bars .seg-bar.k-fx { background: #8b5cf6; }
-.axis .bars .seg-bar.k-anim { background: #f59e0b; }
+.axis .track .seg-bar { position: absolute; top: 0; bottom: 0; border-radius: 4px; cursor: ew-resize; opacity: .85; }
+.axis .track .seg-bar.k-text { background: var(--accent); }
+.axis .track .seg-bar.k-sticker { background: #ec6bad; }
+.axis .track .seg-bar.k-fx { background: #8b5cf6; }
+.axis .track .seg-bar.k-anim { background: #f59e0b; }
+.axis .track.selected { border-color: var(--accent); box-shadow: inset 0 0 0 2px var(--accent); }
 
 .trans-slot { display: flex; align-items: center; gap: 8px; justify-content: center; padding: 6px 12px; margin: -2px 0; }
 .trans-slot .trans-arrow { color: var(--accent); font-size: 14px; }
@@ -109,6 +109,6 @@ textarea.auto-grow { resize: none; overflow: hidden; }
   /* 窄屏多轨轴横向滚动，避免挤变形 */
   .axis { overflow-x: auto; -webkit-overflow-scrolling: touch; }
   .axis .track-line { white-space: nowrap; min-width: max-content; }
-  .axis .bars { min-width: max-content; }
+  .axis .track { min-width: max-content; }
   .post-list { gap: 8px; }
 }
