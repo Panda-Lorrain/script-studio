@@ -2,7 +2,6 @@
 import * as store from './store.js';
 import * as utils from './utils.js';
 
-const POST = [['text', '文字'], ['sticker', '贴纸'], ['fx', '特效'], ['anim', '动画'], ['trans', '转场']];
 const AUDIO = [['bgm', '背景音乐'], ['sfx', '音效'], ['voice', '口播'], ['voiceFx', '变声']];
 
 /* ---------- 项目 JSON 导出/导入 ---------- */
@@ -97,21 +96,35 @@ export function exportCutGuide(data) {
     else if (t === 'ai') pic = `AI生成（待生）`;
     else pic = `未定`;
     const sub = s.subtitle || '（同口播/不打）';
-    const p = POST.map(([k, l]) => {
-      if (!s.post[k]) return '';
-      const tm = s.timing[k] ? `（念到"${s.timing[k]}"时）` : '';
-      return `${l}:${s.post[k]}${tm}`;
-    }).filter(Boolean).join('  ');
+    const post = (Array.isArray(s.post) ? s.post : []).map(el => {
+      const label = { text: '文字', sticker: '贴纸', fx: '特效', anim: '动画' }[el.kind] || el.kind;
+      const tm = rangeToText(s.line, el.range);
+      const note = el.note ? `（原：${el.note}）` : '';
+      return `${label}「${el.content}」${tm}${note}`;
+    }).join('  ');
     const a = AUDIO.map(([k, l]) => {
       if (!s.audio || !s.audio[k]) return '';
       const tm = (s.audioTiming && s.audioTiming[k]) ? `（念到"${s.audioTiming[k]}"时）` : '';
       return `${l}:${s.audio[k]}${tm}`;
     }).filter(Boolean).join('  ');
-    return `【${String(i + 1).padStart(2, '0')}】${s.line}\n  画面：${pic} ｜ 字幕：${sub}\n  ${p ? '后期：' + p : '（后期空）'}${a ? '\n  音频：' + a : ''}`;
+    const isLast = i === data.design.shots.length - 1;
+    const trans = (!isLast && s.trans) ? `\n  转场到第${i + 2}镜：${s.trans}` : '';
+    return `【${String(i + 1).padStart(2, '0')}】${s.line}\n  画面：${pic} ｜ 字幕：${sub}\n  ${post ? '后期：' + post : '（后期空）'}${a ? '\n  音频：' + a : ''}${trans}`;
   });
   const txt = `剪辑指引 · ${data.meta.title} · 共 ${data.design.shots.length} 镜\n${'='.repeat(40)}\n\n${lines.join('\n\n')}`;
   utils.download(`剪辑指引-${data.meta.title}.txt`, txt);
   utils.toast('已导出剪辑指引');
+}
+
+// range（基于 line 的字符区间）→ 人话时机描述
+function rangeToText(line, range) {
+  if (!line || range == null) return '（跟镜·全程）';
+  const chars = [...line];
+  const a = Math.max(0, range[0]), b = Math.min(chars.length, range[1]);
+  if (a >= b) return '（跟镜·全程）';
+  const inW = chars[a] || '';
+  const outW = chars[b - 1] || '';
+  return `（念到"${inW}"出现→"${outW}"消失）`;
 }
 
 /* ---------- 旧 HTML 迁移 ---------- */
