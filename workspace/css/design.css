@@ -103,7 +103,12 @@ textarea.auto-grow { resize: none; overflow: hidden; }
   .shot .card-inner { max-height: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior-y: contain; }
   .shot-line { font-size: 19px; line-height: 1.5; }
   .thumb { width: 88px; height: 156px; }
-  .post, .audio { display: flex; flex-direction: column; gap: 10px; }
-  .post .cell, .audio .cell { background: #fafbfc; padding: 8px 10px; border-radius: 7px; }
+  .post-list, .audio { display: flex; flex-direction: column; gap: 10px; }
+  .audio .cell { background: #fafbfc; padding: 8px 10px; border-radius: 7px; }
   .cell .inp { width: 100%; }
+  /* 窄屏多轨轴横向滚动，避免挤变形 */
+  .axis { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .axis .track-line { white-space: nowrap; min-width: max-content; }
+  .axis .bars { min-width: max-content; }
+  .post-list { gap: 8px; }
 }
