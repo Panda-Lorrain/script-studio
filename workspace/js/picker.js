@@ -39,7 +39,7 @@ function renderModal() {
             <div class="t">${utils.esc(modalState.title)}</div>
             <div class="s">${utils.esc(modalState.sub)}</div>
           </div>
-          <button class="btn ghost" id="pickerClose">✕ 完成</button>
+          <button class="btn primary" id="pickerClose">完成</button>
         </div>
         <div class="filters">
           <input class="search" id="pickerSearch" placeholder="🔍 搜索：存钱罐 / 背身 / 墨镜 / 推车 …" value="${utils.escAttr(modalState.query)}">
@@ -112,7 +112,7 @@ function renderGrid() {
   grid.innerHTML = list.map(a => {
     const sel = selected.includes(a.id) ? 'sel' : '';
     return `<div class="asset ${sel}" data-id="${utils.escAttr(a.id)}">
-      <img src="${store.assetUrl(a)}" loading="lazy" onerror="this.style.background='#fee'">
+      <div class="img-wrap"><img src="${store.assetUrl(a)}" loading="lazy" data-fb="${utils.escAttr(store.assetThumbUrl(a))}" onerror="this.onerror=null;if(this.src.startsWith('blob:'))this.src=this.dataset.fb;else this.parentElement.style.background='#fee'"></div>
       <div class="cap"><b>${utils.esc(a.id)}</b> ${utils.esc(a.desc)}<br><span style="opacity:.7">${utils.esc(a.cat)}/${utils.esc(a.framing)}</span></div>
     </div>`;
   }).join('');

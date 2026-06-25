@@ -8,18 +8,22 @@
     "framing": "全身",
     "state": "",
     "prop": "",
-    "desc": "哭"
+    "desc": "哭",
+    "mtime": 1782186599,
+    "thumb": "assets-thumb/01_悲伤/01_全身_哭.jpg"
   },
   {
     "id": "02",
-    "file": "02_上半身_哭.jpg",
+    "file": "02_上半身_哭.png",
     "folder": "01_悲伤",
     "cat": "悲伤",
     "action": "",
     "framing": "上半身",
     "state": "",
     "prop": "",
-    "desc": "哭"
+    "desc": "哭",
+    "mtime": 1782186599,
+    "thumb": "assets-thumb/01_悲伤/02_上半身_哭.jpg"
   },
   {
     "id": "03",
@@ -30,7 +34,9 @@
     "framing": "全身",
     "state": "",
     "prop": "",
-    "desc": "上坟伤心"
+    "desc": "上坟伤心",
+    "mtime": 1782186599,
+    "thumb": "assets-thumb/01_悲伤/03_全身_上坟伤心.jpg"
   },
   {
     "id": "04",
@@ -41,7 +47,9 @@
     "framing": "全身",
     "state": "",
     "prop": "",
-    "desc": "伤心背身插刀"
+    "desc": "伤心背身插刀",
+    "mtime": 1782186599,
+    "thumb": "assets-thumb/01_悲伤/04_全身_伤心背身插刀.jpg"
   },
   {
     "id": "05",
@@ -52,18 +60,22 @@
     "framing": "全身",
     "state": "",
     "prop": "",
-    "desc": "抱着存钱罐工资悲伤"
+    "desc": "抱着存钱罐工资悲伤",
+    "mtime": 1782186599,
+    "thumb": "assets-thumb/01_悲伤/05_全身_抱着存钱罐工资悲伤.jpg"
   },
   {
     "id": "06",
-    "file": "06_全身_发怒封嘴.jpg",
+    "file": "06_全身_发怒封嘴.png",
     "folder": "02_愤怒",
     "cat": "愤怒",
     "action": "",
     "framing": "全身",
     "state": "",
     "prop": "",
-    "desc": "发怒封嘴"
+    "desc": "发怒封嘴",
+    "mtime": 1782186599,
+    "thumb": "assets-thumb/02_愤怒/06_全身_发怒封嘴.jpg"
   },
   {
     "id": "07",
@@ -74,7 +86,9 @@
     "framing": "全身",
     "state": "",
     "prop": "",
-    "desc": "发怒点赞"
+    "desc": "发怒点赞",
+    "mtime": 1782186599,
+    "thumb": "assets-thumb/02_愤怒/07_全身_发怒点赞.jpg"
   },
   {
     "id": "08",
@@ -85,7 +99,9 @@
     "framing": "上半身",
     "state": "",
     "prop": "",
-    "desc": "生气握拳"
+    "desc": "生气握拳",
+    "mtime": 1782186599,
+    "thumb": "assets-thumb/02_愤怒/08_上半身_生气握拳.jpg"
   },
   {
     "id": "09",
@@ -96,7 +112,9 @@
     "framing": "全身",
     "state": "",
     "prop": "",
-    "desc": "叉腰盯"
+    "desc": "叉腰盯",
+    "mtime": 1782186599,
+    "thumb": "assets-thumb/02_愤怒/09_全身_叉腰盯.jpg"
   },
   {
     "id": "10",
@@ -107,7 +125,9 @@
     "framing": "全身",
     "state": "",
     "prop": "",
-    "desc": "指着盯"
+    "desc": "指着盯",
+    "mtime": 1782186599,
+    "thumb": "assets-thumb/02_愤怒/10_全身_指着盯.jpg"
   },
   {
     "id": "11",
@@ -118,29 +138,9 @@
     "framing": "全身",
     "state": "",
     "prop": "",
-    "desc": "站直盯"
-  },
-  {
-    "id": "12",
-    "file": "12_全身_懵圈疑惑.png",
-    "folder": "03_懵圈无力",
-    "cat": "懵圈无力",
-    "action": "",
-    "framing": "全身",
-    "state": "",
-    "prop": "",
-    "desc": "懵圈疑惑"
-  },
-  {
-    "id": "13",
-    "file": "13_上半身_懵圈抱头.jpg",
-    "folder": "03_懵圈无力",
-    "cat": "懵圈无力",
-    "action": "",
-    "framing": "上半身",
-    "state": "",
-    "prop": "",
-    "desc": "懵圈抱头"
+    "desc": "站直盯",
+    "mtime": 1782186599,
+    "thumb": "assets-thumb/02_愤怒/11_全身_站直盯.jpg"
   },
   {
     "id": "14",
@@ -151,7 +151,9 @@
     "framing": "全身",
     "state": "",
     "prop": "",
-    "desc": "泄气无力低落"
+    "desc": "泄气无力低落",
+    "mtime": 1782186599,
+    "thumb": "assets-thumb/03_懵圈无力/14_全身_泄气无力低落.jpg"
   },
   {
     "id": "15",
@@ -162,18 +164,22 @@
     "framing": "全身",
     "state": "",
     "prop": "",
-    "desc": "无力正面趴下"
+    "desc": "无力正面趴下",
+    "mtime": 1782186599,
+    "thumb": "assets-thumb/03_懵圈无力/15_全身_无力正面趴下.jpg"
   },
   {
     "id": "16",
-    "file": "16_全身_黑眼圈耷拉耳朵无力.jpg",
+    "file": "16_全身_黑眼圈耷拉耳朵无力.png",
     "folder": "03_懵圈无力",
     "cat": "懵圈无力",
     "action": "",
     "framing": "全身",
     "state": "",
     "prop": "",
-    "desc": "黑眼圈耷拉耳朵无力"
+    "desc": "黑眼圈耷拉耳朵无力",
+    "mtime": 1782186599,
+    "thumb": "assets-thumb/03_懵圈无力/16_全身_黑眼圈耷拉耳朵无力.jpg"
   },
   {
     "id": "17",
@@ -184,7 +190,9 @@
     "framing": "全身",
     "state": "",
     "prop": "",
-    "desc": "疲惫电脑桌前工作"
+    "desc": "疲惫电脑桌前工作",
+    "mtime": 1782186599,
+    "thumb": "assets-thumb/04_打工人/17_全身_疲惫电脑桌前工作.jpg"
   },
   {
     "id": "18",
@@ -195,18 +203,22 @@
     "framing": "全身",
     "state": "",
     "prop": "",
-    "desc": "拉推车干活"
+    "desc": "拉推车干活",
+    "mtime": 1782186599,
+    "thumb": "assets-thumb/04_打工人/18_全身_拉推车干活.jpg"
   },
   {
     "id": "19",
-    "file": "19_上半身_开心鼓掌.jpg",
+    "file": "19_上半身_开心鼓掌.png",
     "folder": "05_开心",
     "cat": "开心",
     "action": "",
     "framing": "上半身",
     "state": "",
     "prop": "",
-    "desc": "开心鼓掌"
+    "desc": "开心鼓掌",
+    "mtime": 1782186599,
+    "thumb": "assets-thumb/05_开心/19_上半身_开心鼓掌.jpg"
   },
   {
     "id": "20",
@@ -217,6 +229,8 @@
     "framing": "转场",
     "state": "",
     "prop": "",
-    "desc": "花屏我已懵圈"
+    "desc": "花屏我已懵圈",
+    "mtime": 1782186599,
+    "thumb": "assets-thumb/06_转场特效/20_转场_花屏我已懵圈.jpg"
   }
 ]
