@@ -1,5 +1,21 @@
 /* workspace/css/review.css */
-.review-wrap { padding: 16px 24px; }
+/* ───────────────────────────────────────────────────────────────
+   ⚠️ 电脑端审核台布局契约（改本文件 / 改手机端前必读）
+   原文区 / 采纳区 / 输出区 必须各自在容器内 overflow:auto 滚动，
+   整页（.main）不滚动。依赖下面这条约束链，断任何一环都会崩：
+     .main(flex:1)
+       → .review-wrap(height:100%, flex column, overflow:hidden)
+       → .review-grid(flex:1, minmax(0,1fr) 行, ★align-items:stretch★)
+       → .rev-panel(stretch 到行高, overflow:hidden)
+       → 子区 #revOriginal / #revItems / #revOutput (flex:1 + overflow:auto)
+   ★致命陷阱：.review-grid 的 align-items 必须是 stretch，绝不可改回 start。
+     start 会让 panel 高度=内容、突破 minmax(0,1fr) 行高 → 原文区溢出被裁、
+     和输出区重叠、#revOutput 塌成 textarea 默认 rows=2（"两行半"）。
+     #revOutput 的 flex:1 只有在 panel 被行高约束（stretch）时才拉伸。
+   ★改手机端：只动文件底部 @media(max-width:768px) 块，勿碰上面的基础规则。
+   ★改完务必跑回归自检：  python workspace/scripts/check-layout.py
+   ─────────────────────────────────────────────────────────────── */
+.review-wrap { padding: 16px 24px; height: 100%; display: flex; flex-direction: column; overflow: hidden; min-height: 0; }
 .review-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; flex-shrink: 0; }
 .review-head h1 { font-size: 17px; font-weight: 600; }
 .review-head .verdict { font-size: 13px; color: var(--muted); }
@@ -7,17 +23,19 @@
 .review-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: minmax(280px, 40vh) auto;
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
   grid-template-areas: "original items" "output items";
   gap: 14px;
-  align-items: start;
+  align-items: stretch;  /* ★勿改 start★ 见顶部契约：start→panel突破行高→原文溢出/输出框塌缩 */
+  flex: 1;
+  min-height: 0;
 }
 .review-grid .panel-original { grid-area: original; }
 .review-grid .panel-output { grid-area: output; }
 .review-grid .panel-items { grid-area: items; }
 
 .rev-panel { display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
-.rev-panel h2 { font-size: 13px; margin: 0 0 10px; color: var(--muted); font-weight: 500; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.rev-panel h2 { font-size: 13px; margin: 0 0 10px; color: var(--muted); font-weight: 500; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; flex-shrink: 0; }
 .sort-bar { display: flex; gap: 6px; }
 .sort-btn { border: 1px solid var(--border); background: #fff; color: var(--muted); padding: 3px 11px; border-radius: 14px; font-size: 11px; cursor: pointer; font-weight: 500; white-space: nowrap; }
 .sort-btn:hover { background: #f2f3f5; }
@@ -54,12 +72,13 @@ mark.l { background: var(--ok-bg); color: var(--ok); border-bottom: 2px dashed v
 .manual-head { font-size: 12px; color: var(--ai); font-weight: 600; margin-bottom: 10px; }
 .manual-hint { color: var(--muted); font-weight: 400; }
 .rev-card.manual { border-left: 3px solid var(--ai); background: var(--ai-bg); }
+.manual-section .rev-card.manual + .rev-card.manual { margin-top: 10px; }
 .manual-tag { background: #fff; color: var(--ai); border: 1px solid var(--ai); }
 .manual-to { color: var(--ai); font-weight: 600; flex: 1; min-width: 140px; word-break: break-word; }
 
-.out-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 10px; flex-wrap: wrap; }
+.out-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 10px; flex-wrap: wrap; flex-shrink: 0; }
 .out-head .btns { display: flex; gap: 8px; flex-wrap: wrap; }
-#revOutput { width: 100%; min-height: 180px; height: auto; border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-size: 14px; line-height: 1.9; font-family: inherit; resize: none; color: var(--text); }
+#revOutput { width: 100%; flex: 1; min-height: 0; overflow: auto; border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-size: 14px; line-height: 1.9; font-family: inherit; resize: none; color: var(--text); }
 #revOutput:focus { border-color: var(--accent); }
 .split-btn { background: #fff; border: 1px solid var(--border); color: var(--muted); padding: 5px 12px; border-radius: 6px; font-size: 13px; cursor: pointer; font-family: inherit; }
 .split-btn:hover { background: #f2f3f5; }
@@ -69,9 +88,14 @@ mark.l { background: var(--ok-bg); color: var(--ok); border-bottom: 2px dashed v
   .review-wrap { padding: 12px; height: auto; display: block; overflow: visible; }
   .review-grid { grid-template-columns: 1fr; grid-template-rows: auto; grid-template-areas: "original" "items" "output"; height: auto; }
   .rev-panel { max-height: none; }
-  #revOutput { min-height: 100px; height: auto; max-height: none; overflow: visible; }
+  #revOutput { flex: none; min-height: 100px; height: auto; max-height: none; overflow: visible; }
   #revOriginal { font-size: 15px; line-height: 1.95; }
   .rev-line { flex-direction: column; align-items: stretch; gap: 5px; }
   .edit-sug { min-width: 100%; font-size: 15px; padding: 9px 10px; }
   .rev-actions .btn { flex: 1; padding: 10px; font-size: 14px; min-height: 42px; }
 }
+
+/* 长按审核卡片 → 输出框选区高亮：防系统文本选择/长按菜单 + 触发时的视觉反馈 */
+.rev-card[data-id] { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+.rev-card[data-id] input.edit-sug { -webkit-user-select: text; user-select: text; -webkit-touch-callout: default; }
+.rev-card.longpress-active { transform: scale(0.985); box-shadow: 0 0 0 2px var(--accent) inset; }

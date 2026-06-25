@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<!-- 电脑端审核台布局回归夹具：check-layout.py 用 Edge headless dump-dom 本页，
+     从 <title> 里取以 LAYOUTCHECK 开头的 JSON 数值做断言。结构须与 js/review.js 的审核台模板一致。 -->
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/review.css">
+<title>fixture</title>
+</head>
+<body>
+<div class="topbar"><div class="brand">🎬 Script Studio <span class="sub">工作台</span></div></div>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="nav-section">项目</div>
+    <div class="nav-item active">🛡️ 审核</div>
+    <div class="nav-item">🎨 设计</div>
+  </aside>
+  <main class="main">
+    <div class="review-wrap">
+      <div class="review-head"><h1>🛡️ 文案审核 · 布局夹具</h1></div>
+      <div class="review-grid">
+        <section class="panel rev-panel panel-original">
+          <h2><span>原文</span><button class="split-btn">✂️ 字幕断句</button></h2>
+          <div id="revOriginal">姐妹们听我说这个真的绝绝子
+我用了三天三夜终于搞明白了
+首先你要准备一瓶最便宜的洗发水
+千万不要买贵的没有用真的
+然后把头发打湿水温一定要四十度
+太高会伤头皮太低打不开毛鳞片
+接着把洗发水挤在手心搓出泡沫
+直接上头揉搓三分钟不要偷懒
+你会发现头发变得超级顺滑
+但是重点来了千万别用护发素
+护发素会让头发越用越干相信我
+洗完之后用毛巾按压不要搓
+搓头发等于毁头发切记切记
+然后让它自然干不要用吹风机
+吹风机的热度会让头发分叉断裂
+等到半干的时候抹一点精油
+只需要一滴多了一会变油头
+第二天你会发现头发蓬松又顺滑
+这个方法我教了无数姐妹都成功了
+赶紧点赞收藏不然刷着刷着就没了
+关注我每天分享实用小技巧
+评论区告诉我你最想解决什么问题
+下期视频专门拍给你们看
+最后再说一遍洗发水千万别买贵的
+便宜大碗才是永远的神
+听我的准没错姐妹们冲就完了</div>
+        </section>
+        <section class="panel rev-panel panel-items">
+          <h2><span>采纳区</span><span class="sort-bar"><button class="sort-btn on">⚠️ 危险程度</button><button class="sort-btn">📜 文案顺序</button></span></h2>
+          <div id="revItems">
+            <div class="rev-card"><div><span class="tag high">🔴 高危</span><span class="cat"> 绝对化用语</span></div><div class="rev-line"><span class="from">真的绝绝子</span><span class="arrow">→</span><input class="edit-sug" value="挺不错的"></div><div class="rev-reason">"绝绝子""真的"等绝对化表达</div><div class="rev-actions"><button class="btn yes">✓ 采纳</button><button class="btn no">✗ 保留</button></div></div>
+            <div class="rev-card"><div><span class="tag high">🔴 高危</span><span class="cat"> 功效承诺</span></div><div class="rev-line"><span class="from">用了三天三夜终于搞明白</span><span class="arrow">→</span><input class="edit-sug" value="花了不少时间研究"></div><div class="rev-reason">夸大功效暗示</div><div class="rev-actions"><button class="btn yes">✓ 采纳</button><button class="btn no">✗ 保留</button></div></div>
+            <div class="rev-card"><div><span class="tag high">🔴 高危</span><span class="cat"> 绝对化用语</span></div><div class="rev-line"><span class="from">千万不要买贵的没有用真的</span><span class="arrow">→</span><input class="edit-sug" value="不一定要买贵的"></div><div class="rev-reason">绝对化否定</div><div class="rev-actions"><button class="btn yes">✓ 采纳</button><button class="btn no">✗ 保留</button></div></div>
+            <div class="rev-card"><div><span class="tag medium">🟡 中危</span><span class="cat"> 引流</span></div><div class="rev-line"><span class="from">评论区告诉我</span><span class="arrow">→</span><input class="edit-sug" value="欢迎留言"></div><div class="rev-reason">引导评论互动</div><div class="rev-actions"><button class="btn yes">✓ 采纳</button><button class="btn no">✗ 保留</button></div></div>
+            <div class="rev-card"><div><span class="tag high">🔴 高危</span><span class="cat"> 绝对化用语</span></div><div class="rev-line"><span class="from">听我的准没错</span><span class="arrow">→</span><input class="edit-sug" value="可以参考我的方法"></div><div class="rev-reason">绝对化保证</div><div class="rev-actions"><button class="btn yes">✓ 采纳</button><button class="btn no">✗ 保留</button></div></div>
+            <div class="rev-card"><div><span class="tag medium">🟡 中危</span><span class="cat"> 功效承诺</span></div><div class="rev-line"><span class="from">头发变得超级顺滑</span><span class="arrow">→</span><input class="edit-sug" value="头发会比较顺滑"></div><div class="rev-reason">功效夸大</div><div class="rev-actions"><button class="btn yes">✓ 采纳</button><button class="btn no">✗ 保留</button></div></div>
+            <div class="rev-card"><div><span class="tag low">🟢 低危</span><span class="cat"> 表述</span></div><div class="rev-line"><span class="from">姐妹们</span><span class="arrow">→</span><input class="edit-sug" value="大家好"></div><div class="rev-reason">称呼偏口语</div><div class="rev-actions"><button class="btn yes">✓ 采纳</button><button class="btn no">✗ 保留</button></div></div>
+          </div>
+        </section>
+        <section class="panel rev-panel panel-output">
+          <div class="out-head">
+            <h2 style="margin:0">输出 <span style="font-size:11px;color:#8a9099;font-weight:400">（可手动编辑）</span></h2>
+            <div class="btns">
+              <button class="split-btn">✂️ 字幕断句</button>
+              <button class="btn primary">📋 复制</button>
+              <button class="btn ok">✓ 完成审核</button>
+              <button class="btn">↩ 撤销完成</button>
+              <button class="btn">♻️ 恢复分镜</button>
+              <button class="btn primary">🎨 去设计台 →</button>
+            </div>
+          </div>
+          <textarea id="revOutput">挺不错的
+花了不少时间研究
+首先你要准备一瓶洗发水
+不一定要买贵的
+然后把头发打湿水温四十度
+把洗发水搓出泡沫上头揉搓
+头发会比较顺滑
+洗完用毛巾按压不要搓
+让它自然干
+抹一点精油
+欢迎留言
+可以参考我的方法
+便宜大碗才是永远的神</textarea>
+        </section>
+      </div>
+    </div>
+  </main>
+</div>
+<script>
+addEventListener('load', function(){
+  setTimeout(function(){
+    var H=function(s){var e=document.querySelector(s);return e?Math.round(e.getBoundingClientRect().height):null};
+    var OY=function(s){var e=document.querySelector(s);return e?getComputedStyle(e).overflowY:null};
+    var d={
+      vw:innerWidth, vh:innerHeight, isMobile:matchMedia('(max-width:768px)').matches,
+      main:H('.main'), wrap:H('.review-wrap'), grid:H('.review-grid'),
+      panelOrig:H('.panel-original'), revOrig:H('#revOriginal'), revOrigOv:OY('#revOriginal'),
+      panelOut:H('.panel-output'), outHead:H('.out-head'), revOut:H('#revOutput'), revOutOv:OY('#revOutput'),
+      panelItems:H('.panel-items'), revItems:H('#revItems'), revItemsOv:OY('#revItems')
+    };
+    document.title='LAYOUTCHECK'+JSON.stringify(d);
+  },350);
+});
+</script>
+</body>
+</html>
