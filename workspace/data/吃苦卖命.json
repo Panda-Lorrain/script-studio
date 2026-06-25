@@ -2,8 +2,8 @@
   "meta": {
     "title": "吃苦卖命",
     "created": "2026-06-22T11:33:19.031Z",
-    "updated": "2026-06-22T11:33:19.031Z",
-    "stage": "review",
+    "updated": "2026-06-23T14:30:47.000Z",
+    "stage": "design",
     "operator": "script-review"
   },
   "review": {
@@ -112,11 +112,722 @@
         "reason": "「钱」是直播间违禁词，但口播剧情中风险较低。可改为「挣的钱」或「攒的钱」更口语化。"
       }
     ],
-    "decisions": {},
-    "output": ""
+    "decisions": {
+      "1": {
+        "adopted": false,
+        "kept": false,
+        "editedSuggestion": "慢性透支",
+        "lastBy": null,
+        "lastTs": null
+      },
+      "2": {
+        "adopted": false,
+        "kept": false,
+        "editedSuggestion": "该休息就休息",
+        "lastBy": null,
+        "lastTs": null
+      },
+      "3": {
+        "adopted": false,
+        "kept": false,
+        "editedSuggestion": "有人拿天道酬勤",
+        "lastBy": null,
+        "lastTs": null
+      },
+      "4": {
+        "adopted": false,
+        "kept": false,
+        "editedSuggestion": "方向不对再拼",
+        "lastBy": null,
+        "lastTs": null
+      },
+      "5": {
+        "adopted": false,
+        "kept": false,
+        "editedSuggestion": "透支身体图",
+        "lastBy": null,
+        "lastTs": null
+      },
+      "6": {
+        "adopted": false,
+        "kept": false,
+        "editedSuggestion": "努力也追不上",
+        "lastBy": null,
+        "lastTs": null
+      },
+      "7": {
+        "adopted": false,
+        "kept": false,
+        "editedSuggestion": "工资只涨几百",
+        "lastBy": null,
+        "lastTs": null
+      },
+      "8": {
+        "adopted": false,
+        "kept": false,
+        "editedSuggestion": "被洗脑了",
+        "lastBy": null,
+        "lastTs": null
+      },
+      "9": {
+        "adopted": false,
+        "kept": false,
+        "editedSuggestion": "领导还劝",
+        "lastBy": null,
+        "lastTs": null
+      },
+      "10": {
+        "adopted": true,
+        "kept": false,
+        "editedSuggestion": "放弃全部休息",
+        "lastBy": "陈德基",
+        "lastTs": "2026-06-23T11:44:03.492Z"
+      },
+      "11": {
+        "adopted": false,
+        "kept": false,
+        "editedSuggestion": "挣的钱不够看病",
+        "lastBy": "陈德基",
+        "lastTs": "2026-06-23T02:48:29.712Z"
+      }
+    },
+    "output": "从小家里人都说：勤快饿不死，别人能出头，就是比你更能吃苦。\n我听话进厂苦干，天天加班到深夜，放弃全部休息休假，熬了整整三年。\n熬坏颈椎、熬出胃病、大把掉发，薪资只涨几百，老板还劝我勤劳自有回报。\n好像我再拼命，也永远赶不上别人，只能认命埋头干活。\n别被 KFC 了！这根本不是勤劳，是愚笨式自残！\n老板挂天道酬勤哄你卖命，自己坐享红利，这套鸡汤你也信？\n没资源没方向，瞎勤快一文不值！螺丝钉再拼，也变不了发动机。\n累垮一身毛病，赚的钱连看病都不够，卖命到底图什么？\n可以干活，但别卖命！拒绝无意义内耗，该摆烂就摆烂。\n你的命，远比老板画的饼金贵，谁都别想消耗你！",
+    "outputLastBy": "陈德基",
+    "outputLastTs": "2026-06-23T12:09:51.146Z"
   },
   "design": {
-    "shots": []
+    "shots": [
+      {
+        "line": "从小家里都说：",
+        "subtitle": "",
+        "subject": {
+          "type": "lib",
+          "refs": [],
+          "prompt": "",
+          "assetIds": [
+            "07"
+          ]
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T14:30:45.897Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "勤快饿不死，",
+        "subtitle": "",
+        "subject": {
+          "type": "ai",
+          "refs": [
+            "02"
+          ],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "陈德基",
+        "lastTs": "2026-06-23T13:07:42.631Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "别人能出头，",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "就是比你更能吃苦。",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "我听话进厂苦干，",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "天天加班到深夜，",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "放弃所有休假，",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "熬了整整三年。",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "熬坏颈椎、",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "熬出胃病、",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "大把掉发，",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "工资只涨",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "几百，",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "老板还劝我",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "勤劳自有回报。",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "好像我再拼命，",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "也永远赶不上别人，",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "只能认命埋头干活。",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "别被 KFC 了！",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "这根本不是勤劳，",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "是愚笨式自残！",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "老板挂天道酬勤",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "哄你卖命，",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "自己坐享红利，",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "这套鸡汤你也信？",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "没资源没方向，",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "瞎勤快一文不值！",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "螺丝钉再拼，",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "也变不了发动机。",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "累垮一身毛病，",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "赚的钱连看病都不够，",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "透支身体图什么？",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "可以干活，",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "但别卖命！",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "拒绝无意义内耗，",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "该摆烂就摆烂。",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "你的命，",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "远比老板画的饼金贵，",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      },
+      {
+        "line": "谁都别想消耗你！",
+        "subtitle": "",
+        "subject": {
+          "type": null,
+          "refs": [],
+          "prompt": "",
+          "assetIds": []
+        },
+        "post": [],
+        "lastBy": "熊猫洛兰",
+        "lastTs": "2026-06-23T03:02:38.265Z",
+        "audio": {},
+        "audioTiming": {},
+        "trans": null
+      }
+    ],
+    "_trash": null,
+    "schemaVer": 2
   },
   "changelog": [
     {
@@ -124,6 +835,1062 @@
       "who": "script-review",
       "action": "migrated",
       "detail": "从旧 review-*.html 迁移"
+    },
+    {
+      "ts": "2026-06-22T17:40:29.433Z",
+      "who": "陈德基",
+      "action": "review_decide",
+      "detail": "第1条 采纳"
+    },
+    {
+      "ts": "2026-06-22T17:40:30.793Z",
+      "who": "陈德基",
+      "action": "review_decide",
+      "detail": "第3条 保留"
+    },
+    {
+      "ts": "2026-06-22T17:40:31.623Z",
+      "who": "陈德基",
+      "action": "review_decide",
+      "detail": "第4条 采纳"
+    },
+    {
+      "ts": "2026-06-22T17:40:40.242Z",
+      "who": "陈德基",
+      "action": "review_decide",
+      "detail": "第5条 保留"
+    },
+    {
+      "ts": "2026-06-22T17:40:41.223Z",
+      "who": "陈德基",
+      "action": "review_decide",
+      "detail": "第2条 采纳"
+    },
+    {
+      "ts": "2026-06-22T17:40:48.701Z",
+      "who": "陈德基",
+      "action": "manual_edit",
+      "detail": "手动编辑输出"
+    },
+    {
+      "ts": "2026-06-22T17:40:58.311Z",
+      "who": "陈德基",
+      "action": "manual_edit",
+      "detail": "手动编辑输出"
+    },
+    {
+      "ts": "2026-06-22T17:41:43.233Z",
+      "who": "陈德基",
+      "action": "review_undo",
+      "detail": "第5条撤销决定"
+    },
+    {
+      "ts": "2026-06-22T17:41:44.246Z",
+      "who": "陈德基",
+      "action": "review_undo",
+      "detail": "第2条撤销决定"
+    },
+    {
+      "ts": "2026-06-22T17:41:45.948Z",
+      "who": "陈德基",
+      "action": "manual_revert",
+      "detail": "撤销第4行手动修改"
+    },
+    {
+      "ts": "2026-06-22T17:41:46.846Z",
+      "who": "陈德基",
+      "action": "review_undo",
+      "detail": "第1条撤销决定"
+    },
+    {
+      "ts": "2026-06-22T17:41:50.004Z",
+      "who": "陈德基",
+      "action": "manual_revert",
+      "detail": "撤销第1行手动修改"
+    },
+    {
+      "ts": "2026-06-22T17:41:53.982Z",
+      "who": "陈德基",
+      "action": "review_undo",
+      "detail": "第3条撤销决定"
+    },
+    {
+      "ts": "2026-06-22T17:41:55.105Z",
+      "who": "陈德基",
+      "action": "manual_revert",
+      "detail": "撤销第5行手动修改"
+    },
+    {
+      "ts": "2026-06-22T17:41:56.654Z",
+      "who": "陈德基",
+      "action": "manual_revert",
+      "detail": "撤销第9行手动修改"
+    },
+    {
+      "ts": "2026-06-22T17:41:59.482Z",
+      "who": "陈德基",
+      "action": "review_undo",
+      "detail": "第4条撤销决定"
+    },
+    {
+      "ts": "2026-06-22T17:42:44.742Z",
+      "who": "陈德基",
+      "action": "pushed_to_design",
+      "detail": "生成 38 镜"
+    },
+    {
+      "ts": "2026-06-22T17:42:51.487Z",
+      "who": "陈德基",
+      "action": "design_edit",
+      "detail": "第1镜主体=lib"
+    },
+    {
+      "ts": "2026-06-22T17:42:59.297Z",
+      "who": "陈德基",
+      "action": "design_edit",
+      "detail": "第1镜选库 01"
+    },
+    {
+      "ts": "2026-06-22T17:43:22.307Z",
+      "who": "陈德基",
+      "action": "design_edit",
+      "detail": "第1镜选库 02"
+    },
+    {
+      "ts": "2026-06-22T17:44:04.665Z",
+      "who": "陈德基",
+      "action": "design_edit",
+      "detail": "第2镜主体=lib"
+    },
+    {
+      "ts": "2026-06-22T17:44:09.255Z",
+      "who": "陈德基",
+      "action": "design_edit",
+      "detail": "第2镜主体=ai"
+    },
+    {
+      "ts": "2026-06-22T17:44:13.802Z",
+      "who": "陈德基",
+      "action": "design_edit",
+      "detail": "第2镜参考图更新"
+    },
+    {
+      "ts": "2026-06-22T17:44:22.503Z",
+      "who": "陈德基",
+      "action": "design_edit",
+      "detail": "第2镜删参考图"
+    },
+    {
+      "ts": "2026-06-22T17:44:23.777Z",
+      "who": "陈德基",
+      "action": "design_edit",
+      "detail": "第2镜主体=未定"
+    },
+    {
+      "ts": "2026-06-22T17:44:26.153Z",
+      "who": "陈德基",
+      "action": "design_edit",
+      "detail": "第1镜主体=未定"
+    },
+    {
+      "ts": "2026-06-22T17:44:40.078Z",
+      "who": "陈德基",
+      "action": "unpush_design",
+      "detail": "撤销完成审核，分镜移入回收站"
+    },
+    {
+      "ts": "2026-06-22T17:44:46.981Z",
+      "who": "陈德基",
+      "action": "restore_design",
+      "detail": "从回收站恢复分镜"
+    },
+    {
+      "ts": "2026-06-22T17:44:48.059Z",
+      "who": "陈德基",
+      "action": "unpush_design",
+      "detail": "撤销完成审核，分镜移入回收站"
+    },
+    {
+      "ts": "2026-06-22T17:44:49.039Z",
+      "who": "陈德基",
+      "action": "restore_design",
+      "detail": "从回收站恢复分镜"
+    },
+    {
+      "ts": "2026-06-22T17:44:49.687Z",
+      "who": "陈德基",
+      "action": "unpush_design",
+      "detail": "撤销完成审核，分镜移入回收站"
+    },
+    {
+      "ts": "2026-06-22T17:44:51.803Z",
+      "who": "陈德基",
+      "action": "restore_design",
+      "detail": "从回收站恢复分镜"
+    },
+    {
+      "ts": "2026-06-22T17:44:52.468Z",
+      "who": "陈德基",
+      "action": "unpush_design",
+      "detail": "撤销完成审核，分镜移入回收站"
+    },
+    {
+      "ts": "2026-06-23T02:17:16.177Z",
+      "who": "陈德基",
+      "action": "review_decide",
+      "detail": "第1条 采纳"
+    },
+    {
+      "ts": "2026-06-23T02:17:23.842Z",
+      "who": "陈德基",
+      "action": "review_decide",
+      "detail": "第5条 采纳"
+    },
+    {
+      "ts": "2026-06-23T02:48:28.571Z",
+      "who": "陈德基",
+      "action": "review_edit",
+      "detail": "第11条改写"
+    },
+    {
+      "ts": "2026-06-23T02:48:29.717Z",
+      "who": "陈德基",
+      "action": "review_edit",
+      "detail": "第11条改写"
+    },
+    {
+      "ts": "2026-06-23T03:01:15.493Z",
+      "who": "陈德基",
+      "action": "review_undo",
+      "detail": "第1条撤销决定"
+    },
+    {
+      "ts": "2026-06-23T03:01:20.676Z",
+      "who": "陈德基",
+      "action": "review_decide",
+      "detail": "第7条 采纳"
+    },
+    {
+      "ts": "2026-06-23T03:01:21.661Z",
+      "who": "陈德基",
+      "action": "review_decide",
+      "detail": "第7条 保留"
+    },
+    {
+      "ts": "2026-06-23T03:01:22.130Z",
+      "who": "陈德基",
+      "action": "review_decide",
+      "detail": "第7条 采纳"
+    },
+    {
+      "ts": "2026-06-23T03:02:38.267Z",
+      "who": "熊猫洛兰",
+      "action": "pushed_to_design",
+      "detail": "生成 39 镜"
+    },
+    {
+      "ts": "2026-06-23T03:04:10.596Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜主体=lib"
+    },
+    {
+      "ts": "2026-06-23T03:08:49.588Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜主体=lib"
+    },
+    {
+      "ts": "2026-06-23T03:15:34.586Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜主体=lib"
+    },
+    {
+      "ts": "2026-06-23T04:01:57.930Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜主体=lib"
+    },
+    {
+      "ts": "2026-06-23T04:03:06.092Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T04:03:07.287Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜主体=lib"
+    },
+    {
+      "ts": "2026-06-23T04:06:14.313Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜主体=lib"
+    },
+    {
+      "ts": "2026-06-23T04:06:30.373Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 13"
+    },
+    {
+      "ts": "2026-06-23T04:06:31.862Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 13,15"
+    },
+    {
+      "ts": "2026-06-23T04:06:32.616Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 13,15"
+    },
+    {
+      "ts": "2026-06-23T04:06:33.048Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 13,15,14,12"
+    },
+    {
+      "ts": "2026-06-23T04:06:34.270Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 15,14,12"
+    },
+    {
+      "ts": "2026-06-23T04:06:34.551Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 14,12"
+    },
+    {
+      "ts": "2026-06-23T04:06:34.954Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 14"
+    },
+    {
+      "ts": "2026-06-23T04:06:36.150Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 "
+    },
+    {
+      "ts": "2026-06-23T04:06:39.071Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 17"
+    },
+    {
+      "ts": "2026-06-23T04:06:39.812Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 "
+    },
+    {
+      "ts": "2026-06-23T04:06:41.005Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 12"
+    },
+    {
+      "ts": "2026-06-23T04:06:41.833Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 "
+    },
+    {
+      "ts": "2026-06-23T04:06:42.153Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 14"
+    },
+    {
+      "ts": "2026-06-23T04:06:42.438Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 "
+    },
+    {
+      "ts": "2026-06-23T04:06:42.804Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 14"
+    },
+    {
+      "ts": "2026-06-23T04:07:24.453Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 14,02"
+    },
+    {
+      "ts": "2026-06-23T04:07:27.210Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 14,02,01"
+    },
+    {
+      "ts": "2026-06-23T04:07:28.072Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 14,02,01,03"
+    },
+    {
+      "ts": "2026-06-23T04:07:32.973Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T04:07:33.500Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T04:07:33.993Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T04:07:34.474Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T04:21:23.860Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜主体=lib"
+    },
+    {
+      "ts": "2026-06-23T04:22:05.224Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 01"
+    },
+    {
+      "ts": "2026-06-23T04:22:29.536Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 01,13"
+    },
+    {
+      "ts": "2026-06-23T04:56:52.854Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 01,13,19"
+    },
+    {
+      "ts": "2026-06-23T04:56:54.513Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 01,13"
+    },
+    {
+      "ts": "2026-06-23T04:56:55.523Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 01,13,17"
+    },
+    {
+      "ts": "2026-06-23T04:56:55.956Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 01,13,17,18"
+    },
+    {
+      "ts": "2026-06-23T04:56:56.465Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 01,13,17"
+    },
+    {
+      "ts": "2026-06-23T04:56:56.816Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 01,13"
+    },
+    {
+      "ts": "2026-06-23T04:56:57.694Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 01,13,14"
+    },
+    {
+      "ts": "2026-06-23T04:56:58.113Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 01,13,14,15"
+    },
+    {
+      "ts": "2026-06-23T04:56:58.873Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 01,13,14,15,16"
+    },
+    {
+      "ts": "2026-06-23T04:56:59.767Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 01,13,14,16"
+    },
+    {
+      "ts": "2026-06-23T04:57:00.101Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 01,13,16"
+    },
+    {
+      "ts": "2026-06-23T04:57:00.387Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 01,13"
+    },
+    {
+      "ts": "2026-06-23T04:57:13.753Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 01,13,02"
+    },
+    {
+      "ts": "2026-06-23T04:57:14.032Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 01,13,02,04"
+    },
+    {
+      "ts": "2026-06-23T04:57:14.302Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 01,13,02,04,03"
+    },
+    {
+      "ts": "2026-06-23T04:57:14.722Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 01,13,02,04,03,05"
+    },
+    {
+      "ts": "2026-06-23T04:57:21.335Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 01,13,02,04,03,05,06"
+    },
+    {
+      "ts": "2026-06-23T04:57:21.580Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 01,13,02,04,03,05,06,07"
+    },
+    {
+      "ts": "2026-06-23T04:57:21.844Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 01,13,02,04,03,05,06,07,08"
+    },
+    {
+      "ts": "2026-06-23T04:57:22.145Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 01,13,02,04,03,05,06,07,08,09"
+    },
+    {
+      "ts": "2026-06-23T04:57:22.507Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 01,13,02,04,03,05,06,07,08,09,10"
+    },
+    {
+      "ts": "2026-06-23T04:57:22.798Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 01,13,02,04,03,05,06,07,08,09,10,11"
+    },
+    {
+      "ts": "2026-06-23T04:57:38.029Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 01,13,02,04,03,05,06,07,08,09,10,11,19"
+    },
+    {
+      "ts": "2026-06-23T05:06:36.250Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T05:06:37.091Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T05:06:37.677Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T05:06:38.400Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T05:06:38.878Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T05:06:39.411Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T05:06:40.274Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T05:06:40.878Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T05:06:41.263Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T05:06:41.682Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T05:06:42.163Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T05:07:03.196Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 13"
+    },
+    {
+      "ts": "2026-06-23T05:07:21.633Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 13,19"
+    },
+    {
+      "ts": "2026-06-23T05:07:22.772Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 13"
+    },
+    {
+      "ts": "2026-06-23T05:07:25.536Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 13,07"
+    },
+    {
+      "ts": "2026-06-23T05:07:26.338Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 13,07,05"
+    },
+    {
+      "ts": "2026-06-23T05:07:27.101Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 13,07,05,03"
+    },
+    {
+      "ts": "2026-06-23T05:07:27.509Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 13,07,05,03,04"
+    },
+    {
+      "ts": "2026-06-23T05:07:28.252Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 13,07,05,03,04,06"
+    },
+    {
+      "ts": "2026-06-23T05:07:28.593Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 13,07,05,03,04,06,01"
+    },
+    {
+      "ts": "2026-06-23T05:07:29.485Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 13,07,05,03,04,06,01,10"
+    },
+    {
+      "ts": "2026-06-23T05:07:29.997Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 13,07,05,03,04,06,01,10,14"
+    },
+    {
+      "ts": "2026-06-23T05:07:30.253Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 13,07,05,03,04,06,01,10,14,09"
+    },
+    {
+      "ts": "2026-06-23T05:07:31.154Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 13,07,05,03,04,06,01,10,14,09,15"
+    },
+    {
+      "ts": "2026-06-23T05:07:43.805Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T05:07:44.199Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T05:07:45.079Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T05:07:45.651Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T05:07:46.079Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T05:08:47.062Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T05:08:47.771Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T05:08:48.214Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T05:08:48.611Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T05:08:49.149Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T05:09:22.778Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 13,04"
+    },
+    {
+      "ts": "2026-06-23T05:09:23.598Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 13"
+    },
+    {
+      "ts": "2026-06-23T05:09:24.321Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 13,04"
+    },
+    {
+      "ts": "2026-06-23T05:09:59.648Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 13,04,02"
+    },
+    {
+      "ts": "2026-06-23T05:10:00.372Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 13,04,02,01"
+    },
+    {
+      "ts": "2026-06-23T05:10:02.881Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 13,04,02,01,05"
+    },
+    {
+      "ts": "2026-06-23T05:10:35.491Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 13,04,02,01,05,06"
+    },
+    {
+      "ts": "2026-06-23T05:10:36.442Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 13,04,02,01,05,06,08"
+    },
+    {
+      "ts": "2026-06-23T05:10:36.876Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 13,04,02,01,05,06,08,10"
+    },
+    {
+      "ts": "2026-06-23T05:15:32.106Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T05:15:33.011Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T05:16:25.330Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T05:16:26.165Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T05:16:26.758Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T05:16:27.260Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T05:16:28.051Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T05:16:33.779Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 13,14"
+    },
+    {
+      "ts": "2026-06-23T05:16:37.375Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 13,14,01"
+    },
+    {
+      "ts": "2026-06-23T05:16:37.732Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 13,14,01,03"
+    },
+    {
+      "ts": "2026-06-23T05:16:38.073Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 13,14,01,03,05"
+    },
+    {
+      "ts": "2026-06-23T05:16:40.066Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜选库 13,14,01,03,05,20"
+    },
+    {
+      "ts": "2026-06-23T05:19:06.773Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T05:19:08.154Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T05:19:08.744Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T05:19:09.265Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T05:19:09.875Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T05:54:33.887Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "编辑后期/字幕"
+    },
+    {
+      "ts": "2026-06-23T05:54:43.331Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "编辑后期/字幕"
+    },
+    {
+      "ts": "2026-06-23T09:43:06.515Z",
+      "who": "陈德基",
+      "action": "design_edit",
+      "detail": "第1镜删选库图"
+    },
+    {
+      "ts": "2026-06-23T09:43:08.404Z",
+      "who": "陈德基",
+      "action": "design_edit",
+      "detail": "第1镜主体=未定"
+    },
+    {
+      "ts": "2026-06-23T09:43:09.433Z",
+      "who": "陈德基",
+      "action": "design_edit",
+      "detail": "第1镜主体=lib"
+    },
+    {
+      "ts": "2026-06-23T09:43:10.993Z",
+      "who": "陈德基",
+      "action": "design_edit",
+      "detail": "第1镜主体=lib"
+    },
+    {
+      "ts": "2026-06-23T09:43:14.364Z",
+      "who": "陈德基",
+      "action": "design_edit",
+      "detail": "第1镜选库 07"
+    },
+    {
+      "ts": "2026-06-23T09:43:18.445Z",
+      "who": "陈德基",
+      "action": "design_edit",
+      "detail": "第2镜主体=ai"
+    },
+    {
+      "ts": "2026-06-23T09:43:22.621Z",
+      "who": "陈德基",
+      "action": "design_edit",
+      "detail": "第2镜参考图更新"
+    },
+    {
+      "ts": "2026-06-23T09:43:28.362Z",
+      "who": "陈德基",
+      "action": "design_edit",
+      "detail": "编辑后期/字幕"
+    },
+    {
+      "ts": "2026-06-23T11:43:59.878Z",
+      "who": "陈德基",
+      "action": "review_undo",
+      "detail": "第5条撤销决定"
+    },
+    {
+      "ts": "2026-06-23T11:44:02.022Z",
+      "who": "陈德基",
+      "action": "review_undo",
+      "detail": "第7条撤销决定"
+    },
+    {
+      "ts": "2026-06-23T11:44:02.807Z",
+      "who": "陈德基",
+      "action": "review_decide",
+      "detail": "第10条 采纳"
+    },
+    {
+      "ts": "2026-06-23T11:44:03.494Z",
+      "who": "陈德基",
+      "action": "review_decide",
+      "detail": "第10条 采纳"
+    },
+    {
+      "ts": "2026-06-23T12:09:43.008Z",
+      "who": "陈德基",
+      "action": "manual_edit",
+      "detail": "手动编辑输出"
+    },
+    {
+      "ts": "2026-06-23T12:09:51.147Z",
+      "who": "陈德基",
+      "action": "manual_edit",
+      "detail": "手动编辑输出"
+    },
+    {
+      "ts": "2026-06-23T13:07:44.139Z",
+      "who": "陈德基",
+      "action": "design_edit",
+      "detail": "编辑后期/字幕"
+    },
+    {
+      "ts": "2026-06-23T14:30:42.286Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜加text"
+    },
+    {
+      "ts": "2026-06-23T14:30:46.180Z",
+      "who": "熊猫洛兰",
+      "action": "design_edit",
+      "detail": "第1镜删后期元素"
     }
   ]
 }
